@@ -1,0 +1,320 @@
+{
+  "version": 2,
+  "strategy": {
+    "thesis": "Buyers don’t lack listings — they lack timing. Casarico compresses the time between an agent’s decision to sell and the buyer knowing about it. We compete on information velocity and trusted relationships; search is the entry point, owning the transaction workflow is the goal.",
+    "promises": {
+      "buyer": "Find the next home before it’s publicly listed.",
+      "swapper": "Secure the next home before selling the current one.",
+      "agent": "Win additional seller mandates through qualified Swappers."
+    },
+    "connect": [
+      "Model — buyers pay activation + success fee; Swappers are free because their mandate is worth more.",
+      "Supply — early sharing must be economically rational for agents, never contractually forced.",
+      "Buy-back — conditional purchase certainty turns timing risk into a financial product.",
+      "Expansion — Geneva proves, Zurich validates portability, national only once the engine repeats.",
+      "North star — the operating system for residential moves: discovery, financing certainty, purchase, sale and orchestration in one workflow."
+    ],
+    "risks": [
+      {
+        "risk": "Insufficient proprietary supply",
+        "mit": "Agent incentive alignment (off-market supply engine)"
+      },
+      {
+        "risk": "Weak agent engagement",
+        "mit": "Mandate-back flywheel, partner activation"
+      },
+      {
+        "risk": "Matching quality at scale",
+        "mit": "Automation roadmap"
+      },
+      {
+        "risk": "Interest-rate environment",
+        "mit": "Conditional structure of buy-back, disciplined pilot"
+      },
+      {
+        "risk": "Capital needs of buy-back guarantees",
+        "mit": "SPV structure, external capital partners"
+      }
+    ],
+    "rule": "Every choice should strengthen the flywheel of Swappers, proprietary supply, trusted execution and transaction ownership. Incremental revenue that dilutes this positioning is rejected."
+  },
+  "initiatives": [
+    {
+      "id": "i-pricing",
+      "name": "Pricing & business model reset",
+      "status": "active",
+      "owner": "",
+      "summary": "Buyers pay activation + success fee; Swappers stay free (their future mandate is worth more). Adjusted model live 1 August 2026 after the initial agent pricing created friction on the first transaction."
+    },
+    {
+      "id": "i-zurich",
+      "name": "Zurich market entry",
+      "status": "at risk",
+      "owner": "",
+      "summary": "Test of portability beyond Geneva. Cost per lead at parity (CHF 22.50) but Swapper share (37% vs 52%) and lead-to-client conversion (15% vs 54%) lag Geneva. Action plan agreed at board meeting #6."
+    },
+    {
+      "id": "i-offmarket",
+      "name": "Off-market supply engine",
+      "status": "at risk",
+      "owner": "",
+      "summary": "Make early sharing economically rational for agents — never contractually forced. Only 4 true off-market properties so far; publication is a multi-touch, capacity-constrained process."
+    },
+    {
+      "id": "i-buyback",
+      "name": "SPV buy-back guarantee",
+      "status": "proposed",
+      "owner": "",
+      "summary": "Conditional purchase certainty on a Swapper’s current home via an SPV — turns timing uncertainty into a financial product. Key risks: capital requirements and interest-rate environment."
+    },
+    {
+      "id": "i-financing",
+      "name": "Financing round",
+      "status": "active",
+      "owner": "",
+      "summary": "Bridge financing closed (contract + payment received). Main round in preparation."
+    },
+    {
+      "id": "i-ai",
+      "name": "Automation & AI roadmap",
+      "status": "active",
+      "owner": "",
+      "summary": "AI automates operational work; humans stay at high-trust decision points. Workstreams: client onboarding, sales + improvement loop, matching management, marketing analytics, video ad creation."
+    },
+    {
+      "id": "i-legacy",
+      "name": "Immo-Ressource legacy business",
+      "status": "decision",
+      "owner": "",
+      "summary": "License fees churning; keeping legacy customers happy is much harder than anticipated while all energy goes to Casarico. Direction to be decided at board meeting #6."
+    }
+  ],
+  "meetings": [
+    {
+      "id": "m6",
+      "number": 6,
+      "date": "21.07.2026",
+      "location": "Zurich, in person",
+      "status": "upcoming",
+      "attendees": "Daniel Abebe (Chairperson), Luca Fontanella, Nicola Haas",
+      "checkin": [
+        {
+          "t": "Bridge-financing contract + payment",
+          "status": "done"
+        },
+        {
+          "t": "Year-closing 2025 + GV (close or schedule the GV)",
+          "status": "open"
+        }
+      ],
+      "agenda": [
+        {
+          "t": "Check-in — year-closing 2025 + GV, bridge financing",
+          "tag": "inform"
+        },
+        {
+          "t": "Financials Q1–Q3",
+          "tag": "inform"
+        },
+        {
+          "t": "Business update — Q2 review",
+          "tag": "inform"
+        },
+        {
+          "t": "Adjusted pricing & business model from 1 Aug",
+          "tag": "decide"
+        },
+        {
+          "t": "Action plan to improve Zurich",
+          "tag": "decide"
+        },
+        {
+          "t": "Strategy to get more off-market",
+          "tag": "discuss"
+        },
+        {
+          "t": "Immo-Ressource — how to move forward",
+          "tag": "decide"
+        },
+        {
+          "t": "SPV buy-back guarantee — concept",
+          "tag": "discuss"
+        },
+        {
+          "t": "Update financing round",
+          "tag": "discuss"
+        },
+        {
+          "t": "6-month outlook",
+          "tag": "discuss"
+        },
+        {
+          "t": "Automation & AI",
+          "tag": "inform"
+        },
+        {
+          "t": "Decisions, to-dos, next steps & check-out",
+          "tag": "decide"
+        }
+      ],
+      "fin": [
+        {
+          "label": "Q1 2026",
+          "revenue": 105756,
+          "charges": 178516,
+          "proj": false
+        },
+        {
+          "label": "Q2 2026",
+          "revenue": 137042,
+          "charges": 173714,
+          "proj": false
+        },
+        {
+          "label": "Q3 2026",
+          "revenue": 80000,
+          "charges": 170000,
+          "proj": true
+        }
+      ],
+      "finNarrative": "Q2 revenue grew ~30% on stable charges, halving the quarterly loss. The Q3 projection assumes lower revenue while the new pricing and free-Swapper model ramps.",
+      "cashRunway": "",
+      "kpis": {
+        "sw": 30,
+        "bu": 35,
+        "pa": 14,
+        "om": 4
+      },
+      "wins": [
+        "30 active Swappers + 35 active buyers",
+        "14 partner companies onboarded",
+        "Scraper accuracy & speed improved",
+        "New user interface + AI workflows shipped"
+      ],
+      "learnings": [
+        {
+          "what": "Initial pricing flopped with agents",
+          "so": "Revised pricing to remove friction on the first transaction.",
+          "initiativeId": "i-pricing"
+        },
+        {
+          "what": "CAC-to-revenue ratio deteriorated in July",
+          "so": "Swappers are free from now on. July tests: free-signup campaign for buyers in Zurich; CHF 200 urgency discount in Geneva.",
+          "initiativeId": "i-pricing"
+        },
+        {
+          "what": "Slow start in Zurich",
+          "so": "Cost per lead at Geneva level (CHF 22.50), but Swapper share (37% vs 52%) and lead→client conversion (15% vs 54%) lag Geneva.",
+          "initiativeId": "i-zurich"
+        },
+        {
+          "what": "Only 4 true off-market properties shared by agents",
+          "so": "More leads pull focus from supply; publication takes several follow-ups — a capacity and process issue.",
+          "initiativeId": "i-offmarket"
+        },
+        {
+          "what": "Churn in Immo-Ressource license fees",
+          "so": "Harder than anticipated to keep legacy customers happy while all energy goes to Casarico.",
+          "initiativeId": "i-legacy"
+        }
+      ],
+      "outlook": {
+        "swappers": "",
+        "buyers": "",
+        "partners": "",
+        "offmarket": "",
+        "revenue": "",
+        "zurich": ""
+      },
+      "ai": [
+        {
+          "name": "Client onboarding",
+          "what": "Qualify and activate buyers & Swappers without manual steps",
+          "status": ""
+        },
+        {
+          "name": "Sales + improvement loop",
+          "what": "Assist sales conversations and feed learnings back into the funnel",
+          "status": ""
+        },
+        {
+          "name": "Matching management",
+          "what": "Match buyers to (off-market) properties at scale",
+          "status": ""
+        },
+        {
+          "name": "Marketing analytics",
+          "what": "Attribute spend and steer campaigns (ZH vs GE)",
+          "status": ""
+        },
+        {
+          "name": "Video ad creation",
+          "what": "Generate ad creative variants automatically",
+          "status": ""
+        }
+      ],
+      "decisions": [],
+      "nextMeeting": "",
+      "notes": "Q2 wins: 30 active Swappers + 35 active buyers; 14 partner companies onboarded; scraper accuracy & speed improved; new UI + AI workflows shipped.",
+      "initiativeIds": [
+        "i-pricing",
+        "i-zurich",
+        "i-offmarket",
+        "i-buyback",
+        "i-financing",
+        "i-ai",
+        "i-legacy"
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "id": "r-2026-07",
+      "month": "July 2026",
+      "revenue": null,
+      "charges": null,
+      "kpis": {
+        "sw": null,
+        "bu": null,
+        "pa": null,
+        "om": null
+      },
+      "highlights": [
+        "Swappers are free from now on",
+        "“Sign up for free” campaign for buyers in Zurich",
+        "CHF 200 urgency discount tested in Geneva"
+      ],
+      "lowlights": [
+        "CAC-to-revenue ratio deteriorated"
+      ],
+      "notes": "Example entry seeded from board pack #6 — edit or delete.",
+      "initiativeIds": [
+        "i-pricing"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t-gv",
+      "text": "Close year-closing 2025 and schedule the GV",
+      "owner": "",
+      "due": "",
+      "done": false,
+      "src": {
+        "type": "meeting",
+        "id": "m6"
+      }
+    },
+    {
+      "id": "t-bridge",
+      "text": "Bridge-financing contract + payment",
+      "owner": "",
+      "due": "",
+      "done": true,
+      "src": {
+        "type": "meeting",
+        "id": "m6"
+      }
+    }
+  ]
+}

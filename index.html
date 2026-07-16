@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FAFAF7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Casarico Board">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B1E20'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='19' fill='%23fff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<title>Casarico — Board Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
+
+:root{
+  --bg:#FAFAF7;
+  --surface:#FFFFFF;
+  --ink:#1B1E20;
+  --muted:#6C7176;
+  --faint:#9AA0A4;
+  --line:#E8E6DF;
+  --line-soft:#F0EEE8;
+  --pos:#1E7F4F;
+  --pos-bg:#EAF5EF;
+  --neg:#C23934;
+  --neg-bg:#FBEFEE;
+  --act:#9A5B00;
+  --act-bg:#FBF3E6;
+  --disc:#2E5AAC;
+  --disc-bg:#EEF3FB;
+  --radius:10px;
+  --side:224px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font:400 15px/1.6 Inter,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:#E8E2D2}
+
+/* ---------- layout ---------- */
+.side{
+  position:fixed;inset:0 auto 0 0;width:var(--side);
+  border-right:1px solid var(--line);background:var(--bg);
+  padding:26px 20px 18px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;
+}
+.main{margin-left:var(--side);padding:44px 56px 120px;max-width:960px}
+
+/* ---------- sidebar ---------- */
+.brand{font:600 15px/1.3 Inter;letter-spacing:-.01em}
+.brand small{display:block;font:400 11.5px/1.5 Inter;color:var(--muted);margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:1px;font-size:13.5px}
+.nav a{color:var(--muted);text-decoration:none;padding:6px 9px;border-radius:6px}
+.nav a:hover{color:var(--ink);background:var(--line-soft)}
+.nav a.on{color:var(--ink);background:var(--line-soft);font-weight:500}
+.side-foot{margin-top:auto;font-size:11.5px;color:var(--faint);line-height:1.6}
+.side-foot button{margin-top:8px;width:100%}
+.badge{display:inline-block;font:500 11px/1.5 Inter;padding:3px 9px;border-radius:99px;background:var(--line-soft);color:var(--muted)}
+.badge.warn{background:var(--act-bg);color:var(--act)}
+.badge.ok{background:var(--pos-bg);color:var(--pos)}
+.role{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:12px}
+.role .who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.role .dot{flex:none;width:8px;height:8px;border-radius:99px;background:var(--faint)}
+.role.editor .dot{background:var(--pos)}
+.role.viewer .dot{background:var(--disc)}
+
+/* ---------- typography ---------- */
+.eyebrow{font:500 11px/1 Inter;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px}
+h1{font:500 30px/1.15 Newsreader,Georgia,serif;letter-spacing:-.01em;margin-bottom:4px}
+h2{font:500 24px/1.2 Newsreader,Georgia,serif}
+h3{font:600 13.5px/1.4 Inter;margin:30px 0 10px}
+h3 .small{font-weight:400}
+.lede{color:var(--muted);max-width:640px}
+.small{font-size:12.5px;color:var(--muted)}
+.crumb{font-size:13px;margin-bottom:16px}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb a:hover{color:var(--ink)}
+.head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+
+/* ---------- tags & chips ---------- */
+.tag{display:inline-block;font:500 10.5px/1 Inter;text-transform:uppercase;letter-spacing:.07em;
+  padding:4px 8px;border-radius:99px;white-space:nowrap;cursor:default}
+.tag.inform{background:var(--line-soft);color:var(--muted)}
+.tag.discuss{background:var(--disc-bg);color:var(--disc)}
+.tag.decide{background:var(--act-bg);color:var(--act)}
+.tag.click{cursor:pointer}
+.chip{display:inline-block;font:500 11.5px/1 Inter;padding:4px 10px;border-radius:99px;white-space:nowrap;cursor:default}
+.chip.pos{background:var(--pos-bg);color:var(--pos)}
+.chip.neg{background:var(--neg-bg);color:var(--neg)}
+.chip.mut{background:var(--line-soft);color:var(--muted)}
+.chip.act{background:var(--act-bg);color:var(--act)}
+.chip.disc{background:var(--disc-bg);color:var(--disc)}
+.chip.click{cursor:pointer}
+.ichip{display:inline-block;font:500 12px/1 Inter;padding:5px 11px;border-radius:99px;
+  border:1px solid var(--line);color:var(--muted);cursor:pointer;background:var(--surface)}
+.ichip:hover{border-color:var(--muted);color:var(--ink)}
+.ichip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chiprow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+
+/* ---------- cards & grids ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.g4{grid-template-columns:repeat(4,1fr)}
+.kpi .lab{font:500 11px/1 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.kpi .val{font:500 25px/1.2 Newsreader,Georgia,serif;margin-top:8px;font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:12.5px;color:var(--muted);margin-top:4px}
+
+/* ---------- tables & rows ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font:500 11px/1 Inter;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  text-align:left;padding:0 12px 8px 0;border-bottom:1px solid var(--line)}
+td{padding:10px 12px 10px 0;border-bottom:1px solid var(--line-soft);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.num{font-variant-numeric:tabular-nums}
+.t-right{text-align:right}
+.rowlink{cursor:pointer}
+.rowlink:hover td{background:var(--line-soft)}
+.rowtitle{font-weight:500}
+
+/* ---------- editable ---------- */
+[contenteditable="true"]{outline:none;border-radius:6px;min-width:24px}
+[contenteditable="true"]:hover{background:var(--line-soft)}
+[contenteditable="true"]:focus{background:#FFFDF5;box-shadow:0 0 0 1px #E4D3AE}
+[contenteditable="true"]:empty::before{content:attr(data-ph);color:var(--faint);font-style:italic}
+.field .k{font:500 11px/1.9 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.notes{border:1px dashed var(--line);border-radius:8px;padding:12px 14px;margin-top:6px;min-height:44px}
+
+/* ---------- board-pack: memo / ask / learn ---------- */
+.memo{display:grid;grid-template-columns:130px 1fr;gap:8px 24px;margin-top:14px}
+.memo .k{font:500 11px/1.9 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-top:2px}
+.memo .v{min-width:0}
+.ask{margin-top:16px;background:var(--act-bg);border:1px solid #EBD9BC;border-radius:var(--radius);
+  padding:14px 18px;display:flex;gap:12px;align-items:baseline}
+.ask .k{font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--act);white-space:nowrap}
+.mark{display:inline-flex;width:20px;height:20px;border-radius:99px;align-items:center;justify-content:center;
+  font:600 11px/1 Inter;flex:none;margin-top:1px}
+.mark.w{background:var(--pos-bg);color:var(--pos)}
+.mark.f{background:var(--neg-bg);color:var(--neg)}
+.pair{display:flex;gap:10px}
+.learn{border-left:2px solid var(--line);padding:2px 0 2px 16px;margin:12px 0}
+.learn .what{font-weight:500}
+.learn .so{color:var(--muted);font-size:13.5px;margin-top:3px}
+.learn .link{font-size:12.5px;margin-top:6px}
+.learn .link a{color:var(--act);text-decoration:none;border-bottom:1px solid #E4CFA3}
+
+/* ---------- tasks ---------- */
+.task{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.task:last-child{border-bottom:none}
+.tick{flex:none;width:18px;height:18px;border-radius:99px;border:1.5px solid var(--faint);cursor:pointer;margin-top:2px;
+  display:inline-flex;align-items:center;justify-content:center;font:600 11px/1 Inter;color:#fff;background:transparent}
+.tick:hover{border-color:var(--pos)}
+.tick.done{background:var(--pos);border-color:var(--pos)}
+.tick.ro{cursor:default}
+.task .body{flex:1;min-width:0}
+.task .meta{font-size:12px;color:var(--muted);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.task .meta a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+.task .meta a:hover{color:var(--ink)}
+.task.done .text{color:var(--faint);text-decoration:line-through}
+
+/* ---------- list items ---------- */
+.item{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+.item:last-child{border-bottom:none}
+.item .grow{flex:1;min-width:0}
+
+/* ---------- chart ---------- */
+.chart-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 8px;margin-top:12px}
+.chart-wrap svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--muted);padding:2px 2px 8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* ---------- flywheel ---------- */
+.fly{display:flex;justify-content:center;padding:10px 0 4px}
+.fly svg{max-width:520px;width:100%;height:auto}
+.fly text{font:500 12.5px Inter;fill:var(--ink)}
+
+/* ---------- buttons ---------- */
+button{
+  font:500 13px/1 Inter;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;
+}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.ghost{border:none;background:none;color:var(--faint);padding:4px 6px}
+button.ghost:hover{color:var(--neg);background:none}
+button.g{background:#fff;border:1px solid var(--line);width:auto}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.empty{color:var(--muted);font-size:13.5px;padding:14px 0}
+
+/* ---------- sign-in gate ---------- */
+.gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg);z-index:60}
+.gate .box{max-width:380px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:36px 30px}
+.gate h2{margin:14px 0 8px}
+.gate p{color:var(--muted);font-size:14px;margin-bottom:22px}
+.gate .gbtn{display:inline-flex;align-items:center;gap:10px;font:500 14px/1 Inter;padding:12px 20px;border-radius:10px;
+  border:1px solid var(--line);background:#fff;cursor:pointer}
+.gate .gbtn:hover{border-color:var(--muted)}
+.gate .crest{width:52px;height:52px;border-radius:13px;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;
+  font:600 26px/1 Georgia,serif}
+
+/* ---------- toast ---------- */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translate(-50%,8px);opacity:0;
+  background:var(--ink);color:#fff;font:500 13px/1 Inter;padding:11px 16px;border-radius:99px;
+  transition:.25s;pointer-events:none;z-index:70;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- print ---------- */
+@media print{
+  .side,.btnrow,button,#toast,.tick{display:none!important}
+  .main{margin:0;padding:0;max-width:none}
+  body{background:#fff;font-size:12px}
+  .card,.chart-wrap{border-color:#ddd}
+}
+
+/* ---------- mobile ---------- */
+@media (max-width:900px){
+  .side{position:sticky;top:0;inset:auto;width:100%;flex-direction:row;align-items:center;
+    gap:12px;padding:10px 16px;border-right:none;border-bottom:1px solid var(--line);z-index:40;overflow-x:auto}
+  .side .brand small,.side-foot{display:none}
+  .nav{flex-direction:row;gap:2px;white-space:nowrap}
+  .main{margin:0;padding:28px 18px 80px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .memo{grid-template-columns:1fr;gap:2px 0}
+  .memo .k{margin-top:12px}
+}
+</style>
+</head>
+<body>
+
+<nav class="side" id="side" style="display:none">
+  <div class="brand">Casarico<small>Immo-Ressource AG · Board hub</small></div>
+  <div class="nav" id="nav">
+    <a href="#/analytics" data-v="analytics">Analytics</a>
+    <a href="#/meetings" data-v="meetings">Board meetings</a>
+    <a href="#/reports" data-v="reports">Monthly rapports</a>
+    <a href="#/initiatives" data-v="initiatives">Strategic initiatives</a>
+    <a href="#/strategy" data-v="strategy">Strategy on a page</a>
+  </div>
+  <div class="side-foot">
+    <div class="role" id="roleBox" style="display:none"></div>
+    <span class="badge" id="saveBadge" style="margin-top:8px">…</span><br>
+    <span id="editorTools" style="display:none">
+      <button class="primary" onclick="publishSnapshot()">Publish snapshot</button>
+      <button onclick="exportData()">Export data (.json)</button>
+      <button onclick="document.getElementById('importFile').click()">Import data</button>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="importData(this)">
+    </span>
+    <button id="signOutBtn" style="display:none" onclick="fbSignOut()">Sign out</button>
+  </div>
+</nav>
+
+<main class="main" id="app" style="display:none"></main>
+<div class="gate" id="gate" style="display:none">
+  <div class="box">
+    <div class="crest">C</div>
+    <h2>Casarico Board Hub</h2>
+    <p id="gateMsg">This board is private. Sign in to view.</p>
+    <button class="gbtn" onclick="fbSignIn()">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <p class="small" id="gateNote" style="margin-top:18px"></p>
+  </div>
+</div>
+<div id="toast"></div>
+
+<!-- =========================================================
+     CONFIG — edit this block to turn on shared mode (see README)
+     Leave FIREBASE_CONFIG.apiKey as-is to run in local (single-user) mode.
+     ========================================================= -->
+<script>
+window.EDITOR_EMAILS = ['daniel@immo-ressource.ch'];   // who may edit; everyone else is a viewer
+window.BOARD_COLLECTION = 'boards';
+window.BOARD_ID = 'casarico';
+window.FIREBASE_CONFIG = {
+  apiKey: 'PASTE_YOUR_FIREBASE_API_KEY',
+  authDomain: 'PASTE.firebaseapp.com',
+  projectId: 'PASTE_PROJECT_ID',
+  appId: 'PASTE_APP_ID'
+};
+</script>
+
+<script>
+/* ================= app state ================= */
+var KEY = 'casarico-board-hub-v2';
+var DB = null;
+var STORAGE_MODE = 'memory';         // 'firebase' | 'local' | 'memory'
+var CAN_EDIT = false;
+var USER = null;                     // firebase user (shared mode only)
+var VIEW_PARAM = /[?&]view\b/.test(location.search);
+var EDIT_PARAM = /[?&]edit\b/.test(location.search);
+var _booted = false;
+var dirty = false;
+
+var fbConfigured = (function(){
+  var c = window.FIREBASE_CONFIG;
+  return !!(c && c.apiKey && c.apiKey.indexOf('PASTE') < 0);
+})();
+
+/* who can edit right now */
+function recomputeRole(){
+  if (STORAGE_MODE === 'firebase'){
+    CAN_EDIT = !!(USER && window.EDITOR_EMAILS.indexOf((USER.email || '').toLowerCase()) >= 0);
+  } else {
+    // snapshot / local mode: read-only by default; the editor uses ?edit (and never ?view)
+    CAN_EDIT = EDIT_PARAM && !VIEW_PARAM;
+  }
+  document.body.classList.toggle('viewer', !CAN_EDIT);
+}
+
+/* ---- permission-aware template helpers ---- */
+function ce(){ return CAN_EDIT ? ' contenteditable="true"' : ''; }          /* editable attr */
+function E(html){ return CAN_EDIT ? html : ''; }                            /* editor-only fragment */
+function oc(js){ return CAN_EDIT ? ' onclick="' + js + '"' : ''; }          /* editor-only click */
+function clk(){ return CAN_EDIT ? ' click' : ''; }                          /* editor-only "click" class */
+
+/* ================= seed data ================= */
+function seedDB(){
+  return {
+    version: 2,
+    strategy: {
+      thesis: "Buyers don’t lack listings — they lack timing. Casarico compresses the time between an agent’s decision to sell and the buyer knowing about it. We compete on information velocity and trusted relationships; search is the entry point, owning the transaction workflow is the goal.",
+      promises: {
+        buyer:"Find the next home before it’s publicly listed.",
+        swapper:"Secure the next home before selling the current one.",
+        agent:"Win additional seller mandates through qualified Swappers."
+      },
+      connect: [
+        "Model — buyers pay activation + success fee; Swappers are free because their mandate is worth more.",
+        "Supply — early sharing must be economically rational for agents, never contractually forced.",
+        "Buy-back — conditional purchase certainty turns timing risk into a financial product.",
+        "Expansion — Geneva proves, Zurich validates portability, national only once the engine repeats.",
+        "North star — the operating system for residential moves: discovery, financing certainty, purchase, sale and orchestration in one workflow."
+      ],
+      risks: [
+        {risk:"Insufficient proprietary supply", mit:"Agent incentive alignment (off-market supply engine)"},
+        {risk:"Weak agent engagement", mit:"Mandate-back flywheel, partner activation"},
+        {risk:"Matching quality at scale", mit:"Automation roadmap"},
+        {risk:"Interest-rate environment", mit:"Conditional structure of buy-back, disciplined pilot"},
+        {risk:"Capital needs of buy-back guarantees", mit:"SPV structure, external capital partners"}
+      ],
+      rule: "Every choice should strengthen the flywheel of Swappers, proprietary supply, trusted execution and transaction ownership. Incremental revenue that dilutes this positioning is rejected."
+    },
+    initiatives: [
+      {id:'i-pricing',  name:'Pricing & business model reset', status:'active',   owner:'', summary:'Buyers pay activation + success fee; Swappers stay free (their future mandate is worth more). Adjusted model live 1 August 2026 after the initial agent pricing created friction on the first transaction.'},
+      {id:'i-zurich',   name:'Zurich market entry',            status:'at risk',  owner:'', summary:'Test of portability beyond Geneva. Cost per lead at parity (CHF 22.50) but Swapper share (37% vs 52%) and lead-to-client conversion (15% vs 54%) lag Geneva. Action plan agreed at board meeting #6.'},
+      {id:'i-offmarket',name:'Off-market supply engine',       status:'at risk',  owner:'', summary:'Make early sharing economically rational for agents — never contractually forced. Only 4 true off-market properties so far; publication is a multi-touch, capacity-constrained process.'},
+      {id:'i-buyback',  name:'SPV buy-back guarantee',         status:'proposed', owner:'', summary:'Conditional purchase certainty on a Swapper’s current home via an SPV — turns timing uncertainty into a financial product. Key risks: capital requirements and interest-rate environment.'},
+      {id:'i-financing',name:'Financing round',                status:'active',   owner:'', summary:'Bridge financing closed (contract + payment received). Main round in preparation.'},
+      {id:'i-ai',       name:'Automation & AI roadmap',        status:'active',   owner:'', summary:'AI automates operational work; humans stay at high-trust decision points. Workstreams: client onboarding, sales + improvement loop, matching management, marketing analytics, video ad creation.'},
+      {id:'i-legacy',   name:'Immo-Ressource legacy business', status:'decision', owner:'', summary:'License fees churning; keeping legacy customers happy is much harder than anticipated while all energy goes to Casarico. Direction to be decided at board meeting #6.'}
+    ],
+    meetings: [
+      {id:'m6', number:6, date:'21.07.2026', location:'Zurich, in person', status:'upcoming',
+       attendees:'Daniel Abebe (Chairperson), Luca Fontanella, Nicola Haas',
+       checkin:[
+         {t:'Bridge-financing contract + payment', status:'done'},
+         {t:'Year-closing 2025 + GV (close or schedule the GV)', status:'open'}
+       ],
+       agenda:[
+         {t:'Check-in — year-closing 2025 + GV, bridge financing', tag:'inform'},
+         {t:'Financials Q1–Q3', tag:'inform'},
+         {t:'Business update — Q2 review', tag:'inform'},
+         {t:'Adjusted pricing & business model from 1 Aug', tag:'decide'},
+         {t:'Action plan to improve Zurich', tag:'decide'},
+         {t:'Strategy to get more off-market', tag:'discuss'},
+         {t:'Immo-Ressource — how to move forward', tag:'decide'},
+         {t:'SPV buy-back guarantee — concept', tag:'discuss'},
+         {t:'Update financing round', tag:'discuss'},
+         {t:'6-month outlook', tag:'discuss'},
+         {t:'Automation & AI', tag:'inform'},
+         {t:'Decisions, to-dos, next steps & check-out', tag:'decide'}
+       ],
+       fin:[
+         {label:'Q1 2026', revenue:105756, charges:178516, proj:false},
+         {label:'Q2 2026', revenue:137042, charges:173714, proj:false},
+         {label:'Q3 2026', revenue:80000,  charges:170000, proj:true}
+       ],
+       finNarrative:'Q2 revenue grew ~30% on stable charges, halving the quarterly loss. The Q3 projection assumes lower revenue while the new pricing and free-Swapper model ramps.',
+       cashRunway:'',
+       kpis:{sw:30, bu:35, pa:14, om:4},
+       wins:[
+         '30 active Swappers + 35 active buyers',
+         '14 partner companies onboarded',
+         'Scraper accuracy & speed improved',
+         'New user interface + AI workflows shipped'
+       ],
+       learnings:[
+         {what:'Initial pricing flopped with agents', so:'Revised pricing to remove friction on the first transaction.', initiativeId:'i-pricing'},
+         {what:'CAC-to-revenue ratio deteriorated in July', so:'Swappers are free from now on. July tests: free-signup campaign for buyers in Zurich; CHF 200 urgency discount in Geneva.', initiativeId:'i-pricing'},
+         {what:'Slow start in Zurich', so:'Cost per lead at Geneva level (CHF 22.50), but Swapper share (37% vs 52%) and lead→client conversion (15% vs 54%) lag Geneva.', initiativeId:'i-zurich'},
+         {what:'Only 4 true off-market properties shared by agents', so:'More leads pull focus from supply; publication takes several follow-ups — a capacity and process issue.', initiativeId:'i-offmarket'},
+         {what:'Churn in Immo-Ressource license fees', so:'Harder than anticipated to keep legacy customers happy while all energy goes to Casarico.', initiativeId:'i-legacy'}
+       ],
+       outlook:{swappers:'', buyers:'', partners:'', offmarket:'', revenue:'', zurich:''},
+       ai:[
+         {name:'Client onboarding', what:'Qualify and activate buyers & Swappers without manual steps', status:''},
+         {name:'Sales + improvement loop', what:'Assist sales conversations and feed learnings back into the funnel', status:''},
+         {name:'Matching management', what:'Match buyers to (off-market) properties at scale', status:''},
+         {name:'Marketing analytics', what:'Attribute spend and steer campaigns (ZH vs GE)', status:''},
+         {name:'Video ad creation', what:'Generate ad creative variants automatically', status:''}
+       ],
+       decisions:[],
+       nextMeeting:'',
+       notes:'Q2 wins: 30 active Swappers + 35 active buyers; 14 partner companies onboarded; scraper accuracy & speed improved; new UI + AI workflows shipped.',
+       initiativeIds:['i-pricing','i-zurich','i-offmarket','i-buyback','i-financing','i-ai','i-legacy']
+      }
+    ],
+    reports: [
+      {id:'r-2026-07', month:'July 2026', revenue:null, charges:null,
+       kpis:{sw:null, bu:null, pa:null, om:null},
+       highlights:['Swappers are free from now on', '“Sign up for free” campaign for buyers in Zurich', 'CHF 200 urgency discount tested in Geneva'],
+       lowlights:['CAC-to-revenue ratio deteriorated'],
+       notes:'Example entry seeded from board pack #6 — edit or delete.',
+       initiativeIds:['i-pricing']
+      }
+    ],
+    tasks: [
+      {id:'t-gv',     text:'Close year-closing 2025 and schedule the GV', owner:'', due:'', done:false, src:{type:'meeting', id:'m6'}},
+      {id:'t-bridge', text:'Bridge-financing contract + payment',          owner:'', due:'', done:true,  src:{type:'meeting', id:'m6'}}
+    ]
+  };
+}
+
+/* backfill fields so older exports keep working */
+function normalize(db){
+  if (!db || typeof db !== 'object') return seedDB();
+  db.version = 2;
+  if (!Array.isArray(db.initiatives)) db.initiatives = [];
+  if (!Array.isArray(db.meetings)) db.meetings = [];
+  if (!Array.isArray(db.reports)) db.reports = [];
+  if (!Array.isArray(db.tasks)) db.tasks = [];
+  if (!db.strategy) db.strategy = seedDB().strategy;
+  var s = db.strategy;
+  if (!s.promises) s.promises = {buyer:'',swapper:'',agent:''};
+  if (!Array.isArray(s.connect)) s.connect = [];
+  if (!Array.isArray(s.risks)) s.risks = [];
+  if (typeof s.thesis !== 'string') s.thesis = '';
+  if (typeof s.rule !== 'string') s.rule = '';
+  db.meetings.forEach(function(m){
+    if (!Array.isArray(m.checkin)) m.checkin = [];
+    if (!Array.isArray(m.agenda)) m.agenda = [];
+    if (!Array.isArray(m.fin)) m.fin = [];
+    if (!Array.isArray(m.wins)) m.wins = [];
+    if (!Array.isArray(m.learnings)) m.learnings = [];
+    if (!Array.isArray(m.ai)) m.ai = [];
+    if (!Array.isArray(m.decisions)) m.decisions = [];
+    if (!Array.isArray(m.initiativeIds)) m.initiativeIds = [];
+    if (!m.kpis) m.kpis = {sw:null,bu:null,pa:null,om:null};
+    if (!m.outlook) m.outlook = {swappers:'',buyers:'',partners:'',offmarket:'',revenue:'',zurich:''};
+    if (typeof m.finNarrative !== 'string') m.finNarrative = '';
+    if (typeof m.cashRunway !== 'string') m.cashRunway = '';
+    if (typeof m.nextMeeting !== 'string') m.nextMeeting = '';
+    if (typeof m.notes !== 'string') m.notes = '';
+    if (typeof m.attendees !== 'string') m.attendees = '';
+  });
+  db.reports.forEach(function(r){
+    if (!Array.isArray(r.highlights)) r.highlights = [];
+    if (!Array.isArray(r.lowlights)) r.lowlights = [];
+    if (!Array.isArray(r.initiativeIds)) r.initiativeIds = [];
+    if (!r.kpis) r.kpis = {sw:null,bu:null,pa:null,om:null};
+    if (typeof r.notes !== 'string') r.notes = '';
+  });
+  return db;
+}
+
+/* ================= storage ================= */
+var saveT = null;
+function persistSoon(){ if (!CAN_EDIT) return; dirty = true; clearTimeout(saveT); saveT = setTimeout(persist, 400); }
+function persist(){
+  if (!CAN_EDIT) return;
+  if (STORAGE_MODE === 'firebase'){
+    if (window.fb && window.fb.save) window.fb.save(DB);
+    dirty = false;
+  } else if (STORAGE_MODE === 'local'){
+    try{ localStorage.setItem(KEY, JSON.stringify(DB)); dirty = false; }catch(e){ STORAGE_MODE = 'memory'; }
+  }
+  updateSaveBadge();
+}
+function updateSaveBadge(){
+  var b = document.getElementById('saveBadge');
+  if (!b) return;
+  if (STORAGE_MODE === 'firebase'){ b.textContent = CAN_EDIT ? 'Shared · saved to cloud' : 'Shared · live view'; b.className = 'badge ok'; }
+  else if (STORAGE_MODE === 'snapshot'){ b.textContent = 'Viewing published board'; b.className = 'badge ok'; }
+  else if (STORAGE_MODE === 'local'){ b.textContent = 'Draft in this browser · Publish to share'; b.className = 'badge warn'; }
+  else { b.textContent = 'Not saved — export your data'; b.className = 'badge warn'; }
+}
+window.addEventListener('beforeunload', function(e){
+  if (STORAGE_MODE === 'memory' && dirty){ e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ================= helpers ================= */
+function esc(s){
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtCHF(n){
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  var neg = n < 0; var s = String(Math.round(Math.abs(n)));
+  s = s.replace(/\B(?=(\d{3})+(?!\d))/g, '’');
+  return (neg ? '− ' : '') + 'CHF ' + s;
+}
+function fmtNum(n){ return (n === null || n === undefined || isNaN(n)) ? '' : String(n); }
+function parseNum(el){
+  var v = el.innerText.replace(/[^0-9\-\.]/g,'');
+  return v === '' ? null : Math.round(parseFloat(v));
+}
+function byId(list, id){ for (var i=0;i<list.length;i++){ if (list[i].id === id) return list[i]; } return null; }
+function newId(p){ return p + Date.now().toString(36) + Math.floor(Math.random()*99); }
+
+var INIT_STATUSES = ['proposed','active','at risk','decision','done'];
+var INIT_LABEL = {'proposed':'Proposed','active':'Active','at risk':'At risk','decision':'Decision pending','done':'Done'};
+var INIT_CLASS = {'proposed':'mut','active':'disc','at risk':'neg','decision':'act','done':'pos'};
+function initChip(st, cycleId){
+  var cyc = (CAN_EDIT && cycleId) ? ' click" title="Click to change status" onclick="cycleInitStatus(\'' + cycleId + '\')' : '"';
+  return '<span class="chip ' + INIT_CLASS[st] + cyc + '>' + INIT_LABEL[st] + '</span>';
+}
+var TAGS = ['inform','discuss','decide'];
+function srcLabel(src){
+  if (!src) return '';
+  if (src.type === 'meeting'){ var m = byId(DB.meetings, src.id); return m ? 'Board meeting #' + m.number : ''; }
+  if (src.type === 'report'){ var r = byId(DB.reports, src.id); return r ? 'Rapport ' + r.month : ''; }
+  if (src.type === 'initiative'){ var it = byId(DB.initiatives, src.id); return it ? it.name : ''; }
+  return 'General';
+}
+function srcHref(src){
+  if (!src) return '';
+  if (src.type === 'meeting') return '#/meetings/' + src.id;
+  if (src.type === 'report') return '#/reports/' + src.id;
+  if (src.type === 'initiative') return '#/initiatives/' + src.id;
+  return '';
+}
+</script>
+
+<script>
+/* ================= shared partials ================= */
+function taskRow(t, showSource){
+  var h = '<div class="task' + (t.done ? ' done' : '') + '">';
+  h += '<span class="tick' + (t.done ? ' done' : '') + (CAN_EDIT ? '' : ' ro') + '"' + (CAN_EDIT ? ' title="Mark ' + (t.done ? 'open' : 'done') + '" onclick="toggleTask(\'' + t.id + '\')"' : '') + '>' + (t.done ? '✓' : '') + '</span>';
+  h += '<div class="body"><div class="text"' + ce() + ' data-ph="Describe the task …" onblur="updTask(\'' + t.id + '\',\'text\',this)">' + esc(t.text) + '</div>';
+  h += '<div class="meta">';
+  h += '<span>Owner: <span' + ce() + ' data-ph="—" onblur="updTask(\'' + t.id + '\',\'owner\',this)">' + esc(t.owner) + '</span></span>';
+  h += '<span>Due: <span' + ce() + ' data-ph="—" onblur="updTask(\'' + t.id + '\',\'due\',this)">' + esc(t.due) + '</span></span>';
+  if (showSource && t.src){ h += '<a href="' + srcHref(t.src) + '">' + esc(srcLabel(t.src)) + '</a>'; }
+  h += '</div></div>';
+  h += E('<button class="ghost" title="Delete task" onclick="delTask(\'' + t.id + '\')">✕</button>');
+  h += '</div>';
+  return h;
+}
+function tasksFor(type, id){
+  return DB.tasks.filter(function(t){ return t.src && t.src.type === type && t.src.id === id; });
+}
+function initiativeToggles(kind, id, linkedIds){
+  if (!CAN_EDIT) return linkedChips(linkedIds);
+  var h = '<div class="chiprow">';
+  DB.initiatives.forEach(function(it){
+    var on = linkedIds.indexOf(it.id) >= 0;
+    h += '<span class="ichip' + (on ? ' on' : '') + '" onclick="toggleLink(\'' + kind + '\',\'' + id + '\',\'' + it.id + '\')">' + esc(it.name) + '</span>';
+  });
+  h += '</div>';
+  return h;
+}
+function linkedChips(ids){
+  var h = '<div class="chiprow">';
+  ids.forEach(function(iid){
+    var it = byId(DB.initiatives, iid);
+    if (it) h += '<a class="ichip" style="text-decoration:none" href="#/initiatives/' + it.id + '">' + esc(it.name) + '</a>';
+  });
+  h += '</div>';
+  return (ids && ids.length) ? h : '<span class="small">—</span>';
+}
+
+/* ================= financial chart ================= */
+function finPoints(){
+  var pts = [];
+  DB.meetings.forEach(function(m){ (m.fin || []).forEach(function(f){
+    if (f.revenue !== null || f.charges !== null) pts.push({label:f.label, revenue:f.revenue, charges:f.charges, proj:!!f.proj});
+  });});
+  DB.reports.forEach(function(r){
+    if (r.revenue !== null || r.charges !== null) pts.push({label:r.month, revenue:r.revenue, charges:r.charges, proj:false});
+  });
+  return pts;
+}
+function chartSVG(pts){
+  if (!pts.length) return '<div class="empty">No financial data yet — add figures in a board meeting or monthly rapport.</div>';
+  var W = 660, H = 300, top = 40, base = 240;
+  var max = 0;
+  pts.forEach(function(p){ max = Math.max(max, p.revenue || 0, p.charges || 0); });
+  if (max <= 0) max = 1;
+  var scale = (base - top) / max;
+  var n = pts.length;
+  var group = Math.min(200, (W - 60) / n);
+  var bw = Math.max(14, Math.min(34, group * 0.22));
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Revenue and charges over time">';
+  s += '<g stroke="#EFEDE7" stroke-width="1"><line x1="44" y1="' + top + '" x2="' + (W-20) + '" y2="' + top + '"/><line x1="44" y1="' + ((top+base)/2) + '" x2="' + (W-20) + '" y2="' + ((top+base)/2) + '"/><line x1="44" y1="' + base + '" x2="' + (W-20) + '" y2="' + base + '"/></g>';
+  s += '<g font-family="Inter,sans-serif" font-size="10" fill="#9AA0A4"><text x="38" y="' + (top+3) + '" text-anchor="end">' + Math.round(max/1000) + 'k</text><text x="38" y="' + ((top+base)/2+3) + '" text-anchor="end">' + Math.round(max/2000) + 'k</text><text x="38" y="' + (base+3) + '" text-anchor="end">0</text></g>';
+  pts.forEach(function(p, i){
+    var cx = 44 + group * i + group / 2;
+    var ch = Math.round((p.charges || 0) * scale);
+    var rh = Math.round((p.revenue || 0) * scale);
+    var dash = p.proj ? ' fill-opacity=".45" stroke-dasharray="3 3"' : '';
+    s += '<rect x="' + (cx - bw - 4) + '" y="' + (base - ch) + '" width="' + bw + '" height="' + ch + '" rx="3" fill="#C9C7BF"' + (p.proj ? dash + ' stroke="#9AA0A4"' : '') + '/>';
+    s += '<rect x="' + (cx + 4) + '" y="' + (base - rh) + '" width="' + bw + '" height="' + rh + '" rx="3" fill="#1E7F4F"' + (p.proj ? dash + ' stroke="#1E7F4F"' : '') + '/>';
+    var net = (p.revenue || 0) - (p.charges || 0);
+    s += '<text x="' + cx + '" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#1B1E20">' + esc(p.label) + (p.proj ? ' · proj.' : '') + '</text>';
+    s += '<text x="' + cx + '" y="286" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="' + (net >= 0 ? '#1E7F4F' : '#C23934') + '">net ' + (net >= 0 ? '+' : '−') + Math.round(Math.abs(net)/100)/10 + 'k</text>';
+  });
+  s += '</svg>';
+  return '<div class="chart-wrap"><div class="legend"><span><i style="background:#C9C7BF"></i>Charges</span><span><i style="background:#1E7F4F"></i>Revenue</span><span><i style="background:#fff;border:1px dashed #9AA0A4"></i>dashed = projection</span></div>' + s + '</div>';
+}
+function flywheelSVG(){
+  return '<div class="fly"><svg viewBox="0 0 560 320" role="img" aria-label="Casarico flywheel">'
+    + '<defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="#9AA0A4"/></marker></defs>'
+    + '<g fill="none" stroke="#C9C7BF" stroke-width="1.4" marker-end="url(#arr)">'
+    + '<path d="M 208 62  A 132 108 0 0 1 372 70"/><path d="M 428 106 A 132 108 0 0 1 446 208"/>'
+    + '<path d="M 396 256 A 132 108 0 0 1 236 268"/><path d="M 148 236 A 132 108 0 0 1 116 138"/>'
+    + '<path d="M 142 92  A 132 108 0 0 1 168 74"/></g>'
+    + '<g text-anchor="middle"><text x="280" y="46">More Swappers</text><text x="448" y="94">Future sale mandates</text>'
+    + '<text x="452" y="240">Agent cooperation</text><text x="292" y="292">Proprietary off-market supply</text>'
+    + '<text x="112" y="122">More buyers</text></g>'
+    + '<text x="280" y="168" text-anchor="middle" font-family="Newsreader,Georgia,serif" font-size="15" fill="#6C7176" font-style="italic">Quality compounds,</text>'
+    + '<text x="280" y="188" text-anchor="middle" font-family="Newsreader,Georgia,serif" font-size="15" fill="#6C7176" font-style="italic">not just quantity</text>'
+    + '</svg></div>';
+}
+
+/* ================= view: analytics ================= */
+function vAnalytics(){
+  var pts = finPoints();
+  var lastActual = null;
+  for (var i = pts.length - 1; i >= 0; i--){ if (!pts[i].proj){ lastActual = pts[i]; break; } }
+  var open = DB.tasks.filter(function(t){ return !t.done; });
+  var risk = DB.initiatives.filter(function(it){ return it.status === 'at risk' || it.status === 'decision'; });
+
+  var kpiSnaps = [];
+  DB.meetings.forEach(function(m){ if (m.kpis && (m.kpis.sw !== null || m.kpis.bu !== null || m.kpis.pa !== null || m.kpis.om !== null)) kpiSnaps.push({label:'Board #' + m.number, k:m.kpis}); });
+  DB.reports.forEach(function(r){ if (r.kpis && (r.kpis.sw !== null || r.kpis.bu !== null || r.kpis.pa !== null || r.kpis.om !== null)) kpiSnaps.push({label:r.month, k:r.kpis}); });
+  var latest = kpiSnaps.length ? kpiSnaps[kpiSnaps.length - 1] : null;
+
+  var h = '<div class="eyebrow">Analytics</div><h1>Where the company stands</h1>';
+  h += '<p class="lede">Computed live from your board meetings and monthly rapports — nothing here is entered twice.</p>';
+
+  h += '<div class="grid g4" style="margin-top:24px">';
+  h += '<div class="card kpi"><div class="lab">Net result · ' + (lastActual ? esc(lastActual.label) : '—') + '</div><div class="val" style="color:' + (lastActual && (lastActual.revenue - lastActual.charges) >= 0 ? 'var(--pos)' : 'var(--neg)') + '">' + (lastActual ? fmtCHF(lastActual.revenue - lastActual.charges) : '—') + '</div><div class="sub">latest actual quarter/month</div></div>';
+  h += '<div class="card kpi"><div class="lab">Revenue · ' + (lastActual ? esc(lastActual.label) : '—') + '</div><div class="val">' + (lastActual ? fmtCHF(lastActual.revenue) : '—') + '</div><div class="sub">charges ' + (lastActual ? fmtCHF(lastActual.charges) : '—') + '</div></div>';
+  h += '<div class="card kpi"><div class="lab">Open tasks</div><div class="val">' + open.length + '</div><div class="sub">across all meetings & rapports</div></div>';
+  h += '<div class="card kpi"><div class="lab">Initiatives needing attention</div><div class="val">' + risk.length + '</div><div class="sub">at risk or decision pending</div></div>';
+  h += '</div>';
+
+  h += '<h3>Financials over time</h3>' + chartSVG(pts);
+
+  h += '<h3>KPI trend</h3>';
+  if (kpiSnaps.length){
+    h += '<div class="card" style="padding:6px 20px"><table><tr><th></th><th class="t-right">Swappers</th><th class="t-right">Buyers</th><th class="t-right">Partners</th><th class="t-right">Off-market</th></tr>';
+    kpiSnaps.forEach(function(sn){
+      h += '<tr><td>' + esc(sn.label) + '</td><td class="t-right num">' + (sn.k.sw === null ? '—' : sn.k.sw) + '</td><td class="t-right num">' + (sn.k.bu === null ? '—' : sn.k.bu) + '</td><td class="t-right num">' + (sn.k.pa === null ? '—' : sn.k.pa) + '</td><td class="t-right num">' + (sn.k.om === null ? '—' : sn.k.om) + '</td></tr>';
+    });
+    h += '</table></div>';
+    if (latest) h += '<p class="small" style="margin-top:8px">Latest: ' + latest.k.sw + ' Swappers · ' + latest.k.bu + ' buyers · ' + latest.k.pa + ' partners · ' + latest.k.om + ' true off-market (' + esc(latest.label) + ')</p>';
+  } else {
+    h += '<div class="empty">No KPI snapshots yet — add them in a meeting or rapport.</div>';
+  }
+
+  h += '<h3>Open tasks <span class="small">— from every meeting and rapport</span></h3><div class="card">';
+  if (open.length){ open.forEach(function(t){ h += taskRow(t, true); }); }
+  else { h += '<div class="empty">Nothing open.' + E(' Add tasks inside a meeting, rapport or initiative.') + '</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addTask(\'general\',\'\')">+ Add task</button></div>');
+
+  h += '<h3>Initiatives at a glance</h3><div class="card" style="padding:6px 20px"><table>';
+  DB.initiatives.forEach(function(it){
+    h += '<tr class="rowlink" onclick="go(\'#/initiatives/' + it.id + '\')"><td class="rowtitle">' + esc(it.name) + '</td><td class="t-right">' + initChip(it.status) + '</td></tr>';
+  });
+  h += '</table></div>';
+  return h;
+}
+
+/* ================= views: lists ================= */
+function vReports(){
+  var h = '<div class="head-row"><div><div class="eyebrow">Monthly rapports</div><h1>Monthly rapports</h1></div>';
+  h += E('<button class="primary" onclick="addReport()">+ New rapport</button>') + '</div>';
+  h += '<p class="lede">One light entry per month: figures, highlights, lowlights — linked to the initiatives they touch.</p>';
+  if (!DB.reports.length){ h += '<div class="empty" style="margin-top:20px">No rapports yet.' + E(' Create the first one for this month.') + '</div>'; return h; }
+  h += '<div class="card" style="margin-top:20px;padding:6px 20px"><table><tr><th>Month</th><th class="t-right">Revenue</th><th class="t-right">Charges</th><th>Initiatives</th><th style="width:60px" class="t-right">Tasks</th></tr>';
+  DB.reports.slice().reverse().forEach(function(r){
+    var open = tasksFor('report', r.id).filter(function(t){ return !t.done; }).length;
+    h += '<tr class="rowlink" onclick="go(\'#/reports/' + r.id + '\')"><td class="rowtitle">' + esc(r.month) + '</td>';
+    h += '<td class="t-right num">' + fmtCHF(r.revenue) + '</td><td class="t-right num">' + fmtCHF(r.charges) + '</td>';
+    h += '<td class="small">' + r.initiativeIds.map(function(iid){ var it = byId(DB.initiatives, iid); return it ? esc(it.name) : ''; }).filter(Boolean).join(' · ') + '</td>';
+    h += '<td class="t-right num">' + (open || '') + '</td></tr>';
+  });
+  h += '</table></div>';
+  return h;
+}
+
+function vMeetings(){
+  var h = '<div class="head-row"><div><div class="eyebrow">Quarterly board meetings</div><h1>Board meetings</h1></div>';
+  h += E('<button class="primary" onclick="addMeeting()">+ New meeting</button>') + '</div>';
+  h += '<p class="lede">The formal record and full board pack: agenda, financials, decisions — every meeting linked to the initiatives it moved.</p>';
+  h += '<div class="card" style="margin-top:20px;padding:6px 20px"><table><tr><th>#</th><th>Date</th><th>Location</th><th>Status</th><th class="t-right">Decisions</th><th class="t-right">Open tasks</th></tr>';
+  DB.meetings.slice().sort(function(a,b){ return b.number - a.number; }).forEach(function(m){
+    var open = tasksFor('meeting', m.id).filter(function(t){ return !t.done; }).length;
+    h += '<tr class="rowlink" onclick="go(\'#/meetings/' + m.id + '\')"><td class="rowtitle num">#' + m.number + '</td><td class="num">' + esc(m.date) + '</td><td>' + esc(m.location) + '</td>';
+    h += '<td><span class="chip ' + (m.status === 'upcoming' ? 'act' : 'mut') + '">' + (m.status === 'upcoming' ? 'Upcoming' : 'Held') + '</span></td>';
+    h += '<td class="t-right num">' + (m.decisions.length || '') + '</td><td class="t-right num">' + (open || '') + '</td></tr>';
+  });
+  h += '</table></div>';
+  return h;
+}
+
+function vInitiatives(){
+  var h = '<div class="head-row"><div><div class="eyebrow">Strategic initiatives</div><h1>Strategic initiatives</h1></div>';
+  h += E('<button class="primary" onclick="addInitiative()">+ New initiative</button>') + '</div>';
+  h += '<p class="lede">The spine of the hub — meetings and rapports link here, and each initiative collects its full history.</p>';
+  h += '<div class="grid g2" style="margin-top:20px">';
+  DB.initiatives.forEach(function(it){
+    var meets = DB.meetings.filter(function(m){ return m.initiativeIds.indexOf(it.id) >= 0; }).length;
+    var reps  = DB.reports.filter(function(r){ return r.initiativeIds.indexOf(it.id) >= 0; }).length;
+    h += '<div class="card rowlink" onclick="go(\'#/initiatives/' + it.id + '\')" style="cursor:pointer">';
+    h += '<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><b>' + esc(it.name) + '</b>' + initChip(it.status) + '</div>';
+    h += '<div class="small" style="margin-top:8px">' + esc(it.summary).slice(0, 150) + (it.summary.length > 150 ? '…' : '') + '</div>';
+    h += '<div class="small" style="margin-top:10px;color:var(--faint)">' + meets + ' meeting' + (meets === 1 ? '' : 's') + ' · ' + reps + ' rapport' + (reps === 1 ? '' : 's') + (it.owner ? ' · ' + esc(it.owner) : '') + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+/* ================= view: strategy on a page ================= */
+function vStrategy(){
+  var s = DB.strategy;
+  var h = '<div class="eyebrow">Reference</div><h1>Strategy on a page</h1>';
+  h += '<div class="notes"' + ce() + ' data-ph="The thesis …" onblur="updStrategy(\'thesis\',this)">' + esc(s.thesis) + '</div>';
+
+  h += '<h3>The flywheel</h3>' + flywheelSVG();
+
+  h += '<h3>One promise per persona</h3><div class="grid g3">';
+  [['buyer','Buyer'],['swapper','Swapper'],['agent','Agent']].forEach(function(p){
+    h += '<div class="card"><div class="eyebrow" style="margin-bottom:6px">' + p[1] + '</div><div' + ce() + ' data-ph="Promise …" onblur="updPromise(\'' + p[0] + '\',this)">' + esc(s.promises[p[0]]) + '</div></div>';
+  });
+  h += '</div>';
+
+  h += '<h3>How the pieces connect</h3><div class="card">';
+  if (s.connect.length){
+    s.connect.forEach(function(v, i){
+      h += '<div class="item"><span class="small">•</span><div class="grow"' + ce() + ' data-ph="Point …" onblur="updStratList(\'connect\',' + i + ',this)">' + esc(v) + '</div>' + E('<button class="ghost" onclick="delStratList(\'connect\',' + i + ')">✕</button>') + '</div>';
+    });
+  } else { h += '<div class="empty">Nothing yet.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addStratList(\'connect\')">+ Add point</button></div>');
+
+  h += '<h3>Risks & mitigations</h3><div class="card" style="padding:6px 20px"><table><tr><th style="width:46%">Risk</th><th>Mitigation</th>' + (CAN_EDIT ? '<th style="width:34px"></th>' : '') + '</tr>';
+  if (s.risks.length){
+    s.risks.forEach(function(rk, i){
+      h += '<tr><td' + ce() + ' data-ph="Risk …" onblur="updRisk(' + i + ',\'risk\',this)">' + esc(rk.risk) + '</td><td' + ce() + ' data-ph="Mitigation …" onblur="updRisk(' + i + ',\'mit\',this)">' + esc(rk.mit) + '</td>' + E('<td><button class="ghost" onclick="delRisk(' + i + ')">✕</button></td>') + '</tr>';
+    });
+  } else { h += '<tr><td class="empty" colspan="3">Nothing yet.</td></tr>'; }
+  h += '</table></div>' + E('<div class="btnrow"><button onclick="addRisk()">+ Add risk</button></div>');
+
+  h += '<h3>Decision rule</h3><div class="notes"' + ce() + ' data-ph="The rule every choice is tested against …" onblur="updStrategy(\'rule\',this)">' + esc(s.rule) + '</div>';
+  return h;
+}
+</script>
+
+<script>
+/* ================= view: meeting (full board pack) ================= */
+function vMeeting(id){
+  var m = byId(DB.meetings, id);
+  if (!m) return notFound('#/meetings', 'Board meetings');
+  var h = '<div class="crumb"><a href="#/meetings">← Board meetings</a></div>';
+
+  h += '<div class="head-row"><div><div class="eyebrow">Board meeting · board pack</div>';
+  h += '<h1>#<span' + ce() + ' onblur="updNum(\'meetings\',\'' + m.id + '\',\'number\',this)">' + m.number + '</span> · <span' + ce() + ' data-ph="date" onblur="upd(\'meetings\',\'' + m.id + '\',\'date\',this)">' + esc(m.date) + '</span></h1>';
+  h += '<div class="small" style="margin-top:6px"><span' + ce() + ' data-ph="location" onblur="upd(\'meetings\',\'' + m.id + '\',\'location\',this)">' + esc(m.location) + '</span></div></div>';
+  h += '<div style="display:flex;gap:8px;align-items:center"><span class="chip ' + (m.status === 'upcoming' ? 'act' : 'mut') + clk() + '"' + oc("toggleMeetingStatus('" + m.id + "')") + (CAN_EDIT ? ' title="Click to toggle"' : '') + '>' + (m.status === 'upcoming' ? 'Upcoming' : 'Held') + '</span>';
+  h += E('<button class="ghost" title="Delete meeting" onclick="delEntity(\'meetings\',\'' + m.id + '\')">✕</button>') + '</div></div>';
+
+  h += '<div class="field" style="margin-top:10px"><span class="k">Attendees</span><div' + ce() + ' data-ph="Names …" onblur="upd(\'meetings\',\'' + m.id + '\',\'attendees\',this)">' + esc(m.attendees) + '</div></div>';
+
+  /* check-in */
+  h += '<h3>Check-in</h3><div class="card">';
+  if (m.checkin.length){
+    m.checkin.forEach(function(c, i){
+      var cls = c.status === 'done' ? 'pos' : (c.status === 'open' ? 'mut' : 'act');
+      var lab = c.status === 'done' ? 'Done' : (c.status === 'open' ? 'Open' : c.status);
+      h += '<div class="item"><span class="chip ' + cls + clk() + '"' + oc("cycleCheckin('" + m.id + "'," + i + ")") + '>' + lab + '</span>';
+      h += '<div class="grow"' + ce() + ' data-ph="Item …" onblur="updCheckin(\'' + m.id + '\',' + i + ',this)">' + esc(c.t) + '</div>' + E('<button class="ghost" onclick="delCheckin(\'' + m.id + '\',' + i + ')">✕</button>') + '</div>';
+    });
+  } else { h += '<div class="empty">No check-in items.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addCheckin(\'' + m.id + '\')">+ Add check-in item</button></div>');
+
+  /* agenda */
+  h += '<h3>Agenda' + (CAN_EDIT ? ' <span class="small">— click a tag to cycle Inform → Discuss → Decide</span>' : '') + '</h3><div class="card">';
+  if (m.agenda.length){
+    m.agenda.forEach(function(a, i){
+      h += '<div class="item"><span class="tag ' + a.tag + clk() + '"' + oc("cycleTag('" + m.id + "'," + i + ")") + '>' + a.tag + '</span>';
+      h += '<div class="grow"' + ce() + ' data-ph="Agenda item …" onblur="updAgenda(\'' + m.id + '\',' + i + ',this)">' + esc(a.t) + '</div>';
+      h += E('<button class="ghost" onclick="delAgenda(\'' + m.id + '\',' + i + ')">✕</button>') + '</div>';
+    });
+  } else { h += '<div class="empty">No agenda items yet.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addAgenda(\'' + m.id + '\')">+ Add agenda item</button></div>');
+
+  /* financials */
+  h += '<h3>Financials reported at this meeting</h3><div class="card" style="padding:6px 20px"><table><tr><th>Period</th><th class="t-right">Revenue</th><th class="t-right">Charges</th><th class="t-right">Net</th><th>Type</th>' + (CAN_EDIT ? '<th style="width:34px"></th>' : '') + '</tr>';
+  (m.fin || []).forEach(function(f, i){
+    var net = (f.revenue || 0) - (f.charges || 0);
+    h += '<tr><td' + ce() + ' data-ph="Q… 20…" onblur="updFin(\'' + m.id + '\',' + i + ',\'label\',this,false)">' + esc(f.label) + '</td>';
+    h += '<td class="t-right num"' + ce() + ' data-ph="—" onblur="updFin(\'' + m.id + '\',' + i + ',\'revenue\',this,true)">' + fmtNum(f.revenue) + '</td>';
+    h += '<td class="t-right num"' + ce() + ' data-ph="—" onblur="updFin(\'' + m.id + '\',' + i + ',\'charges\',this,true)">' + fmtNum(f.charges) + '</td>';
+    h += '<td class="t-right num" style="color:' + (net >= 0 ? 'var(--pos)' : 'var(--neg)') + '">' + fmtCHF(net) + '</td>';
+    h += '<td><span class="chip ' + (f.proj ? 'act' : 'mut') + clk() + '"' + oc("toggleProj('" + m.id + "'," + i + ")") + '>' + (f.proj ? 'Projection' : 'Actual') + '</span></td>';
+    h += E('<td><button class="ghost" onclick="delFin(\'' + m.id + '\',' + i + ')">✕</button></td>') + '</tr>';
+  });
+  h += '</table></div>' + E('<div class="btnrow"><button onclick="addFin(\'' + m.id + '\')">+ Add period</button></div>');
+  h += '<div class="grid g2" style="margin-top:12px"><div class="card"><div class="eyebrow" style="margin-bottom:8px">Reading the numbers</div><div' + ce() + ' data-ph="One line on what the figures mean …" onblur="upd(\'meetings\',\'' + m.id + '\',\'finNarrative\',this)">' + esc(m.finNarrative) + '</div></div>';
+  h += '<div class="card"><div class="eyebrow" style="margin-bottom:8px">Cash position & runway</div><div' + ce() + ' data-ph="CHF … cash at period end · … months runway …" onblur="upd(\'meetings\',\'' + m.id + '\',\'cashRunway\',this)">' + esc(m.cashRunway) + '</div></div></div>';
+
+  /* KPI */
+  h += '<h3>KPI snapshot</h3>' + kpiEditor('meetings', m.id, m.kpis);
+
+  /* Q2 wins & learnings */
+  h += '<h3>Wins</h3><div class="card">';
+  if (m.wins.length){
+    m.wins.forEach(function(w, i){
+      h += '<div class="item"><span class="mark w">✓</span><div class="grow"' + ce() + ' data-ph="Win …" onblur="updMeetingList(\'' + m.id + '\',\'wins\',' + i + ',this)">' + esc(w) + '</div>' + E('<button class="ghost" onclick="delMeetingList(\'' + m.id + '\',\'wins\',' + i + ')">✕</button>') + '</div>';
+    });
+  } else { h += '<div class="empty">No wins recorded.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addMeetingList(\'' + m.id + '\',\'wins\')">+ Add win</button></div>');
+
+  h += '<h3>Fails & learnings</h3><div class="card">';
+  if (m.learnings.length){
+    m.learnings.forEach(function(l, i){
+      var it = l.initiativeId ? byId(DB.initiatives, l.initiativeId) : null;
+      h += '<div class="learn"><div class="pair"><span class="mark f">✕</span><div style="flex:1;min-width:0">';
+      h += '<div class="what"' + ce() + ' data-ph="What happened …" onblur="updLearn(\'' + m.id + '\',' + i + ',\'what\',this)">' + esc(l.what) + '</div>';
+      h += '<div class="so"' + ce() + ' data-ph="So what / response …" onblur="updLearn(\'' + m.id + '\',' + i + ',\'so\',this)">' + esc(l.so) + '</div>';
+      if (it) h += '<div class="link"><a href="#/initiatives/' + it.id + '">→ ' + esc(it.name) + '</a></div>';
+      h += '</div>' + E('<button class="ghost" onclick="delLearn(\'' + m.id + '\',' + i + ')">✕</button>') + '</div>';
+      if (CAN_EDIT){
+        h += '<div class="small" style="margin:8px 0 0 30px">Linked initiative: <select onchange="setLearnInit(\'' + m.id + '\',' + i + ',this.value)" style="font:inherit;padding:3px 6px;border:1px solid var(--line);border-radius:6px">';
+        h += '<option value="">— none —</option>';
+        DB.initiatives.forEach(function(x){ h += '<option value="' + x.id + '"' + (x.id === l.initiativeId ? ' selected' : '') + '>' + esc(x.name) + '</option>'; });
+        h += '</select></div>';
+      }
+      h += '</div>';
+    });
+  } else { h += '<div class="empty">No learnings recorded.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addLearn(\'' + m.id + '\')">+ Add learning</button></div>');
+
+  /* outlook */
+  h += '<h3>6-month outlook <span class="small">— targets for the next two quarters</span></h3><div class="grid g3">';
+  [['swappers','Active Swappers','from 30'],['buyers','Active buyers','from 35'],['partners','Partner companies','from 14'],['offmarket','True off-market','from 4'],['revenue','Quarterly revenue','from 137k in Q2'],['zurich','Zurich milestone','per Zurich plan']].forEach(function(o){
+    h += '<div class="card kpi"><div class="lab">' + o[1] + '</div><div class="val"' + ce() + ' data-ph="…" onblur="updOutlook(\'' + m.id + '\',\'' + o[0] + '\',this)">' + esc(m.outlook[o[0]] || '') + '</div><div class="sub">' + o[2] + '</div></div>';
+  });
+  h += '</div>';
+
+  /* automation & AI */
+  h += '<h3>Automation & AI</h3><div class="card" style="padding:6px 20px"><table><tr><th style="width:26%">Workstream</th><th>What it does</th><th style="width:18%">Status</th>' + (CAN_EDIT ? '<th style="width:34px"></th>' : '') + '</tr>';
+  if (m.ai.length){
+    m.ai.forEach(function(a, i){
+      h += '<tr><td><b' + ce() + ' data-ph="Name …" onblur="updAi(\'' + m.id + '\',' + i + ',\'name\',this)">' + esc(a.name) + '</b></td>';
+      h += '<td class="small" style="color:var(--ink)"' + ce() + ' data-ph="What it does …" onblur="updAi(\'' + m.id + '\',' + i + ',\'what\',this)">' + esc(a.what) + '</td>';
+      h += '<td' + ce() + ' data-ph="status …" onblur="updAi(\'' + m.id + '\',' + i + ',\'status\',this)">' + esc(a.status) + '</td>';
+      h += E('<td><button class="ghost" onclick="delAi(\'' + m.id + '\',' + i + ')">✕</button></td>') + '</tr>';
+    });
+  } else { h += '<tr><td class="empty" colspan="4">No workstreams yet.</td></tr>'; }
+  h += '</table></div>' + E('<div class="btnrow"><button onclick="addAi(\'' + m.id + '\')">+ Add workstream</button></div>');
+
+  /* decisions */
+  h += '<h3>Decisions</h3><div class="card">';
+  if (m.decisions.length){
+    m.decisions.forEach(function(d, i){
+      h += '<div class="item"><span class="small num" style="min-width:18px">' + (i + 1) + '.</span>';
+      h += '<div class="grow"' + ce() + ' data-ph="Decision …" onblur="updDecision(\'' + m.id + '\',' + i + ',this)">' + esc(d) + '</div>';
+      h += E('<button class="ghost" onclick="delDecision(\'' + m.id + '\',' + i + ')">✕</button>') + '</div>';
+    });
+  } else { h += '<div class="empty">No decisions recorded' + (m.status === 'upcoming' ? ' — capture them live during the meeting.' : '.') + '</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addDecision(\'' + m.id + '\')">+ Add decision</button></div>');
+
+  /* tasks / actions */
+  h += '<h3>Actions & to-dos</h3><div class="card">';
+  var ts = tasksFor('meeting', m.id);
+  if (ts.length){ ts.forEach(function(t){ h += taskRow(t, false); }); } else { h += '<div class="empty">No tasks yet.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addTask(\'meeting\',\'' + m.id + '\')">+ Add action</button></div>');
+
+  /* related initiatives */
+  h += '<h3>Related initiatives' + (CAN_EDIT ? ' <span class="small">— click to link / unlink</span>' : '') + '</h3>' + initiativeToggles('meetings', m.id, m.initiativeIds);
+
+  /* notes */
+  h += '<h3>Notes</h3><div class="notes"' + ce() + ' data-ph="Meeting notes …" onblur="upd(\'meetings\',\'' + m.id + '\',\'notes\',this)">' + esc(m.notes) + '</div>';
+
+  /* next meeting + export */
+  h += '<h3>Next steps & check-out</h3><div class="card" style="padding:6px 20px"><table><tr><td style="width:34%">Next board meeting</td><td' + ce() + ' data-ph="date · place" onblur="upd(\'meetings\',\'' + m.id + '\',\'nextMeeting\',this)">' + esc(m.nextMeeting) + '</td></tr></table></div>';
+  h += '<div class="btnrow"><button class="g" onclick="exportMinutes(\'' + m.id + '\')">Export minutes (.txt)</button><button class="g" onclick="window.print()">Print pack</button></div>';
+  return h;
+}
+
+function vReport(id){
+  var r = byId(DB.reports, id);
+  if (!r) return notFound('#/reports', 'Monthly rapports');
+  var h = '<div class="crumb"><a href="#/reports">← Monthly rapports</a></div>';
+  h += '<div class="head-row"><div><div class="eyebrow">Monthly rapport</div>';
+  h += '<h1><span' + ce() + ' data-ph="Month YYYY" onblur="upd(\'reports\',\'' + r.id + '\',\'month\',this)">' + esc(r.month) + '</span></h1></div>';
+  h += E('<button class="ghost" title="Delete rapport" onclick="delEntity(\'reports\',\'' + r.id + '\')">✕</button>') + '</div>';
+
+  h += '<div class="grid g2" style="margin-top:14px">';
+  h += '<div class="card kpi"><div class="lab">Revenue</div><div class="val num"' + ce() + ' data-ph="—" onblur="updNumField(\'reports\',\'' + r.id + '\',\'revenue\',this)">' + fmtNum(r.revenue) + '</div><div class="sub">CHF, this month</div></div>';
+  h += '<div class="card kpi"><div class="lab">Charges</div><div class="val num"' + ce() + ' data-ph="—" onblur="updNumField(\'reports\',\'' + r.id + '\',\'charges\',this)">' + fmtNum(r.charges) + '</div><div class="sub">CHF, this month</div></div>';
+  h += '</div>';
+
+  h += '<h3>KPI snapshot</h3>' + kpiEditor('reports', r.id, r.kpis);
+
+  h += '<h3>Highlights</h3>' + listEditor(r, 'highlights', 'Highlight …');
+  h += '<h3>Lowlights</h3>' + listEditor(r, 'lowlights', 'Lowlight …');
+
+  h += '<h3>Tasks from this rapport</h3><div class="card">';
+  var ts = tasksFor('report', r.id);
+  if (ts.length){ ts.forEach(function(t){ h += taskRow(t, false); }); } else { h += '<div class="empty">No tasks yet.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addTask(\'report\',\'' + r.id + '\')">+ Add task</button></div>');
+
+  h += '<h3>Related initiatives' + (CAN_EDIT ? ' <span class="small">— click to link / unlink</span>' : '') + '</h3>' + initiativeToggles('reports', r.id, r.initiativeIds);
+  h += '<h3>Notes</h3><div class="notes"' + ce() + ' data-ph="Notes …" onblur="upd(\'reports\',\'' + r.id + '\',\'notes\',this)">' + esc(r.notes) + '</div>';
+  return h;
+}
+
+function vInitiative(id){
+  var it = byId(DB.initiatives, id);
+  if (!it) return notFound('#/initiatives', 'Strategic initiatives');
+  var h = '<div class="crumb"><a href="#/initiatives">← Strategic initiatives</a></div>';
+  h += '<div class="head-row"><div><div class="eyebrow">Strategic initiative</div>';
+  h += '<h1><span' + ce() + ' data-ph="Initiative name" onblur="upd(\'initiatives\',\'' + it.id + '\',\'name\',this)">' + esc(it.name) + '</span></h1>';
+  h += '<div class="small" style="margin-top:6px">Owner: <span' + ce() + ' data-ph="—" onblur="upd(\'initiatives\',\'' + it.id + '\',\'owner\',this)">' + esc(it.owner) + '</span></div></div>';
+  h += '<div style="display:flex;gap:8px;align-items:center">' + initChip(it.status, it.id);
+  h += E('<button class="ghost" title="Delete initiative" onclick="delEntity(\'initiatives\',\'' + it.id + '\')">✕</button>') + '</div></div>';
+
+  h += '<div class="notes"' + ce() + ' data-ph="What this initiative is and why it matters …" onblur="upd(\'initiatives\',\'' + it.id + '\',\'summary\',this)">' + esc(it.summary) + '</div>';
+
+  var meets = DB.meetings.filter(function(m){ return m.initiativeIds.indexOf(it.id) >= 0; });
+  var reps  = DB.reports.filter(function(r){ return r.initiativeIds.indexOf(it.id) >= 0; });
+
+  h += '<h3>History — where this initiative appears</h3><div class="card" style="padding:6px 20px"><table>';
+  if (meets.length + reps.length){
+    meets.forEach(function(m){
+      h += '<tr class="rowlink" onclick="go(\'#/meetings/' + m.id + '\')"><td class="rowtitle">Board meeting #' + m.number + '</td><td class="num">' + esc(m.date) + '</td><td class="t-right"><span class="chip ' + (m.status === 'upcoming' ? 'act' : 'mut') + '">' + (m.status === 'upcoming' ? 'Upcoming' : 'Held') + '</span></td></tr>';
+    });
+    reps.forEach(function(r){
+      h += '<tr class="rowlink" onclick="go(\'#/reports/' + r.id + '\')"><td class="rowtitle">Rapport ' + esc(r.month) + '</td><td></td><td class="t-right"><span class="chip mut">Rapport</span></td></tr>';
+    });
+  } else { h += '<tr><td class="empty">Not linked from any meeting or rapport yet.</td></tr>'; }
+  h += '</table></div>';
+
+  var direct = tasksFor('initiative', it.id);
+  var inherited = DB.tasks.filter(function(t){
+    if (!t.src) return false;
+    if (t.src.type === 'meeting'){ var m = byId(DB.meetings, t.src.id); return m && m.initiativeIds.indexOf(it.id) >= 0; }
+    if (t.src.type === 'report'){ var r = byId(DB.reports, t.src.id); return r && r.initiativeIds.indexOf(it.id) >= 0; }
+    return false;
+  });
+  h += '<h3>Tasks</h3><div class="card">';
+  if (direct.length + inherited.length){
+    direct.forEach(function(t){ h += taskRow(t, false); });
+    inherited.forEach(function(t){ h += taskRow(t, true); });
+  } else { h += '<div class="empty">No tasks on this initiative yet.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addTask(\'initiative\',\'' + it.id + '\')">+ Add task</button></div>');
+  h += '<p class="small" style="margin-top:8px">Tasks from linked meetings and rapports appear here automatically.</p>';
+  return h;
+}
+
+function notFound(back, label){
+  return '<div class="crumb"><a href="' + back + '">← ' + label + '</a></div><div class="empty">This entry no longer exists.</div>';
+}
+
+/* ---------- small editors ---------- */
+function kpiEditor(kind, id, k){
+  var h = '<div class="grid g4">';
+  h += kpiCell(kind, id, 'sw', 'Active Swappers', k.sw);
+  h += kpiCell(kind, id, 'bu', 'Active buyers', k.bu);
+  h += kpiCell(kind, id, 'pa', 'Partner companies', k.pa);
+  h += kpiCell(kind, id, 'om', 'True off-market', k.om);
+  h += '</div>';
+  return h;
+}
+function kpiCell(kind, id, key, lab, val){
+  return '<div class="card kpi"><div class="lab">' + lab + '</div><div class="val num"' + ce() + ' data-ph="—" onblur="updKpi(\'' + kind + '\',\'' + id + '\',\'' + key + '\',this)">' + fmtNum(val) + '</div></div>';
+}
+function listEditor(r, field, ph){
+  var h = '<div class="card">';
+  if (r[field].length){
+    r[field].forEach(function(v, i){
+      h += '<div class="item"><span class="small">•</span><div class="grow"' + ce() + ' data-ph="' + ph + '" onblur="updList(\'' + r.id + '\',\'' + field + '\',' + i + ',this)">' + esc(v) + '</div>';
+      h += E('<button class="ghost" onclick="delList(\'' + r.id + '\',\'' + field + '\',' + i + ')">✕</button>') + '</div>';
+    });
+  } else { h += '<div class="empty">Nothing yet.</div>'; }
+  h += '</div>' + E('<div class="btnrow"><button onclick="addList(\'' + r.id + '\',\'' + field + '\')">+ Add</button></div>');
+  return h;
+}
+</script>
+
+<script>
+/* ================= mutations (all guarded by CAN_EDIT) ================= */
+function go(hash){ location.hash = hash; }
+
+function upd(kind, id, field, el){ if(!CAN_EDIT) return; var e = byId(DB[kind], id); if (!e) return; e[field] = el.innerText.trim(); persistSoon(); }
+function updNum(kind, id, field, el){ if(!CAN_EDIT) return; var e = byId(DB[kind], id); if (!e) return; var v = parseNum(el); e[field] = v === null ? e[field] : v; persistSoon(); }
+function updNumField(kind, id, field, el){ if(!CAN_EDIT) return; var e = byId(DB[kind], id); if (!e) return; e[field] = parseNum(el); persistSoon(); }
+function updKpi(kind, id, key, el){ if(!CAN_EDIT) return; var e = byId(DB[kind], id); if (!e) return; e.kpis[key] = parseNum(el); persistSoon(); }
+
+/* strategy */
+function updStrategy(field, el){ if(!CAN_EDIT) return; DB.strategy[field] = el.innerText.trim(); persistSoon(); }
+function updPromise(key, el){ if(!CAN_EDIT) return; DB.strategy.promises[key] = el.innerText.trim(); persistSoon(); }
+function addStratList(field){ if(!CAN_EDIT) return; DB.strategy[field].push(''); persistSoon(); rerender(); focusNewest('.item .grow'); }
+function updStratList(field, i, el){ if(!CAN_EDIT) return; DB.strategy[field][i] = el.innerText.trim(); persistSoon(); }
+function delStratList(field, i){ if(!CAN_EDIT) return; DB.strategy[field].splice(i, 1); persistSoon(); rerender(); }
+function addRisk(){ if(!CAN_EDIT) return; DB.strategy.risks.push({risk:'', mit:''}); persistSoon(); rerender(); }
+function updRisk(i, key, el){ if(!CAN_EDIT) return; DB.strategy.risks[i][key] = el.innerText.trim(); persistSoon(); }
+function delRisk(i){ if(!CAN_EDIT) return; DB.strategy.risks.splice(i, 1); persistSoon(); rerender(); }
+
+/* tasks */
+function addTask(type, id){ if(!CAN_EDIT) return;
+  DB.tasks.push({id:newId('t'), text:'', owner:'', due:'', done:false, src:{type:type, id:id}});
+  persistSoon(); rerender(); focusNewest('.task .text');
+}
+function updTask(id, field, el){ if(!CAN_EDIT) return; var t = byId(DB.tasks, id); if (!t) return; t[field] = el.innerText.trim(); persistSoon(); }
+function toggleTask(id){ if(!CAN_EDIT) return; var t = byId(DB.tasks, id); if (!t) return; t.done = !t.done; persistSoon(); rerender(); }
+function delTask(id){ if(!CAN_EDIT) return; if (!confirm('Delete this task?')) return; DB.tasks = DB.tasks.filter(function(t){ return t.id !== id; }); persistSoon(); rerender(); }
+
+/* initiative links & statuses */
+function toggleLink(kind, id, initId){ if(!CAN_EDIT) return;
+  var e = byId(DB[kind], id); if (!e) return;
+  var i = e.initiativeIds.indexOf(initId);
+  if (i >= 0) e.initiativeIds.splice(i, 1); else e.initiativeIds.push(initId);
+  persistSoon(); rerender();
+}
+function cycleInitStatus(id){ if(!CAN_EDIT) return;
+  var it = byId(DB.initiatives, id); if (!it) return;
+  it.status = INIT_STATUSES[(INIT_STATUSES.indexOf(it.status) + 1) % INIT_STATUSES.length];
+  persistSoon(); rerender();
+}
+function toggleMeetingStatus(id){ if(!CAN_EDIT) return;
+  var m = byId(DB.meetings, id); if (!m) return;
+  m.status = m.status === 'upcoming' ? 'held' : 'upcoming';
+  persistSoon(); rerender();
+}
+
+/* check-in */
+function addCheckin(mid){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.checkin.push({t:'', status:'open'}); persistSoon(); rerender(); focusNewest('.item .grow'); }
+function updCheckin(mid, i, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.checkin[i].t = el.innerText.trim(); persistSoon(); }
+function cycleCheckin(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; var order = ['open','done']; var c = m.checkin[i]; c.status = order[(order.indexOf(c.status) + 1) % order.length]; persistSoon(); rerender(); }
+function delCheckin(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.checkin.splice(i, 1); persistSoon(); rerender(); }
+
+/* agenda / decisions / fin */
+function addAgenda(mid){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.agenda.push({t:'', tag:'inform'}); persistSoon(); rerender(); focusNewest('.item .grow'); }
+function updAgenda(mid, i, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.agenda[i].t = el.innerText.trim(); persistSoon(); }
+function delAgenda(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.agenda.splice(i, 1); persistSoon(); rerender(); }
+function cycleTag(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; var a = m.agenda[i]; a.tag = TAGS[(TAGS.indexOf(a.tag) + 1) % TAGS.length]; persistSoon(); rerender(); }
+
+function addDecision(mid){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.decisions.push(''); persistSoon(); rerender(); focusNewest('.item .grow'); }
+function updDecision(mid, i, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.decisions[i] = el.innerText.trim(); persistSoon(); }
+function delDecision(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.decisions.splice(i, 1); persistSoon(); rerender(); }
+
+function addFin(mid){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.fin.push({label:'', revenue:null, charges:null, proj:false}); persistSoon(); rerender(); }
+function updFin(mid, i, key, el, isNum){ if(!CAN_EDIT) return;
+  var m = byId(DB.meetings, mid); if (!m) return;
+  var f = m.fin[i];
+  f[key] = isNum ? parseNum(el) : el.innerText.trim();
+  persistSoon();
+  if (isNum){
+    var tr = el.closest('tr');
+    if (tr && tr.children[3]){
+      var net = (f.revenue || 0) - (f.charges || 0);
+      tr.children[3].textContent = fmtCHF(net);
+      tr.children[3].style.color = net >= 0 ? 'var(--pos)' : 'var(--neg)';
+    }
+  }
+}
+function toggleProj(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.fin[i].proj = !m.fin[i].proj; persistSoon(); rerender(); }
+function delFin(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.fin.splice(i, 1); persistSoon(); rerender(); }
+
+/* wins (array of strings on a meeting) */
+function addMeetingList(mid, field){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m[field].push(''); persistSoon(); rerender(); focusNewest('.item .grow'); }
+function updMeetingList(mid, field, i, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m[field][i] = el.innerText.trim(); persistSoon(); }
+function delMeetingList(mid, field, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m[field].splice(i, 1); persistSoon(); rerender(); }
+
+/* learnings */
+function addLearn(mid){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.learnings.push({what:'', so:'', initiativeId:''}); persistSoon(); rerender(); }
+function updLearn(mid, i, key, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.learnings[i][key] = el.innerText.trim(); persistSoon(); }
+function setLearnInit(mid, i, val){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.learnings[i].initiativeId = val; persistSoon(); rerender(); }
+function delLearn(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.learnings.splice(i, 1); persistSoon(); rerender(); }
+
+/* outlook */
+function updOutlook(mid, key, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.outlook[key] = el.innerText.trim(); persistSoon(); }
+
+/* ai workstreams */
+function addAi(mid){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.ai.push({name:'', what:'', status:''}); persistSoon(); rerender(); }
+function updAi(mid, i, key, el){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.ai[i][key] = el.innerText.trim(); persistSoon(); }
+function delAi(mid, i){ if(!CAN_EDIT) return; var m = byId(DB.meetings, mid); if (!m) return; m.ai.splice(i, 1); persistSoon(); rerender(); }
+
+/* report lists */
+function addList(rid, field){ if(!CAN_EDIT) return; var r = byId(DB.reports, rid); if (!r) return; r[field].push(''); persistSoon(); rerender(); focusNewest('.item .grow'); }
+function updList(rid, field, i, el){ if(!CAN_EDIT) return; var r = byId(DB.reports, rid); if (!r) return; r[field][i] = el.innerText.trim(); persistSoon(); }
+function delList(rid, field, i){ if(!CAN_EDIT) return; var r = byId(DB.reports, rid); if (!r) return; r[field].splice(i, 1); persistSoon(); rerender(); }
+
+/* entities */
+function addInitiative(){ if(!CAN_EDIT) return;
+  var id = newId('i');
+  DB.initiatives.push({id:id, name:'', status:'proposed', owner:'', summary:''});
+  persistSoon(); go('#/initiatives/' + id);
+}
+function addReport(){ if(!CAN_EDIT) return;
+  var id = newId('r');
+  var now = new Date();
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  DB.reports.push({id:id, month:months[now.getMonth()] + ' ' + now.getFullYear(), revenue:null, charges:null,
+    kpis:{sw:null, bu:null, pa:null, om:null}, highlights:[], lowlights:[], notes:'', initiativeIds:[]});
+  persistSoon(); go('#/reports/' + id);
+}
+function addMeeting(){ if(!CAN_EDIT) return;
+  var id = newId('m');
+  var maxN = 0; DB.meetings.forEach(function(m){ maxN = Math.max(maxN, m.number || 0); });
+  DB.meetings.push({id:id, number:maxN + 1, date:'', location:'', status:'upcoming', attendees:'', checkin:[],
+    agenda:[], fin:[], finNarrative:'', cashRunway:'', kpis:{sw:null, bu:null, pa:null, om:null},
+    wins:[], learnings:[], outlook:{swappers:'',buyers:'',partners:'',offmarket:'',revenue:'',zurich:''}, ai:[],
+    decisions:[], nextMeeting:'', notes:'', initiativeIds:[]});
+  persistSoon(); go('#/meetings/' + id);
+}
+function delEntity(kind, id){ if(!CAN_EDIT) return;
+  var names = {initiatives:'initiative', meetings:'meeting', reports:'rapport'};
+  if (!confirm('Delete this ' + names[kind] + '? Its tasks are deleted too. This cannot be undone.')) return;
+  DB[kind] = DB[kind].filter(function(e){ return e.id !== id; });
+  DB.tasks = DB.tasks.filter(function(t){ return !(t.src && t.src.id === id); });
+  if (kind === 'initiatives'){
+    DB.meetings.forEach(function(m){ m.initiativeIds = m.initiativeIds.filter(function(x){ return x !== id; }); });
+    DB.reports.forEach(function(r){ r.initiativeIds = r.initiativeIds.filter(function(x){ return x !== id; }); });
+  }
+  persistSoon();
+  go('#/' + kind);
+  render();
+}
+
+/* ================= minutes export ================= */
+function exportMinutes(mid){
+  var m = byId(DB.meetings, mid); if (!m) return;
+  var L = [];
+  L.push('Minutes of the Board Meeting of Immo-Ressource AG, registered seat 1700 Fribourg');
+  L.push('Meeting #' + m.number + ' — ' + m.date + (m.location ? ', ' + m.location : ''));
+  L.push('');
+  if (m.attendees){ L.push('Attendees: ' + m.attendees + '.'); L.push(''); }
+  if (m.checkin.length){
+    L.push('Check-in: ' + m.checkin.map(function(c){ return c.t + ': ' + (c.status === 'done' ? 'done' : 'open'); }).join('; ') + '.');
+    L.push('');
+  }
+  if (m.fin.length){
+    L.push('Financials: ' + m.fin.map(function(f){
+      var net = (f.revenue || 0) - (f.charges || 0);
+      return f.label + ' net ' + fmtCHF(net) + ' (rev ' + fmtCHF(f.revenue) + ' / charges ' + fmtCHF(f.charges) + ')' + (f.proj ? ' [projection]' : '');
+    }).join('; ') + '.');
+    L.push('');
+  }
+  L.push('DECISIONS');
+  if (m.decisions.length){ m.decisions.forEach(function(d, i){ if (d.trim()) L.push((i + 1) + '. ' + d); }); }
+  else { L.push('(none recorded)'); }
+  L.push('');
+  L.push('ACTIONS & TO-DOS');
+  var acts = tasksFor('meeting', m.id);
+  if (acts.length){ acts.forEach(function(t, i){ L.push((i + 1) + '. ' + (t.text || '(no description)') + (t.owner ? ' — ' + t.owner : '') + (t.due ? ' — due ' + t.due : '') + (t.done ? ' [done]' : '')); }); }
+  else { L.push('(none recorded)'); }
+  L.push('');
+  L.push('Next board meeting: ' + (m.nextMeeting || '(to be scheduled)'));
+  L.push('');
+  L.push('');
+  L.push('___________________________');
+  L.push((m.location ? m.location.split(',')[0] + ', ' : '') + m.date + ' — Daniel Abebe, Chairperson');
+  L.push('');
+  L.push('___________________________');
+  L.push((m.location ? m.location.split(',')[0] + ', ' : '') + m.date + ' — Board member');
+  var blob = new Blob([L.join('\n')], {type:'text/plain;charset=utf-8'});
+  download(blob, 'Minutes-Board-Meeting-' + m.number + '.txt');
+  toast('Minutes exported');
+}
+
+/* ================= publish / export / import ================= */
+function publishSnapshot(){
+  if (!CAN_EDIT) return;
+  var blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  download(blob, 'data.json');
+  toast('data.json downloaded — commit it to publish the board');
+}
+function exportData(){
+  var d = new Date();
+  var name = 'Casarico-Board-Hub-data-' + d.toISOString().slice(0, 10) + '.json';
+  var blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  download(blob, name);
+  toast('Data exported');
+}
+function importData(input){
+  if(!CAN_EDIT) return;
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(){
+    try{
+      var data = JSON.parse(reader.result);
+      if (!data || !Array.isArray(data.initiatives) || !Array.isArray(data.meetings) || !Array.isArray(data.reports) || !Array.isArray(data.tasks)) throw new Error('bad');
+      if (!confirm('Replace all current data with the imported file?')){ input.value = ''; return; }
+      DB = normalize(data); persistSoon(); render(); toast('Data imported');
+    }catch(e){ toast('Import failed — not a valid Board Hub file'); }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+function download(blob, name){
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* ================= toast, router, chrome ================= */
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+window.toast = toast;
+function focusNewest(sel){
+  setTimeout(function(){
+    var els = document.querySelectorAll(sel);
+    if (els.length) els[els.length - 1].focus();
+  }, 0);
+}
+function route(){
+  var h = location.hash.replace(/^#\/?/, '');
+  var parts = h.split('/');
+  return {view: parts[0] || 'analytics', id: parts[1] || null};
+}
+function render(){
+  if (!DB) return;
+  var r = route();
+  document.querySelectorAll('#nav a').forEach(function(a){
+    a.classList.toggle('on', a.getAttribute('data-v') === r.view);
+  });
+  var el = document.getElementById('app');
+  if (r.view === 'reports') el.innerHTML = r.id ? vReport(r.id) : vReports();
+  else if (r.view === 'meetings') el.innerHTML = r.id ? vMeeting(r.id) : vMeetings();
+  else if (r.view === 'initiatives') el.innerHTML = r.id ? vInitiative(r.id) : vInitiatives();
+  else if (r.view === 'strategy') el.innerHTML = vStrategy();
+  else el.innerHTML = vAnalytics();
+}
+function rerender(){ var y = window.scrollY; render(); window.scrollTo(0, y); }
+window.addEventListener('hashchange', function(){ render(); window.scrollTo(0, 0); });
+
+function updateChrome(){
+  var role = document.getElementById('roleBox');
+  var editorTools = document.getElementById('editorTools');
+  var signOutBtn = document.getElementById('signOutBtn');
+  if (STORAGE_MODE === 'firebase'){
+    role.style.display = 'flex';
+    role.className = 'role ' + (CAN_EDIT ? 'editor' : 'viewer');
+    role.innerHTML = '<span class="dot"></span><span class="who">' + esc((USER && (USER.email || USER.displayName)) || '') + '</span><span style="margin-left:auto;color:var(--muted)">' + (CAN_EDIT ? 'Editor' : 'Viewer') + '</span>';
+    signOutBtn.style.display = 'block';
+  } else {
+    role.style.display = 'flex';
+    role.className = 'role ' + (CAN_EDIT ? 'editor' : 'viewer');
+    role.innerHTML = '<span class="dot"></span><span class="who">' + (CAN_EDIT ? 'Editing (draft)' : 'Published board') + '</span><span style="margin-left:auto;color:var(--muted)">' + (CAN_EDIT ? 'Editor' : 'Viewer') + '</span>';
+    signOutBtn.style.display = 'none';
+  }
+  editorTools.style.display = CAN_EDIT ? 'block' : 'none';
+  updateSaveBadge();
+}
+
+function showApp(){
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('side').style.display = '';
+  document.getElementById('app').style.display = '';
+  if (!location.hash) history.replaceState(null, '', '#/analytics');
+  updateChrome();
+  render();
+}
+function showGate(msg, note){
+  document.getElementById('side').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  if (msg) document.getElementById('gateMsg').textContent = msg;
+  document.getElementById('gateNote').textContent = note || '';
+}
+
+/* ================= boot ================= */
+async function loadSnapshot(){
+  try{
+    var res = await fetch('data.json', {cache:'no-store'});
+    if (res.ok) return await res.json();
+  }catch(e){}
+  return null;
+}
+async function bootLocal(){
+  if (_booted) return;   // already running (firebase took over, or already booted local)
+  _booted = true;
+  recomputeRole();       // CAN_EDIT from ?edit / ?view
+  if (CAN_EDIT){
+    /* editor working copy: your browser draft, seeded from the published snapshot */
+    STORAGE_MODE = 'memory';
+    var stored = null;
+    try{ stored = localStorage.getItem(KEY); STORAGE_MODE = 'local'; }catch(e){ STORAGE_MODE = 'memory'; }
+    if (stored){
+      DB = normalize(JSON.parse(stored));
+    } else {
+      var snap = await loadSnapshot();
+      DB = snap ? normalize(snap) : seedDB();
+      if (STORAGE_MODE === 'local') persist();
+    }
+  } else {
+    /* everyone else: the published board, read-only */
+    STORAGE_MODE = 'snapshot';
+    var pub = await loadSnapshot();
+    DB = pub ? normalize(pub) : seedDB();
+  }
+  showApp();
+}
+
+/* firebase callbacks (invoked from the module below) */
+window.onFirebaseReady = function(){
+  _booted = true;
+  STORAGE_MODE = 'firebase';
+};
+window.onAuthChange = function(u){
+  USER = u || null;
+  recomputeRole();
+  if (!USER){ showGate('This board is private. Sign in to view.', 'Only ' + window.EDITOR_EMAILS.join(', ') + ' can edit; everyone else joins as a viewer.'); return; }
+  if (DB){ showApp(); }
+  else { showGate('Loading the board…', ''); }
+};
+window.onRemoteData = function(payload){
+  if (payload && payload.data){
+    try{ DB = normalize(JSON.parse(payload.data)); }catch(e){ DB = DB || seedDB(); }
+  } else if (!DB){
+    DB = seedDB();
+    if (CAN_EDIT) persist();   // editor initialises the shared board on first run
+  }
+  if (USER){ showApp(); }
+};
+window.onRemoteError = function(err){
+  toast('Cloud read error — check Firestore rules');
+};
+window.onFirebaseAbsent = function(){ bootLocal(); };
+
+function fbSignIn(){ if (window.fb && window.fb.signIn) window.fb.signIn(); else bootLocal(); }
+function fbSignOut(){ if (window.fb && window.fb.signOut) window.fb.signOut(); }
+
+/* If Firebase is not configured, run locally right away.
+   If it IS configured, give the module time to load; fall back to local only if it never initialises. */
+if (!fbConfigured){
+  bootLocal();
+} else {
+  showGate('Connecting…', '');
+  setTimeout(function(){ if (STORAGE_MODE !== 'firebase'){ toast('Cloud unavailable — running locally'); bootLocal(); } }, 6000);
+}
+</script>
+
+<!-- Firebase (shared mode). Loads only when configured; otherwise this module no-ops. -->
+<script type="module">
+  const c = window.FIREBASE_CONFIG;
+  const configured = !!(c && c.apiKey && c.apiKey.indexOf('PASTE') < 0);
+  if (configured){
+    try{
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
+      const { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
+      const { getFirestore, doc, onSnapshot, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+      const app = initializeApp(c);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const ref = doc(db, window.BOARD_COLLECTION || 'boards', window.BOARD_ID || 'casarico');
+      window.fb = {
+        signIn: function(){ return signInWithPopup(auth, new GoogleAuthProvider()).catch(function(e){ window.toast && window.toast('Sign-in failed'); }); },
+        signOut: function(){ return signOut(auth); },
+        save: function(data){ return setDoc(ref, { data: JSON.stringify(data), updatedBy: (auth.currentUser && auth.currentUser.email) || '' }).catch(function(e){ window.toast && window.toast('Save failed — check permissions'); }); }
+      };
+      window.onFirebaseReady && window.onFirebaseReady();
+      onAuthStateChanged(auth, function(u){ window.onAuthChange && window.onAuthChange(u); });
+      onSnapshot(ref, function(snap){ window.onRemoteData && window.onRemoteData(snap.exists() ? snap.data() : null); },
+                       function(err){ window.onRemoteError && window.onRemoteError(err); });
+    }catch(e){
+      window.onFirebaseAbsent && window.onFirebaseAbsent();
+    }
+  } else {
+    window.onFirebaseAbsent && window.onFirebaseAbsent();
+  }
+</script>
+</body>
+</html>
