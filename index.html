@@ -244,6 +244,7 @@ button.g{background:#fff;border:1px solid var(--line);width:auto}
     <div class="role" id="roleBox" style="display:none"></div>
     <span class="badge" id="saveBadge" style="margin-top:8px">…</span><br>
     <span id="editorTools" style="display:none">
+      <button class="primary" onclick="publishSnapshot()">Publish snapshot</button>
       <button onclick="exportData()">Export data (.json)</button>
       <button onclick="document.getElementById('importFile').click()">Import data</button>
       <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="importData(this)">
@@ -291,6 +292,7 @@ var STORAGE_MODE = 'memory';         // 'firebase' | 'local' | 'memory'
 var CAN_EDIT = false;
 var USER = null;                     // firebase user (shared mode only)
 var VIEW_PARAM = /[?&]view\b/.test(location.search);
+var EDIT_PARAM = /[?&]edit\b/.test(location.search);
 var _booted = false;
 var dirty = false;
 
@@ -304,7 +306,8 @@ function recomputeRole(){
   if (STORAGE_MODE === 'firebase'){
     CAN_EDIT = !!(USER && window.EDITOR_EMAILS.indexOf((USER.email || '').toLowerCase()) >= 0);
   } else {
-    CAN_EDIT = !VIEW_PARAM;   // local mode: you are the editor unless the URL says ?view
+    // snapshot / local mode: read-only by default; the editor uses ?edit (and never ?view)
+    CAN_EDIT = EDIT_PARAM && !VIEW_PARAM;
   }
   document.body.classList.toggle('viewer', !CAN_EDIT);
 }
@@ -482,7 +485,8 @@ function updateSaveBadge(){
   var b = document.getElementById('saveBadge');
   if (!b) return;
   if (STORAGE_MODE === 'firebase'){ b.textContent = CAN_EDIT ? 'Shared · saved to cloud' : 'Shared · live view'; b.className = 'badge ok'; }
-  else if (STORAGE_MODE === 'local'){ b.textContent = 'Saved in this browser'; b.className = 'badge'; }
+  else if (STORAGE_MODE === 'snapshot'){ b.textContent = 'Viewing published board'; b.className = 'badge ok'; }
+  else if (STORAGE_MODE === 'local'){ b.textContent = 'Draft in this browser · Publish to share'; b.className = 'badge warn'; }
   else { b.textContent = 'Not saved — export your data'; b.className = 'badge warn'; }
 }
 window.addEventListener('beforeunload', function(e){
@@ -1175,7 +1179,13 @@ function exportMinutes(mid){
   toast('Minutes exported');
 }
 
-/* ================= export / import ================= */
+/* ================= publish / export / import ================= */
+function publishSnapshot(){
+  if (!CAN_EDIT) return;
+  var blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  download(blob, 'data.json');
+  toast('data.json downloaded — commit it to publish the board');
+}
 function exportData(){
   var d = new Date();
   var name = 'Casarico-Board-Hub-data-' + d.toISOString().slice(0, 10) + '.json';
@@ -1252,7 +1262,7 @@ function updateChrome(){
   } else {
     role.style.display = 'flex';
     role.className = 'role ' + (CAN_EDIT ? 'editor' : 'viewer');
-    role.innerHTML = '<span class="dot"></span><span class="who">Local</span><span style="margin-left:auto;color:var(--muted)">' + (CAN_EDIT ? 'Editor' : 'Viewer') + '</span>';
+    role.innerHTML = '<span class="dot"></span><span class="who">' + (CAN_EDIT ? 'Editing (draft)' : 'Published board') + '</span><span style="margin-left:auto;color:var(--muted)">' + (CAN_EDIT ? 'Editor' : 'Viewer') + '</span>';
     signOutBtn.style.display = 'none';
   }
   editorTools.style.display = CAN_EDIT ? 'block' : 'none';
@@ -1276,18 +1286,35 @@ function showGate(msg, note){
 }
 
 /* ================= boot ================= */
-function bootLocal(){
+async function loadSnapshot(){
+  try{
+    var res = await fetch('data.json', {cache:'no-store'});
+    if (res.ok) return await res.json();
+  }catch(e){}
+  return null;
+}
+async function bootLocal(){
   if (_booted) return;   // already running (firebase took over, or already booted local)
   _booted = true;
-  STORAGE_MODE = 'memory';
-  var stored = null;
-  try{
-    stored = localStorage.getItem(KEY);
-    STORAGE_MODE = 'local';
-  }catch(e){ STORAGE_MODE = 'memory'; }
-  DB = stored ? normalize(JSON.parse(stored)) : seedDB();
-  recomputeRole();
-  if (!stored && CAN_EDIT) persist();
+  recomputeRole();       // CAN_EDIT from ?edit / ?view
+  if (CAN_EDIT){
+    /* editor working copy: your browser draft, seeded from the published snapshot */
+    STORAGE_MODE = 'memory';
+    var stored = null;
+    try{ stored = localStorage.getItem(KEY); STORAGE_MODE = 'local'; }catch(e){ STORAGE_MODE = 'memory'; }
+    if (stored){
+      DB = normalize(JSON.parse(stored));
+    } else {
+      var snap = await loadSnapshot();
+      DB = snap ? normalize(snap) : seedDB();
+      if (STORAGE_MODE === 'local') persist();
+    }
+  } else {
+    /* everyone else: the published board, read-only */
+    STORAGE_MODE = 'snapshot';
+    var pub = await loadSnapshot();
+    DB = pub ? normalize(pub) : seedDB();
+  }
   showApp();
 }
 
