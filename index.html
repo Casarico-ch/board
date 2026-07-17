@@ -235,14 +235,14 @@ main.main .page{border-top:none}
 @media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important}}
 </style>
 </head>
-<body cz-shortcut-listen="true" class="onpage">
+<body>
 
-<a id="backbar" href="#overview" style="display: inline-block;">← Agenda</a>
+<a id="backbar" href="#overview">← Agenda</a>
 
-<main class="main" contenteditable="false">
+<main class="main">
 
 <!-- ================= OVERVIEW ================= -->
-<section id="overview" class="hide">
+<section id="overview">
   <div class="eyebrow"><span style="font-family: Newsreader, Georgia, serif; font-size: 34px; letter-spacing: -0.01em; color: rgb(27, 30, 32);">Board meeting q2 26</span></div>
   <p class="lede">21.07.2026</p>
 
@@ -471,7 +471,7 @@ main.main .page{border-top:none}
 </section>
 
 <!-- ================= DEEP DIVE 02 · ZURICH ================= -->
-<section class="page active" id="zurich">
+<section class="page" id="zurich">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 02</div>
@@ -819,11 +819,34 @@ main.main .page{border-top:none}
     var fb0 = document.getElementById('fmtbar'); if(fb0) fb0.style.display = 'none';
     return;
   }
-  try{ var saved = localStorage.getItem(EKEY); if(saved) main.innerHTML = saved; }catch(e){}
   var editing = false, st;
   function saveNow(){ try{ localStorage.setItem(EKEY, main.innerHTML); }catch(e){} }
+  function clearDraft(){ try{ localStorage.removeItem(EKEY); }catch(e){} }
   function saveSoon(){ clearTimeout(st); st = setTimeout(saveNow, 500); }
   main.addEventListener('input', saveSoon);
+  /* Always start from the freshest PUBLISHED version (bypasses the Pages cache),
+     then only offer a leftover unpublished draft as an explicit restore. */
+  (async function loadFreshest(){
+    try{
+      var res = await fetch('https://raw.githubusercontent.com/Casarico-ch/board/main/index.html?_=' + Date.now(), {cache:'no-store'});
+      if(res.ok){
+        var doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+        var freshMain = doc.querySelector('main.main');
+        if(freshMain) main.innerHTML = freshMain.innerHTML;
+      }
+    }catch(e){ /* offline: keep the served page */ }
+    try{
+      var draft = localStorage.getItem(EKEY);
+      if(draft && draft !== main.innerHTML){
+        if(confirm('You have unpublished changes saved on this device. Restore them?\n\nOK = restore my draft · Cancel = start from the published version')){
+          main.innerHTML = draft;
+        } else {
+          clearDraft();
+        }
+      }
+    }catch(e){}
+    if(window.routeRefresh) window.routeRefresh();   /* re-apply page visibility after swapping content */
+  })();
   window.keepSel = function(e){ e.preventDefault(); return false; };  /* keep the selection when clicking the toolbar */
   window.fmt = function(c, v){ document.execCommand(c, false, v || null); main.focus(); saveSoon(); };
   window.makeLink = function(){ var u = prompt('Link URL (https://…)'); if(u) window.fmt('createLink', u); };
@@ -846,6 +869,13 @@ main.main .page{border-top:none}
     document.body.classList.remove('editmode');
     var fb = document.getElementById('fmtbar'); if(fb) fb.style.display = 'none';
     var eb = document.getElementById('editbar'); if(eb) eb.style.display = 'none';
+    /* normalize router state so the published file is not frozen mid-navigation */
+    document.body.classList.remove('onpage');
+    var ov = document.getElementById('overview'); if(ov) ov.classList.remove('hide');
+    main.querySelectorAll('.page').forEach(function(s){ s.classList.remove('active'); });
+    var bb = document.getElementById('backbar'); if(bb) bb.style.display = 'none';
+    /* strip extension artifacts */
+    document.body.removeAttribute('cz-shortcut-listen');
   }
   window.toggleEdit = function(){
     editing = !editing;
@@ -875,6 +905,7 @@ main.main .page{border-top:none}
     cleanForSave();
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
     document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
+    if(window.routeRefresh) window.routeRefresh();
     var blob = new Blob([html], {type:'text/html;charset=utf-8'});
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'index.html';
@@ -904,6 +935,7 @@ main.main .page{border-top:none}
     cleanForSave();
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
     document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
+    if(window.routeRefresh) window.routeRefresh();
     var api = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
     var headers = { 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
     toast('Publishing …');
@@ -918,7 +950,7 @@ main.main .page{border-top:none}
         sha: sha,
         branch: BRANCH
       }) });
-      if(res.ok){ toast('Published ✓ — live in about a minute'); }
+      if(res.ok){ clearDraft(); toast('Published ✓ — live in about a minute'); }
       else {
         var e = {}; try{ e = await res.json(); }catch(_){}
         if(res.status === 401 || res.status === 403) toast('Token rejected — set a valid token (⚙)');
@@ -954,6 +986,7 @@ main.main .page{border-top:none}
     window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', route);
+  window.routeRefresh = route;   /* editor calls this after refreshing content */
   route();
 })();
 
