@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Casarico — Board pack #6 · 21.07.2026</title>
@@ -216,7 +215,6 @@ body.editmode section{position:relative}
 .sec-del{position:absolute;top:12px;right:0;background:var(--neg-bg);color:var(--neg);border:none;
   border-radius:99px;font:600 11px/1 Inter;padding:6px 11px;cursor:pointer;opacity:.85}
 .sec-del:hover{opacity:1;border-color:transparent}
-#tokenBtn.saved{border-color:var(--pos);color:var(--pos)}
 @media print{#editbar,#fmtbar,.sec-del{display:none!important}}
 
 /* ---------- agenda-as-navigation: each section is its own page ---------- */
@@ -237,40 +235,39 @@ main.main .page{border-top:none}
 @media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important}}
 </style>
 </head>
-<body>
+<body cz-shortcut-listen="true" class="">
 
-<a id="backbar" href="#overview">← Agenda</a>
+<a id="backbar" href="#overview" style="display: none;">← Agenda</a>
 
-<main class="main">
+<main class="main" contenteditable="false">
 
 <!-- ================= OVERVIEW ================= -->
 <section id="overview">
-  <div class="eyebrow">Immo-Ressource AG, 1700 Fribourg · Board meeting #6 · 21.07.2026 · Zurich, in person</div>
-  <h1>Board pack — Q2 2026</h1>
-  <p class="lede">Please read before the meeting. Sections are tagged by what we need from the board: <span class="tag inform">Inform</span> <span class="tag discuss">Discuss</span> <span class="tag decide">Decide</span>. Meeting time goes to the amber items.</p>
+  <div class="eyebrow"><span style="font-family: Newsreader, Georgia, serif; font-size: 34px; letter-spacing: -0.01em; color: rgb(27, 30, 32);">Board meeting q2 26</span></div>
+  <p class="lede">21.07.2026</p>
 
   <div class="grid g2" style="margin-top:26px">
     <div class="card">
       <div class="eyebrow" style="margin-bottom:12px">Attendees</div>
       <table>
-        <tr><td>Daniel Abebe</td><td class="t-right small">Chairperson</td></tr>
-        <tr><td>Luca Fontanella</td><td class="t-right small">Board member</td></tr>
-        <tr><td>Nicola Haas</td><td class="t-right small">Board member</td></tr>
+        <tbody><tr><td>Daniel Abebe</td><td class="t-right small">Chairperson</td></tr>
+        <tr><td>Luca Fontanella</td><td class="t-right small"><br></td></tr>
+        <tr><td>Nicola Haas</td><td class="t-right small"><br></td></tr>
         <tr><td class="small" colspan="2">Absent: none</td></tr>
-      </table>
+      </tbody></table>
     </div>
     <div class="card">
       <div class="eyebrow" style="margin-bottom:12px">Check-in</div>
       <table>
-        <tr><td>Bridge-financing contract + payment</td><td class="t-right"><span class="chip pos">Done</span></td></tr>
+        <tbody><tr><td>Bridge-financing contract + payment</td><td class="t-right"><span class="chip pos">Done</span></td></tr>
         <tr><td>Year-closing 2025 + GV <span class="small">(close or schedule GV)</span></td><td class="t-right"><span class="chip mut">Open</span></td></tr>
-      </table>
+      </tbody></table>
     </div>
   </div>
 
   <h3>Agenda <span class="small" style="font-weight:400">— suggested timeboxes, ≈ 2 h 10. Tap a time to edit.</span></h3>
   <table class="agenda">
-    <tr><td>1</td><td><a href="#overview">Check-in</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
+    <tbody><tr><td>1</td><td><a href="#overview">Check-in</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>2</td><td><a href="#financials">Financials</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>3</td><td>
       <a href="#q2">Business update — Q2 review</a>
@@ -286,7 +283,7 @@ main.main .page{border-top:none}
     <tr><td>6</td><td><a href="#outlook">6-month outlook</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>7</td><td><a href="#ai">Automation &amp; AI</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>8</td><td><a href="#decisions">Decisions, to-dos, next steps &amp; check-out</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">10 min</td></tr>
-  </table>
+  </tbody></table>
   <p class="ref-line">Reference · <a href="#strategy">Strategy on a page</a></p>
 </section>
 
@@ -326,26 +323,26 @@ main.main .page{border-top:none}
     </div>
     <svg viewBox="0 0 660 300" role="img" aria-label="Revenue and charges by quarter">
       <g stroke="#EFEDE7" stroke-width="1">
-        <line x1="44" y1="40"  x2="640" y2="40"/>
-        <line x1="44" y1="107" x2="640" y2="107"/>
-        <line x1="44" y1="173" x2="640" y2="173"/>
-        <line x1="44" y1="240" x2="640" y2="240"/>
+        <line x1="44" y1="40" x2="640" y2="40"></line>
+        <line x1="44" y1="107" x2="640" y2="107"></line>
+        <line x1="44" y1="173" x2="640" y2="173"></line>
+        <line x1="44" y1="240" x2="640" y2="240"></line>
       </g>
       <g font-family="Inter,sans-serif" font-size="10" fill="#9AA0A4">
-        <text x="38" y="43"  text-anchor="end">180k</text>
+        <text x="38" y="43" text-anchor="end">180k</text>
         <text x="38" y="110" text-anchor="end">120k</text>
         <text x="38" y="176" text-anchor="end">60k</text>
         <text x="38" y="243" text-anchor="end">0</text>
       </g>
       <!-- Q1 -->
-      <rect x="101" y="42"  width="34" height="198" rx="3" fill="#C9C7BF"/>
-      <rect x="145" y="122" width="34" height="118" rx="3" fill="#1E7F4F"/>
+      <rect x="101" y="42" width="34" height="198" rx="3" fill="#C9C7BF"></rect>
+      <rect x="145" y="122" width="34" height="118" rx="3" fill="#1E7F4F"></rect>
       <!-- Q2 -->
-      <rect x="301" y="47"  width="34" height="193" rx="3" fill="#C9C7BF"/>
-      <rect x="345" y="88"  width="34" height="152" rx="3" fill="#1E7F4F"/>
+      <rect x="301" y="47" width="34" height="193" rx="3" fill="#C9C7BF"></rect>
+      <rect x="345" y="88" width="34" height="152" rx="3" fill="#1E7F4F"></rect>
       <!-- Q3 projected -->
-      <rect x="501" y="51"  width="34" height="189" rx="3" fill="#C9C7BF" fill-opacity=".45" stroke="#9AA0A4" stroke-dasharray="3 3"/>
-      <rect x="545" y="151" width="34" height="89"  rx="3" fill="#1E7F4F" fill-opacity=".45" stroke="#1E7F4F" stroke-dasharray="3 3"/>
+      <rect x="501" y="51" width="34" height="189" rx="3" fill="#C9C7BF" fill-opacity=".45" stroke="#9AA0A4" stroke-dasharray="3 3"></rect>
+      <rect x="545" y="151" width="34" height="89" rx="3" fill="#1E7F4F" fill-opacity=".45" stroke="#1E7F4F" stroke-dasharray="3 3"></rect>
       <g font-family="Inter,sans-serif" font-size="10.5" fill="#6C7176" text-anchor="middle">
         <text x="118" y="34">178.5k</text><text x="162" y="114">105.8k</text>
         <text x="318" y="39">173.7k</text><text x="362" y="80">137.0k</text>
@@ -461,12 +458,12 @@ main.main .page{border-top:none}
     <div class="k">Proposal <span class="todo">To complete</span></div>
     <div class="v">
       <table style="margin-top:2px">
-        <tr><th style="width:34%">Participant</th><th>From 1 August</th></tr>
+        <tbody><tr><th style="width:34%">Participant</th><th>From 1 August</th></tr>
         <tr><td>Buyer — activation fee</td><td class="fill" contenteditable="true"><span class="hint">CHF … at signup / on activation …</span></td></tr>
         <tr><td>Buyer — success fee</td><td class="fill" contenteditable="true"><span class="hint">… % or CHF … on completed purchase</span></td></tr>
         <tr><td>Swapper</td><td>Free — monetized via the future sales mandate</td></tr>
         <tr><td>Agent / partner</td><td class="fill" contenteditable="true"><span class="hint">First transaction free? Referral / mandate share …</span></td></tr>
-      </table>
+      </tbody></table>
       <div class="fill" style="margin-top:10px" contenteditable="true"><span class="hint">Expected revenue impact Q3–Q4 and why this strengthens the flywheel …</span></div>
     </div>
   </div>
@@ -491,22 +488,22 @@ main.main .page{border-top:none}
     <div class="k">The data</div>
     <div class="v">
       <table style="margin-top:2px">
-        <tr><th></th><th class="t-right">Geneva</th><th class="t-right">Zurich</th></tr>
+        <tbody><tr><th></th><th class="t-right">Geneva</th><th class="t-right">Zurich</th></tr>
         <tr><td>Cost per lead</td><td class="t-right num">CHF 22.50</td><td class="t-right num">CHF 22.50</td></tr>
         <tr><td>Swapper share of signups</td><td class="t-right num" style="color:var(--pos)">52%</td><td class="t-right num" style="color:var(--neg)">37%</td></tr>
         <tr><td>Lead → client conversion</td><td class="t-right num" style="color:var(--pos)">54%</td><td class="t-right num" style="color:var(--neg)">15%</td></tr>
-      </table>
+      </tbody></table>
       <p class="small" style="margin-top:8px">Acquisition works — leads cost the same. The gap is in who signs up and how they convert.</p>
     </div>
 
     <div class="k">Action plan <span class="todo">To complete</span></div>
     <div class="v">
       <table style="margin-top:2px">
-        <tr><th>Action</th><th style="width:22%">Owner</th><th style="width:20%">By when</th></tr>
+        <tbody><tr><th>Action</th><th style="width:22%">Owner</th><th style="width:20%">By when</th></tr>
         <tr><td class="fill" contenteditable="true"><span class="hint">e.g. Rework ZH messaging &amp; landing page toward Swappers …</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td></tr>
         <tr><td class="fill" contenteditable="true"><span class="hint">e.g. Tighten lead qualification / onboarding call flow in ZH …</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td></tr>
         <tr><td class="fill" contenteditable="true"><span class="hint">e.g. Activate ZH partner agents for supply and referrals …</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td></tr>
-      </table>
+      </tbody></table>
     </div>
 
     <div class="k">Checkpoint</div>
@@ -625,12 +622,12 @@ main.main .page{border-top:none}
     <div class="k">Round status <span class="todo">To complete</span></div>
     <div class="v">
       <table style="margin-top:2px">
-        <tr><td style="width:34%">Target size &amp; instrument</td><td class="fill" contenteditable="true"><span class="hint">CHF … · equity / convertible …</span></td></tr>
+        <tbody><tr><td style="width:34%">Target size &amp; instrument</td><td class="fill" contenteditable="true"><span class="hint">CHF … · equity / convertible …</span></td></tr>
         <tr><td>Valuation basis</td><td class="fill" contenteditable="true"><span class="hint">… </span></td></tr>
         <tr><td>Investor pipeline</td><td class="fill" contenteditable="true"><span class="hint"># in talks, warm leads, committed …</span></td></tr>
         <tr><td>Timeline to close</td><td class="fill" contenteditable="true"><span class="hint">… </span></td></tr>
         <tr><td>Use of funds</td><td class="fill" contenteditable="true"><span class="hint">… </span></td></tr>
-      </table>
+      </tbody></table>
     </div>
   </div>
 
@@ -670,13 +667,13 @@ main.main .page{border-top:none}
   <p class="lede" style="margin-bottom:16px">Principle: AI automates operational work; humans stay at the high-trust decision points. Tap a status to edit.</p>
 
   <table>
-    <tr><th>Workstream</th><th>What it does</th><th style="width:16%">Status</th></tr>
+    <tbody><tr><th>Workstream</th><th>What it does</th><th style="width:16%">Status</th></tr>
     <tr><td><b>Client onboarding</b></td><td class="small" style="color:var(--ink)">Qualify and activate buyers &amp; Swappers without manual steps</td><td class="fill" contenteditable="true"><span class="hint">status …</span></td></tr>
     <tr><td><b>Sales + improvement loop</b></td><td class="small" style="color:var(--ink)">Assist sales conversations and feed learnings back into the funnel</td><td class="fill" contenteditable="true"><span class="hint">status …</span></td></tr>
     <tr><td><b>Matching management</b></td><td class="small" style="color:var(--ink)">Match buyers to (off-market) properties at scale</td><td class="fill" contenteditable="true"><span class="hint">status …</span></td></tr>
     <tr><td><b>Marketing analytics</b></td><td class="small" style="color:var(--ink)">Attribute spend and steer campaigns (ZH vs GE)</td><td class="fill" contenteditable="true"><span class="hint">status …</span></td></tr>
     <tr><td><b>Video ad creation</b></td><td class="small" style="color:var(--ink)">Generate ad creative variants automatically</td><td class="fill" contenteditable="true"><span class="hint">status …</span></td></tr>
-  </table>
+  </tbody></table>
 </section>
 
 <!-- ================= STRATEGY ================= -->
@@ -696,15 +693,15 @@ main.main .page{border-top:none}
     <svg viewBox="0 0 560 320" role="img" aria-label="Casarico flywheel">
       <defs>
         <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M0,0 L8,4 L0,8 z" fill="#9AA0A4"/>
+          <path d="M0,0 L8,4 L0,8 z" fill="#9AA0A4"></path>
         </marker>
       </defs>
       <g fill="none" stroke="#C9C7BF" stroke-width="1.4" marker-end="url(#arr)">
-        <path d="M 208 62  A 132 108 0 0 1 372 70"/>
-        <path d="M 428 106 A 132 108 0 0 1 446 208"/>
-        <path d="M 396 256 A 132 108 0 0 1 236 268"/>
-        <path d="M 148 236 A 132 108 0 0 1 116 138"/>
-        <path d="M 142 92  A 132 108 0 0 1 168 74"/>
+        <path d="M 208 62  A 132 108 0 0 1 372 70"></path>
+        <path d="M 428 106 A 132 108 0 0 1 446 208"></path>
+        <path d="M 396 256 A 132 108 0 0 1 236 268"></path>
+        <path d="M 148 236 A 132 108 0 0 1 116 138"></path>
+        <path d="M 142 92  A 132 108 0 0 1 168 74"></path>
       </g>
       <g text-anchor="middle">
         <text x="280" y="46">More Swappers</text>
@@ -736,12 +733,12 @@ main.main .page{border-top:none}
 
   <h3>Risks &amp; mitigations</h3>
   <table>
-    <tr><td style="width:50%">Insufficient proprietary supply</td><td class="small" style="color:var(--ink)">Agent incentive alignment (deep dive 03)</td></tr>
+    <tbody><tr><td style="width:50%">Insufficient proprietary supply</td><td class="small" style="color:var(--ink)">Agent incentive alignment (deep dive 03)</td></tr>
     <tr><td>Weak agent engagement</td><td class="small" style="color:var(--ink)">Mandate-back flywheel, partner activation</td></tr>
     <tr><td>Matching quality at scale</td><td class="small" style="color:var(--ink)">Automation roadmap</td></tr>
     <tr><td>Interest-rate environment</td><td class="small" style="color:var(--ink)">Conditional structure of buy-back, disciplined pilot</td></tr>
     <tr><td>Capital needs of buy-back guarantees</td><td class="small" style="color:var(--ink)">SPV structure, external capital partners</td></tr>
-  </table>
+  </tbody></table>
   <p class="small" style="margin-top:12px">Decision rule: every choice should strengthen the flywheel of Swappers, proprietary supply, trusted execution and transaction ownership. Incremental revenue that dilutes this positioning is rejected.</p>
 </section>
 
@@ -758,16 +755,16 @@ main.main .page{border-top:none}
 
   <h3 style="margin-top:0">Decisions</h3>
   <table id="decTable">
-    <tr><th style="width:26px">#</th><th>Decision</th><th style="width:22%">Relates to</th><th style="width:34px"></th></tr>
+    <tbody><tr><th style="width:26px">#</th><th>Decision</th><th style="width:22%">Relates to</th><th style="width:34px"></th></tr>
     <tr class="rec"><td class="idx">1</td><td contenteditable="true"></td><td contenteditable="true"></td><td><button class="ghost" onclick="delRow(this)" title="Remove">✕</button></td></tr>
-  </table>
+  </tbody></table>
   <div class="btnrow"><button onclick="addRow('decTable',3)">+ Add decision</button></div>
 
   <h3>Actions &amp; to-dos</h3>
   <table id="actTable">
-    <tr><th style="width:26px">#</th><th>Action</th><th style="width:18%">Owner</th><th style="width:16%">Due</th><th style="width:34px"></th></tr>
+    <tbody><tr><th style="width:26px">#</th><th>Action</th><th style="width:18%">Owner</th><th style="width:16%">Due</th><th style="width:34px"></th></tr>
     <tr class="rec"><td class="idx">1</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><button class="ghost" onclick="delRow(this)" title="Remove">✕</button></td></tr>
-  </table>
+  </tbody></table>
   <div class="btnrow"><button onclick="addRow('actTable',4)">+ Add action</button></div>
 
   <h3>Board remarks &amp; risk mitigation</h3>
@@ -775,9 +772,9 @@ main.main .page{border-top:none}
 
   <h3>Next steps &amp; check-out</h3>
   <table>
-    <tr><td style="width:34%">Next board meeting (#7)</td><td class="fill" id="nextMeeting" contenteditable="true"><span class="hint">date · place</span></td></tr>
+    <tbody><tr><td style="width:34%">Next board meeting (#7)</td><td class="fill" id="nextMeeting" contenteditable="true"><span class="hint">date · place</span></td></tr>
     <tr><td>Check-out</td><td class="fill" contenteditable="true"><span class="hint">Wrap-up and final comments …</span></td></tr>
-  </table>
+  </tbody></table>
 
   <div class="btnrow" style="margin-top:26px">
     <button class="primary" onclick="exportMinutes()">Export minutes (.txt)</button>
@@ -789,17 +786,17 @@ main.main .page{border-top:none}
 
 </main>
 
-<div id="toast"></div>
+<div id="toast" class="show">Token saved on this device</div>
 
 <!-- ================= INLINE EDITOR (opens with ?edit) ================= -->
-<div id="editbar" style="display:none">
+<div id="editbar" style="display: flex;">
   <button id="tokenBtn" onclick="setToken()" title="Set or change your GitHub publish token">⚙</button>
   <button id="discardBtn" onclick="discardEdits()" title="Discard your local changes and reload the published page">Revert</button>
   <button id="saveFileBtn" onclick="downloadPage()" title="Download the updated index.html (offline backup)">Save file</button>
-  <button id="editToggle" onclick="toggleEdit()">✎ Edit</button>
+  <button id="editToggle" onclick="toggleEdit()" class="">✎ Edit</button>
   <button id="publishBtn" class="primary" onclick="publishLive()" title="Commit your changes to GitHub and go live">▲ Publish live</button>
 </div>
-<div id="fmtbar">
+<div id="fmtbar" style="display: none;">
   <button onmousedown="return keepSel(event)" onclick="fmt('bold')" title="Bold"><b>B</b></button>
   <button onmousedown="return keepSel(event)" onclick="fmt('italic')" title="Italic"><i>I</i></button>
   <span class="sep"></span>
@@ -878,21 +875,11 @@ main.main .page{border-top:none}
   var REPO = 'Casarico-ch/board', BRANCH = 'main', FILE = 'index.html';
   var TKEY = 'casarico-board-gh-token';   // token is stored only in this browser, never in the page
   function getToken(){ try{ return localStorage.getItem(TKEY) || ''; }catch(e){ return ''; } }
-  function refreshTokenBtn(){
-    var el = document.getElementById('tokenBtn'); if(!el) return;
-    var has = !!getToken();
-    el.classList.toggle('saved', has);
-    el.textContent = has ? '⚙ ✓' : '⚙ Token';
-    el.title = has ? 'GitHub token saved on this device — click to change or remove' : 'Set your GitHub publish token (once)';
-  }
   window.setToken = function(){
     var cur = getToken();
-    var v = prompt(cur
-      ? 'A token is already saved on this device. Paste a new one to replace it, or leave empty to remove it.'
-      : 'Paste your GitHub token once. It is saved in this browser and reused automatically — you will not be asked again on this device.', '');
+    var v = prompt('Paste your GitHub token (stored only in this browser). Leave empty to remove it.', cur ? '' : '');
     if(v === null) return;
-    try{ if(v){ localStorage.setItem(TKEY, v.trim()); toast('Token saved — you won’t be asked again on this device'); } else { localStorage.removeItem(TKEY); toast('Token removed'); } }catch(e){}
-    refreshTokenBtn();
+    try{ if(v){ localStorage.setItem(TKEY, v.trim()); toast('Token saved on this device'); } else { localStorage.removeItem(TKEY); toast('Token removed'); } }catch(e){}
   };
   function b64utf8(str){
     var bytes = new TextEncoder().encode(str), bin = '';
@@ -931,7 +918,6 @@ main.main .page{border-top:none}
   };
 
   document.getElementById('editbar').style.display = 'flex';
-  refreshTokenBtn();
 })();
 </script>
 
@@ -1055,5 +1041,6 @@ document.addEventListener('focusin', function(e){
   if(el && el.querySelector('.hint')){ el.innerHTML = ''; }
 });
 </script>
-</body>
-</html>
+
+
+</body></html>
