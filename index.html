@@ -216,6 +216,7 @@ body.editmode section{position:relative}
 .sec-del{position:absolute;top:12px;right:0;background:var(--neg-bg);color:var(--neg);border:none;
   border-radius:99px;font:600 11px/1 Inter;padding:6px 11px;cursor:pointer;opacity:.85}
 .sec-del:hover{opacity:1;border-color:transparent}
+#tokenBtn.saved{border-color:var(--pos);color:var(--pos)}
 @media print{#editbar,#fmtbar,.sec-del{display:none!important}}
 
 /* ---------- agenda-as-navigation: each section is its own page ---------- */
@@ -877,11 +878,21 @@ main.main .page{border-top:none}
   var REPO = 'Casarico-ch/board', BRANCH = 'main', FILE = 'index.html';
   var TKEY = 'casarico-board-gh-token';   // token is stored only in this browser, never in the page
   function getToken(){ try{ return localStorage.getItem(TKEY) || ''; }catch(e){ return ''; } }
+  function refreshTokenBtn(){
+    var el = document.getElementById('tokenBtn'); if(!el) return;
+    var has = !!getToken();
+    el.classList.toggle('saved', has);
+    el.textContent = has ? '⚙ ✓' : '⚙ Token';
+    el.title = has ? 'GitHub token saved on this device — click to change or remove' : 'Set your GitHub publish token (once)';
+  }
   window.setToken = function(){
     var cur = getToken();
-    var v = prompt('Paste your GitHub token (stored only in this browser). Leave empty to remove it.', cur ? '' : '');
+    var v = prompt(cur
+      ? 'A token is already saved on this device. Paste a new one to replace it, or leave empty to remove it.'
+      : 'Paste your GitHub token once. It is saved in this browser and reused automatically — you will not be asked again on this device.', '');
     if(v === null) return;
-    try{ if(v){ localStorage.setItem(TKEY, v.trim()); toast('Token saved on this device'); } else { localStorage.removeItem(TKEY); toast('Token removed'); } }catch(e){}
+    try{ if(v){ localStorage.setItem(TKEY, v.trim()); toast('Token saved — you won’t be asked again on this device'); } else { localStorage.removeItem(TKEY); toast('Token removed'); } }catch(e){}
+    refreshTokenBtn();
   };
   function b64utf8(str){
     var bytes = new TextEncoder().encode(str), bin = '';
@@ -920,6 +931,7 @@ main.main .page{border-top:none}
   };
 
   document.getElementById('editbar').style.display = 'flex';
+  refreshTokenBtn();
 })();
 </script>
 
