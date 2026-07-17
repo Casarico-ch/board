@@ -297,10 +297,10 @@ main.main > .offpage{display:none!important}
       Business update
       <ul class="subagenda">
         <li><a href="#q2">Q2 review</a> <span class="tag inform">Inform</span></li>
-        <li><a href="#pricing">Adjusted pricing &amp; business model from 1 Aug</a> <span class="tag decide">Decide</span></li>
-        <li><a href="#zurich">Action plan to improve Zurich</a> <span class="tag decide">Decide</span></li>
+        <li><a href="#pricing">Adjusted pricing &amp; business model from 1 Aug</a> <span class="tag decide">confirm</span></li>
+        <li><a href="#zurich">Action plan to improve Zurich</a> <span class="tag decide">confirm</span></li>
         <li><a href="#offmarket">Strategy to get more off-market</a> <span class="tag discuss">Discuss</span></li>
-        <li><a href="#churn">Immo-Ressource — how to move forward</a> <span class="tag decide">Decide</span></li>
+        <li><a href="#churn">Immo-Ressource — how to move forward</a> <span class="tag decide">inform</span></li>
       </ul>
     </td><td class="tagset"></td><td class="time" contenteditable="true">60 min</td></tr>
     <tr><td>4</td><td><a href="#buyback">SPV buy-back guarantee — concept</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">60&nbsp;min</td></tr>
@@ -657,7 +657,7 @@ main.main > .offpage{display:none!important}
   <div class="grid g4">
     <div class="card kpi"><div class="lab">Guarantee floor</div><div class="val">85%</div><div class="sub">of appraised value — a safety net, not an offer</div></div>
     <div class="card kpi"><div class="lab">Term</div><div class="val">6 months</div></div><div class="card kpi"><div class="val">0.5% fee</div><div class="sub">of floor price&nbsp;</div></div>
-    <div class="card kpi"><div class="lab">Equity advance</div><div class="val">6%</div><div class="sub">one-time fee for 6 months (annualized at 12% return for RE backed lending)</div></div>
+    <div class="card kpi"><div class="lab">Equity advance</div><div class="val">5% return</div><div class="sub">one-time fee for 6 months (annualized at 10% return for RE backed lending)</div></div>
   </div>
   <p class="small" style="margin-top:10px">At an 85% floor, a rational seller cuts the asking price before due date, low expected activation (not clear how much)</p>
 
@@ -677,21 +677,21 @@ main.main > .offpage{display:none!important}
       <table class="wf">
         <tbody><tr><td>Home sells at appraised value</td><td class="t-right num" id="bbMv">CHF 1’500’000</td></tr>
         <tr><td>Repay bank mortgage</td><td class="t-right num" id="bbMm">− CHF 900’000</td></tr>
-        <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbMr">− CHF 397’500</td></tr>
+        <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbMr">− CHF 212’000</td></tr>
         <tr><td>Guarantee fee (0.5% of floor)</td><td class="t-right num" id="bbMf">− CHF 6’375</td></tr>
-        <tr class="total"><td>To the customer at closing <span class="small">(advance was already in hand on day one)</span></td><td class="t-right num" id="bbMn">CHF 196’125</td></tr>
+        <tr class="total"><td>To the customer at closing <span class="small">(advance was already in hand on day one)</span></td><td class="t-right num" id="bbMn">CHF 381’625</td></tr>
       </tbody></table>
     </div>
     <div id="bbBackstop" style="display: none;">
       <table class="wf">
         <tbody><tr><td>CasaBuy pays the floor price</td><td class="t-right num" id="bbBg">CHF 1’275’000</td></tr>
         <tr><td>Repay bank mortgage</td><td class="t-right num" id="bbBm">− CHF 900’000</td></tr>
-        <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbBr">− CHF 397’500</td></tr>
+        <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbBr">− CHF 212’000</td></tr>
         <tr><td>Guarantee fee</td><td class="t-right num">waived</td></tr>
-        <tr class="total"><td>To the customer at closing — clean exit, no earn-out, transaction ends</td><td class="t-right num" id="bbBn">CHF −22’500</td></tr>
+        <tr class="total"><td>To the customer at closing — clean exit, no earn-out, transaction ends</td><td class="t-right num" id="bbBn">CHF 163’000</td></tr>
       </tbody></table>
     </div>
-    <p class="small" style="margin-top:10px">Advance is capped so mortgage + advance never exceed the floor — the home is never charged beyond 85% of value. Customer keeps full control of pricing for the whole 6 months.</p>
+    <p class="small" style="margin-top:10px">&nbsp;Customer keeps full control of pricing for the whole 6 months.</p>
   </div>
 
   <h3>Who puts in what</h3>
@@ -699,23 +699,18 @@ main.main > .offpage{display:none!important}
     <div class="card">
       <div class="eyebrow" style="margin-bottom:8px">Casarico</div>
       <div class="small" style="color:var(--ink)">
-        <b>Cash in: none — services only.</b><br>
-        Origination fee CHF 3–5k per guarantee (part deferred, forfeited on loss-making deals) + the Swapper fees the product unlocks.<br>
-        Earn-in option up to ~20% of CasaCash on milestones · board seat · contractual exclusivity across both vehicles.
+        <b>Cash in: none, services only.</b><br>
+        Origination fee CHF X per guarantee&nbsp;<br>
+        Earn-in option up to X% of return.
       </div>
     </div>
     <div class="card">
-      <div class="eyebrow" style="margin-bottom:8px">Refolio</div>
+      <div class="eyebrow" style="margin-bottom:8px">Investors / Refolio</div>
       <div class="small" style="color:var(--ink)">
-        <b>Funds both vehicles: ≈ CHF 15m committed.</b><br>
-        CasaCash funding line ≈ CHF 5–6m · CasaBuy capital ≈ CHF 9–10m (6–8 concurrent activations).<br>
-        Earns the lending margin, the ~15-point acquisition discount and resale/rental returns. Owns 100% at incorporation.
-      </div>
+        <b>Funds both vehicles: ≈ CHF X committed.</b><br>Earns the lending margin, the ~15-point acquisition discount and resale returns.&nbsp;</div>
     </div>
   </div>
-  <p class="small" style="margin-top:10px">Pilot year at 25 deals ≈ break-even before activation outcomes · ≈ CHF 24k revenue per full deal (1.9% of floor) · clear profitability from ~40 deals a year.</p>
-
-  <h3>Stress-tested — 20 open guarantees</h3>
+  <p class="small" style="margin-top:10px"><br><font color="#1b1e20" face="Inter"><span style="font-size: 14px;"><b>Stress-test: 20 open guarantees</b></span></font></p>
   <div class="grid g3">
     <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Base</b><span class="chip pos">Clearly positive</span></div><div class="small" style="margin-top:8px">10% activate · resale at value.<br>≈ 15-point entry discount less costs. Advances fully repaid.</div></div>
     <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Adverse</b><span class="chip pos">Positive</span></div><div class="small" style="margin-top:8px">20% activate · resale −5%.<br>≈ 10-point cushion remains. Advances fully repaid.</div></div>
