@@ -120,10 +120,6 @@ td .num,.num{font-variant-numeric:tabular-nums}
   padding:14px 18px;display:flex;gap:12px;align-items:baseline;
 }
 .ask .k{font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--act);white-space:nowrap}
-.decision{margin-top:12px;background:var(--pos-bg);border:1px solid #C3E4D2;border-radius:var(--radius);padding:14px 18px}
-.decision .k{display:block;font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--pos);margin-bottom:8px}
-.decision .fill{background:#fff;border:1px dashed #A9D3BC;color:var(--ink);min-height:60px}
-.decision .fill:empty::before,.decision .fill .hint{color:#5B9D77}
 
 /* ---------- editable fills ---------- */
 [contenteditable]{outline:none;border-radius:6px}
@@ -437,7 +433,7 @@ main.main .page{border-top:none}
 </section>
 
 <!-- ================= DEEP DIVE 01 · PRICING ================= -->
-<section class="page active" id="pricing">
+<section class="page" id="pricing">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 01</div>
@@ -464,8 +460,7 @@ main.main .page{border-top:none}
         <tbody><tr><th style="width:34%">Participant</th><th>From 1 August</th></tr>
         <tr><td>Buyer: activation fee</td><td class="fill" contenteditable="true"><span class="hint">CHF 450.- at signup</span></td></tr>
         <tr><td>Buyer: success fee</td><td class="fill" contenteditable="true"><span class="hint">&nbsp;0.5% on completed purchase<br></span></td></tr>
-        <tr><td>Swapper: activation fee</td><td class="fill" contenteditable="true"><span class="hint">Free? or CHF … at signup</span></td></tr>
-        <tr><td>Swapper: success fee</td><td class="fill" contenteditable="true"><span class="hint">… % or CHF … on completed sale</span></td></tr>
+        <tr><td>Swapper</td><td>Free — monetized via the future sales mandate</td></tr>
         <tr><td>Agent / partner</td><td class="fill" contenteditable="true"><span class="hint">First transaction free? Referral / mandate share …</span></td></tr>
       </tbody></table>
       <div class="fill" style="margin-top:10px" contenteditable="true"><span class="hint">Expected revenue impact Q3–Q4 and why this strengthens the flywheel …</span></div>
@@ -473,13 +468,10 @@ main.main .page{border-top:none}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board approves the adjusted pricing and business model effective immediately.</span></div>
-  <div class="decision"><span class="k">Board decision</span>
-    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
-  </div>
 </section>
 
 <!-- ================= DEEP DIVE 02 · ZURICH ================= -->
-<section class="page" id="zurich">
+<section class="page active" id="zurich">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 02</div>
@@ -490,17 +482,17 @@ main.main .page{border-top:none}
 
   <div class="memo">
     <div class="k">Context</div>
-    <div class="v"><p>Geneva is the proving ground; Zurich is the test of portability. National expansion only makes sense once acquisition, matching and monetization repeat their economics outside Geneva — which makes fixing Zurich a strategic gate, not just a growth task.</p></div>
+    <div class="v"><p>Geneva is the proving ground; Zurich feels like a slow start. National expansion only makes sense once the unit economics works outside of Geneva, which makes fixing Zurich our strategic priority.</p><p><br></p></div>
 
     <div class="k">The data</div>
     <div class="v">
       <table style="margin-top:2px">
         <tbody><tr><th></th><th class="t-right">Geneva</th><th class="t-right">Zurich</th></tr>
-        <tr><td>Cost per lead</td><td class="t-right num">CHF 22.50</td><td class="t-right num">CHF 22.50</td></tr>
+        <tr><td>Cost per lead</td><td class="t-right num">CHF 22.50</td><td class="t-right num">CHF 22.14</td></tr>
         <tr><td>Swapper share of signups</td><td class="t-right num" style="color:var(--pos)">52%</td><td class="t-right num" style="color:var(--neg)">37%</td></tr>
         <tr><td>Lead → client conversion</td><td class="t-right num" style="color:var(--pos)">54%</td><td class="t-right num" style="color:var(--neg)">15%</td></tr>
       </tbody></table>
-      <p class="small" style="margin-top:8px">Acquisition works — leads cost the same. The gap is in who signs up and how they convert.</p>
+      <p class="small" style="margin-top:8px">Acquisition works, leads cost the same. The gap is in who signs up and how they convert.</p><p class="small" style="margin-top:8px"><br><br></p>
     </div>
 
     <div class="k">Action plan <span class="todo">To complete</span></div>
@@ -510,17 +502,14 @@ main.main .page{border-top:none}
         <tr><td class="fill" contenteditable="true"><span class="hint">e.g. Rework ZH messaging &amp; landing page toward Swappers …</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td></tr>
         <tr><td class="fill" contenteditable="true"><span class="hint">e.g. Tighten lead qualification / onboarding call flow in ZH …</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td></tr>
         <tr><td class="fill" contenteditable="true"><span class="hint">e.g. Activate ZH partner agents for supply and referrals …</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td><td class="fill" contenteditable="true"><span class="hint">…</span></td></tr>
-      </tbody></table>
+      </tbody></table><br>
     </div>
 
     <div class="k">Checkpoint</div>
-    <div class="v"><div class="fill" contenteditable="true"><span class="hint">Target for next board meeting, e.g. ZH conversion ≥ …% and Swapper share ≥ …% by …</span></div></div>
+    <div class="v"><div class="fill" contenteditable="true"><span class="hint">Target for next board meeting, e.g. ZH conversion ≥ …% and Swapper share ≥ …% by&nbsp;</span></div></div>
   </div>
 
-  <div class="ask"><span class="k">The ask</span><span>Board aligns on the action plan and the checkpoint against which Zurich is reassessed at meeting #7.</span></div>
-  <div class="decision"><span class="k">Board decision</span>
-    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
-  </div>
+  <div class="ask"><span class="k"><br></span><span class="k">The ask</span><span>Board aligns on the action plan and the checkpoint against which Zurich is reassessed at meeting #7.</span></div>
 </section>
 
 <!-- ================= DEEP DIVE 03 · OFF-MARKET ================= -->
@@ -584,9 +573,6 @@ main.main .page{border-top:none}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board decides the direction for the Immo-Ressource legacy business.</span></div>
-  <div class="decision"><span class="k">Board decision</span>
-    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
-  </div>
 </section>
 
 <!-- ================= BUY-BACK ================= -->
