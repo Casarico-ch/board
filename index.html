@@ -930,7 +930,11 @@ main.main > .offpage{display:none!important}
 <script>
 /* Inline editor - only active when the URL has ?edit. Viewers on the plain link see nothing. */
 (function(){
-  var EDIT = /[?&]edit\b/.test(location.search) || /[?&]edit\b/.test(location.hash);
+  /* editor activates via ?edit OR automatically on devices where the publish token is saved;
+     ?view always forces the read-only view */
+  var hasToken = false; try{ hasToken = !!localStorage.getItem('casarico-board-gh-token'); }catch(e){}
+  var EDIT = (/[?&]edit\b/.test(location.search) || /[?&]edit\b/.test(location.hash) || hasToken)
+             && !/[?&]view\b/.test(location.search);
   var EKEY = 'casarico-boardpack-6-edits-v2';
   var main = document.querySelector('main.main');
   if(!EDIT || !main){
@@ -1155,7 +1159,9 @@ main.main > .offpage{display:none!important}
 // agenda-as-navigation router: home = Overview & agenda; every other section is its own page
 (function(){
   var overview = document.getElementById('overview');
-  var isEdit = /[?&]edit\b/.test(location.search) || /[?&]edit\b/.test(location.hash);
+  var isEditTok = false; try{ isEditTok = !!localStorage.getItem('casarico-board-gh-token'); }catch(e){}
+  var isEdit = (/[?&]edit\b/.test(location.search) || /[?&]edit\b/.test(location.hash) || isEditTok)
+               && !/[?&]view\b/.test(location.search);
   /* On the plain (viewer) link, lock the natively-editable fields so nobody types edits that won't save. */
   if(!isEdit){
     document.querySelectorAll('main.main [contenteditable="true"]').forEach(function(el){ el.setAttribute('contenteditable', 'false'); });
@@ -1214,7 +1220,80 @@ main.main > .offpage{display:none!important}
     });
     return { decs: decs, acts: acts };
   };
+  /* ---- self-healing: rebuild capture UI if a publish rolled it out of the content ---- */
+  var CAP_HTML = '<h3 class="cap-h">Decisions &amp; actions from this item</h3>'
+    + '<div class="card cap-card"><div class="cap-list"></div></div>'
+    + '<div class="btnrow add-cap"><button type="button" onclick="capAdd(this,\'decision\')">+ Decision</button>'
+    + '<button type="button" onclick="capAdd(this,\'action\')">+ Action</button></div>';
+  function ensureCaps(){
+    document.querySelectorAll('main.main > section.page').forEach(function(s){
+      if(s.id === 'decisions') return;
+      if(!s.querySelector('[data-cap]')){
+        var d = document.createElement('div');
+        d.className = 'cap';
+        d.setAttribute('data-cap', '');
+        d.innerHTML = CAP_HTML;
+        s.appendChild(d);
+      }
+    });
+  }
+  function migrateRows(table, type, list){
+    table.querySelectorAll('tr.rec').forEach(function(tr){
+      var cells = [];
+      tr.querySelectorAll('td[contenteditable]').forEach(function(td){
+        var v = td.innerText.replace(/\s+/g, ' ').trim();
+        cells.push(v);
+      });
+      if(!cells.some(function(v){ return v; })) return;
+      var d = document.createElement('div');
+      d.className = 'cap-item';
+      d.setAttribute('data-type', type);
+      d.innerHTML = '<span class="cap-n small num" style="min-width:20px"></span>'
+        + '<div class="cap-text" contenteditable="true" data-ph="' + (type === 'action' ? 'Action …' : 'Decision …') + '"></div>'
+        + (type === 'action' ? '<span class="cap-owner small">Owner:&nbsp;<span contenteditable="true" data-ph="—"></span></span>' : '')
+        + '<button type="button" class="ghost cap-del" onclick="capDel(this)" title="Remove">✕</button>';
+      d.querySelector('.cap-text').textContent = cells[0] || '';
+      if(type === 'action' && cells[1]){ d.querySelector('.cap-owner span').textContent = cells[1]; }
+      list.appendChild(d);
+    });
+  }
+  function ensureSummary(){
+    var sec = document.getElementById('decisions'); if(!sec) return;
+    if(sec.querySelector('#rollupDec') && sec.querySelector('#rollupAct')) return;
+    function block(rollId, genId, type, label){
+      var card = document.createElement('div'); card.className = 'card';
+      card.innerHTML = '<div id="' + rollId + '" data-derived></div><div class="cap-list" id="' + genId + '"></div>';
+      var btn = document.createElement('div'); btn.className = 'btnrow add-cap';
+      btn.innerHTML = '<button type="button" onclick="capAddGeneral(\'' + type + '\')">' + label + '</button>';
+      return [card, btn];
+    }
+    var pair, oldT, oldBtn;
+    if(!sec.querySelector('#rollupDec')){
+      pair = block('rollupDec', 'genDec', 'decision', '+ Add decision');
+      oldT = sec.querySelector('#decTable');
+      if(oldT){
+        oldBtn = oldT.nextElementSibling;
+        if(oldBtn && oldBtn.classList.contains('btnrow')) oldBtn.remove();
+        migrateRows(oldT, 'decision', pair[0].querySelector('#genDec'));
+        oldT.replaceWith(pair[0]);
+      } else { sec.appendChild(pair[0]); }
+      pair[0].after(pair[1]);
+    }
+    if(!sec.querySelector('#rollupAct')){
+      pair = block('rollupAct', 'genAct', 'action', '+ Add action');
+      oldT = sec.querySelector('#actTable');
+      if(oldT){
+        oldBtn = oldT.nextElementSibling;
+        if(oldBtn && oldBtn.classList.contains('btnrow')) oldBtn.remove();
+        migrateRows(oldT, 'action', pair[0].querySelector('#genAct'));
+        oldT.replaceWith(pair[0]);
+      } else { sec.appendChild(pair[0]); }
+      pair[0].after(pair[1]);
+    }
+  }
   window.buildRollup = function(){
+    ensureCaps();
+    ensureSummary();
     /* per-page: reveal the capture card only when it has items (editor always sees it) */
     document.querySelectorAll('main.main [data-cap]').forEach(function(cap){
       cap.classList.toggle('has-items', !!cap.querySelector('.cap-item'));
@@ -1242,6 +1321,10 @@ main.main > .offpage{display:none!important}
       var m = fromPagesA.length;
       document.querySelectorAll('#genAct .cap-item .cap-n').forEach(function(sp){ sp.textContent = (++m) + '.'; });
       if(!m) ra.innerHTML = '<div class="empty">No actions captured yet - add them here or on any agenda page.</div>';
+    }
+    /* viewers: anything injected/migrated stays read-only */
+    if(!document.body.classList.contains('canedit')){
+      document.querySelectorAll('main.main [contenteditable="true"]').forEach(function(el){ el.setAttribute('contenteditable', 'false'); });
     }
   };
   function markDirty(){
