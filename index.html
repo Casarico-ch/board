@@ -812,10 +812,15 @@ main.main .page{border-top:none}
 <script>
 /* Inline editor — only active when the URL has ?edit. Viewers on the plain link see nothing. */
 (function(){
-  var EDIT = /[?&]edit\b/.test(location.search);
+  var EDIT = /[?&]edit\b/.test(location.search) || /[?&]edit\b/.test(location.hash);
   var EKEY = 'casarico-boardpack-6-edits-v2';
   var main = document.querySelector('main.main');
-  if(!EDIT || !main) return;
+  if(!EDIT || !main){
+    /* not an editor: make sure the toolbar can never show (in case a published file froze it visible) */
+    var eb0 = document.getElementById('editbar'); if(eb0) eb0.style.display = 'none';
+    var fb0 = document.getElementById('fmtbar'); if(fb0) fb0.style.display = 'none';
+    return;
+  }
   try{ var saved = localStorage.getItem(EKEY); if(saved) main.innerHTML = saved; }catch(e){}
   var editing = false, st;
   function saveNow(){ try{ localStorage.setItem(EKEY, main.innerHTML); }catch(e){} }
@@ -835,6 +840,15 @@ main.main .page{border-top:none}
     });
   }
   function removeHandles(){ main.querySelectorAll('.sec-del').forEach(function(b){ b.remove(); }); }
+  /* reset all transient editor UI so it never gets baked into the saved/published file */
+  function cleanForSave(){
+    if(editing) window.toggleEdit();
+    removeHandles();
+    main.setAttribute('contenteditable', 'false');
+    document.body.classList.remove('editmode');
+    var fb = document.getElementById('fmtbar'); if(fb) fb.style.display = 'none';
+    var eb = document.getElementById('editbar'); if(eb) eb.style.display = 'none';
+  }
   window.toggleEdit = function(){
     editing = !editing;
     main.setAttribute('contenteditable', editing ? 'true' : 'false');
@@ -860,10 +874,9 @@ main.main .page{border-top:none}
     }
   };
   window.downloadPage = function(){
-    if(editing) window.toggleEdit();
-    removeHandles();
-    main.setAttribute('contenteditable', 'false');
+    cleanForSave();
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
     var blob = new Blob([html], {type:'text/html;charset=utf-8'});
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'index.html';
@@ -890,10 +903,9 @@ main.main .page{border-top:none}
   window.publishLive = async function(){
     var token = getToken();
     if(!token){ window.setToken(); token = getToken(); if(!token) return; }
-    if(editing) window.toggleEdit();
-    removeHandles();
-    main.setAttribute('contenteditable', 'false');
+    cleanForSave();
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
     var api = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
     var headers = { 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
     toast('Publishing …');
@@ -926,12 +938,13 @@ main.main .page{border-top:none}
 // agenda-as-navigation router: home = Overview & agenda; every other section is its own page
 (function(){
   var overview = document.getElementById('overview');
+  var isEdit = /[?&]edit\b/.test(location.search) || /[?&]edit\b/.test(location.hash);
   /* On the plain (viewer) link, lock the natively-editable fields so nobody types edits that won't save. */
-  if(!/[?&]edit\b/.test(location.search)){
+  if(!isEdit){
     document.querySelectorAll('main.main [contenteditable="true"]').forEach(function(el){ el.setAttribute('contenteditable', 'false'); });
   }
   function route(){
-    var id = (location.hash || '').replace(/^#\/?/, '');
+    var id = (location.hash || '').replace(/^#\/?/, '').split('?')[0];   /* ignore a stray ?edit in the hash */
     var target = id ? document.getElementById(id) : null;
     var onPage = !!(target && target.classList.contains('page'));
     document.querySelectorAll('main.main .page').forEach(function(s){
