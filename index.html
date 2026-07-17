@@ -235,14 +235,14 @@ main.main .page{border-top:none}
 @media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important}}
 </style>
 </head>
-<body cz-shortcut-listen="true" class="">
+<body cz-shortcut-listen="true" class="onpage">
 
-<a id="backbar" href="#overview" style="display: none;">← Agenda</a>
+<a id="backbar" href="#overview" style="display: inline-block;">← Agenda</a>
 
 <main class="main" contenteditable="false">
 
 <!-- ================= OVERVIEW ================= -->
-<section id="overview">
+<section id="overview" class="hide">
   <div class="eyebrow"><span style="font-family: Newsreader, Georgia, serif; font-size: 34px; letter-spacing: -0.01em; color: rgb(27, 30, 32);">Board meeting q2 26</span></div>
   <p class="lede">21.07.2026</p>
 
@@ -265,20 +265,19 @@ main.main .page{border-top:none}
     </div>
   </div>
 
-  <h3>Agenda <span class="small" style="font-weight:400">— suggested timeboxes, ≈ 2 h 10. Tap a time to edit.</span></h3>
+  <h3>Agenda</h3>
   <table class="agenda">
     <tbody><tr><td>1</td><td><a href="#overview">Check-in</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>2</td><td><a href="#financials">Financials</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>3</td><td>
-      Business update
+      <a href="#q2">Business update — Q2 review</a>
       <ul class="subagenda">
-        <li><a href="#q2">Q2 review</a> <span class="tag inform">Inform</span></li>
         <li><a href="#pricing">Adjusted pricing &amp; business model from 1 Aug</a> <span class="tag decide">Decide</span></li>
         <li><a href="#zurich">Action plan to improve Zurich</a> <span class="tag decide">Decide</span></li>
         <li><a href="#offmarket">Strategy to get more off-market</a> <span class="tag discuss">Discuss</span></li>
         <li><a href="#churn">Immo-Ressource — how to move forward</a> <span class="tag decide">Decide</span></li>
       </ul>
-    </td><td class="tagset"></td><td class="time" contenteditable="true">10 min</td></tr>
+    </td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>4</td><td><a href="#buyback">SPV buy-back guarantee — concept</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>5</td><td><a href="#financing">Update financing round</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>6</td><td><a href="#outlook">6-month outlook</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">5 min</td></tr>
@@ -373,7 +372,7 @@ main.main .page{border-top:none}
 </section>
 
 <!-- ================= Q2 REVIEW ================= -->
-<section class="page" id="q2">
+<section class="page active" id="q2">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Business update</div>
@@ -387,10 +386,10 @@ main.main .page{border-top:none}
     <div class="card pair"><span class="mark w">✓</span><div><b>30 active Swappers + 35 active buyers</b><div class="small">The strategic center of the flywheel is populated on both sides.</div></div></div>
     <div class="card pair"><span class="mark w">✓</span><div><b>14 partner companies onboarded</b><div class="small">Agent side of the network is forming.</div></div></div>
     <div class="card pair"><span class="mark w">✓</span><div><b>Scraper accuracy &amp; speed improved</b><div class="small">Better market coverage feeding matching.</div></div></div>
-    <div class="card pair"><span class="mark w">✓</span><div><b>New user interface + AI workflows shipped</b><div class="small">Foundation for the automation roadmap below.</div></div></div>
+    <div class="card pair"><span class="mark w">✓</span><div><b>New user interface + AI workflows shipped</b><div class="small">Foundation for more automation.</div></div></div>
   </div>
 
-  <h3>Fails &amp; learnings <span class="small" style="font-weight:400">— each amber link opens the deep dive where we act on it</span></h3>
+  <h3>Fails &amp; learnings</h3>
 
   <div class="learn">
     <div class="pair"><span class="mark f">✕</span><div>
@@ -419,14 +418,14 @@ main.main .page{border-top:none}
   <div class="learn">
     <div class="pair"><span class="mark f">✕</span><div>
       <div class="what">Only 4 true off-market properties shared by agents so far</div>
-      <div class="so">The more leads we get, the less time we spend on supply. Getting agents to publish takes several follow-ups — a capacity and process issue.</div>
+      <div class="so">The more leads we get, the less time we spend on supply. Getting agents to publish takes several follow-ups pointint to a capacity and process issue.</div>
       <div class="link"><a href="#offmarket">→ Deep dive 03 · Strategy to get more off-market</a></div>
     </div></div>
   </div>
 
   <div class="learn">
     <div class="pair"><span class="mark f">✕</span><div>
-      <div class="what">Churn in Immo-Ressource license fees <span class="fill" style="display:inline;padding:2px 8px" contenteditable="true"><span class="hint">CHF …</span></span></div>
+      <div class="what">Churn in Immo-Ressource license fees <span class="fill" style="display:inline;padding:2px 8px" contenteditable="true"><span class="hint">CHF - 12'070</span></span></div>
       <div class="so">Much harder than anticipated to keep legacy customers happy while all focus and energy goes to Casarico.</div>
       <div class="link"><a href="#churn">→ Deep dive 04 · Immo-Ressource — how to move forward</a></div>
     </div></div>
@@ -790,7 +789,7 @@ main.main .page{border-top:none}
 <div id="toast" class="show">Token saved on this device</div>
 
 <!-- ================= INLINE EDITOR (opens with ?edit) ================= -->
-<div id="editbar" style="display: flex;">
+<div id="editbar" style="display: none;">
   <button id="tokenBtn" onclick="setToken()" title="Set or change your GitHub publish token">⚙</button>
   <button id="discardBtn" onclick="discardEdits()" title="Discard your local changes and reload the published page">Revert</button>
   <button id="saveFileBtn" onclick="downloadPage()" title="Download the updated index.html (offline backup)">Save file</button>
