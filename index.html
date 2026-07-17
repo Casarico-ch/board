@@ -42,9 +42,10 @@ body{
   padding:28px 20px 20px;display:flex;flex-direction:column;gap:18px;
   overflow-y:auto;
 }
-.main{margin-left:var(--side);padding:56px 64px 120px;max-width:920px}
+.main{margin:0 auto;padding:56px 64px 120px;max-width:920px}
 section{scroll-margin-top:28px;padding:44px 0;border-top:1px solid var(--line)}
 section:first-of-type{border-top:none;padding-top:0}
+body.onpage main.main{padding-top:68px}
 
 /* ---------- sidebar ---------- */
 .brand{font:600 15px/1.3 Inter;letter-spacing:-.01em}
@@ -216,36 +217,28 @@ body.editmode section{position:relative}
   border-radius:99px;font:600 11px/1 Inter;padding:6px 11px;cursor:pointer;opacity:.85}
 .sec-del:hover{opacity:1;border-color:transparent}
 @media print{#editbar,#fmtbar,.sec-del{display:none!important}}
+
+/* ---------- agenda-as-navigation: each section is its own page ---------- */
+.page{display:none}
+.page.active{display:block}
+main.main .page{border-top:none}
+#overview.hide{display:none}
+#backbar{position:fixed;top:16px;left:16px;z-index:85;display:none;
+  font:500 13px/1 Inter;background:var(--surface);border:1px solid var(--line);border-radius:99px;
+  padding:9px 15px;cursor:pointer;text-decoration:none;color:var(--ink);box-shadow:0 2px 12px rgba(0,0,0,.10)}
+#backbar:hover{border-color:var(--muted)}
+.subagenda{list-style:none;margin:8px 0 2px;padding:0}
+.subagenda li{display:flex;align-items:center;gap:8px;padding:5px 0 5px 16px;border-left:2px solid var(--line);margin:2px 0}
+.subagenda a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);font-size:13px}
+.subagenda a:hover{border-color:var(--muted)}
+.ref-line{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.ref-line a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+@media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important}}
 </style>
 </head>
 <body>
 
-<!-- ================= SIDEBAR ================= -->
-<nav class="side">
-  <div class="brand">Casarico<small>Immo-Ressource AG · Board pack</small></div>
-  <div class="nav" id="nav">
-    <a href="#overview"><span class="n">·</span>Overview &amp; agenda</a>
-    <a href="#financials"><span class="n">·</span>Financials</a>
-    <a href="#q2"><span class="n">·</span>Q2 review</a>
-    <div class="nav-group">Deep dives</div>
-    <a href="#pricing"><span class="n">01</span>Pricing &amp; model</a>
-    <a href="#zurich"><span class="n">02</span>Zurich plan</a>
-    <a href="#offmarket"><span class="n">03</span>Off-market supply</a>
-    <a href="#churn"><span class="n">04</span>Immo-Ressource</a>
-    <div class="nav-group">Forward</div>
-    <a href="#buyback"><span class="n">·</span>Buy-back guarantee</a>
-    <a href="#financing"><span class="n">·</span>Financing round</a>
-    <a href="#outlook"><span class="n">·</span>6-month outlook</a>
-    <a href="#ai"><span class="n">·</span>Automation &amp; AI</a>
-    <div class="nav-group">Reference</div>
-    <a href="#strategy"><span class="n">·</span>Strategy on a page</a>
-    <a href="#decisions"><span class="n">·</span>Decisions &amp; actions</a>
-  </div>
-  <div class="side-foot">
-    Meeting #6 · 21.07.2026<br>Zurich, in person<br>
-    <button onclick="window.print()">Print pack</button>
-  </div>
-</nav>
+<a id="backbar" href="#overview">← Agenda</a>
 
 <main class="main">
 
@@ -278,21 +271,26 @@ body.editmode section{position:relative}
   <table class="agenda">
     <tr><td>1</td><td><a href="#overview">Check-in</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>2</td><td><a href="#financials">Financials</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
-    <tr><td>3</td><td><a href="#q2">Business update — Q2 review</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
-    <tr><td>4</td><td><a href="#pricing">Adjusted pricing &amp; business model from 1 Aug</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">20 min</td></tr>
-    <tr><td>5</td><td><a href="#zurich">Action plan to improve Zurich</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">15 min</td></tr>
-    <tr><td>6</td><td><a href="#offmarket">Strategy to get more off-market</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">15 min</td></tr>
-    <tr><td>7</td><td><a href="#churn">Immo-Ressource — how to move forward</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">15 min</td></tr>
-    <tr><td>8</td><td><a href="#buyback">SPV buy-back guarantee — concept</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
-    <tr><td>9</td><td><a href="#financing">Update financing round</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
-    <tr><td>10</td><td><a href="#outlook">6-month outlook</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">5 min</td></tr>
-    <tr><td>11</td><td><a href="#ai">Automation &amp; AI</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
-    <tr><td>12</td><td><a href="#decisions">Decisions, to-dos, next steps &amp; check-out</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">10 min</td></tr>
+    <tr><td>3</td><td>
+      <a href="#q2">Business update — Q2 review</a>
+      <ul class="subagenda">
+        <li><a href="#pricing">Adjusted pricing &amp; business model from 1 Aug</a> <span class="tag decide">Decide</span></li>
+        <li><a href="#zurich">Action plan to improve Zurich</a> <span class="tag decide">Decide</span></li>
+        <li><a href="#offmarket">Strategy to get more off-market</a> <span class="tag discuss">Discuss</span></li>
+        <li><a href="#churn">Immo-Ressource — how to move forward</a> <span class="tag decide">Decide</span></li>
+      </ul>
+    </td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
+    <tr><td>4</td><td><a href="#buyback">SPV buy-back guarantee — concept</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
+    <tr><td>5</td><td><a href="#financing">Update financing round</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
+    <tr><td>6</td><td><a href="#outlook">6-month outlook</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">5 min</td></tr>
+    <tr><td>7</td><td><a href="#ai">Automation &amp; AI</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
+    <tr><td>8</td><td><a href="#decisions">Decisions, to-dos, next steps &amp; check-out</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">10 min</td></tr>
   </table>
+  <p class="ref-line">Reference · <a href="#strategy">Strategy on a page</a></p>
 </section>
 
 <!-- ================= FINANCIALS ================= -->
-<section id="financials">
+<section class="page" id="financials">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Financials</div>
@@ -376,7 +374,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= Q2 REVIEW ================= -->
-<section id="q2">
+<section class="page" id="q2">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Business update</div>
@@ -437,7 +435,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= DEEP DIVE 01 · PRICING ================= -->
-<section id="pricing">
+<section class="page" id="pricing">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 01</div>
@@ -476,7 +474,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= DEEP DIVE 02 · ZURICH ================= -->
-<section id="zurich">
+<section class="page" id="zurich">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 02</div>
@@ -518,7 +516,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= DEEP DIVE 03 · OFF-MARKET ================= -->
-<section id="offmarket">
+<section class="page" id="offmarket">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 03</div>
@@ -553,7 +551,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= DEEP DIVE 04 · IMMO-RESSOURCE ================= -->
-<section id="churn">
+<section class="page" id="churn">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Deep dive 04</div>
@@ -581,7 +579,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= BUY-BACK ================= -->
-<section id="buyback">
+<section class="page" id="buyback">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Forward</div>
@@ -611,7 +609,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= FINANCING ================= -->
-<section id="financing">
+<section class="page" id="financing">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Forward</div>
@@ -639,7 +637,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= OUTLOOK ================= -->
-<section id="outlook">
+<section class="page" id="outlook">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Forward</div>
@@ -660,7 +658,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= AUTOMATION & AI ================= -->
-<section id="ai">
+<section class="page" id="ai">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Forward</div>
@@ -681,7 +679,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= STRATEGY ================= -->
-<section id="strategy">
+<section class="page" id="strategy">
   <div class="sec-head">
     <div>
       <div class="eyebrow">Reference</div>
@@ -747,7 +745,7 @@ body.editmode section{position:relative}
 </section>
 
 <!-- ================= DECISIONS & ACTIONS ================= -->
-<section id="decisions">
+<section class="page" id="decisions">
   <div class="sec-head">
     <div>
       <div class="eyebrow">During the meeting</div>
@@ -814,7 +812,7 @@ body.editmode section{position:relative}
 /* Inline editor — only active when the URL has ?edit. Viewers on the plain link see nothing. */
 (function(){
   var EDIT = /[?&]edit\b/.test(location.search);
-  var EKEY = 'casarico-boardpack-6-edits';
+  var EKEY = 'casarico-boardpack-6-edits-v2';
   var main = document.querySelector('main.main');
   if(!EDIT || !main) return;
   try{ var saved = localStorage.getItem(EKEY); if(saved) main.innerHTML = saved; }catch(e){}
@@ -877,20 +875,23 @@ body.editmode section{position:relative}
 </script>
 
 <script>
-// active section in nav
+// agenda-as-navigation router: home = Overview & agenda; every other section is its own page
 (function(){
-  var links = document.querySelectorAll('#nav a');
-  var map = {};
-  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
-  var obs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        links.forEach(function(a){ a.classList.remove('on'); });
-        var a = map[e.target.id]; if(a) a.classList.add('on');
-      }
+  var overview = document.getElementById('overview');
+  function route(){
+    var id = (location.hash || '').replace(/^#\/?/, '');
+    var target = id ? document.getElementById(id) : null;
+    var onPage = !!(target && target.classList.contains('page'));
+    document.querySelectorAll('main.main .page').forEach(function(s){
+      s.classList.toggle('active', onPage && s.id === id);
     });
-  }, {rootMargin:'-20% 0px -70% 0px'});
-  document.querySelectorAll('section').forEach(function(s){ obs.observe(s); });
+    if(overview) overview.classList.toggle('hide', onPage);
+    document.getElementById('backbar').style.display = onPage ? 'inline-block' : 'none';
+    document.body.classList.toggle('onpage', onPage);
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+  route();
 })();
 
 function toast(msg){
