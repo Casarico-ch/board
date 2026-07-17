@@ -120,6 +120,10 @@ td .num,.num{font-variant-numeric:tabular-nums}
   padding:14px 18px;display:flex;gap:12px;align-items:baseline;
 }
 .ask .k{font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--act);white-space:nowrap}
+.decision{margin-top:12px;background:var(--pos-bg);border:1px solid #C3E4D2;border-radius:var(--radius);padding:14px 18px}
+.decision .k{display:block;font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--pos);margin-bottom:8px}
+.decision .fill{background:#fff;border:1px dashed #A9D3BC;color:var(--ink);min-height:60px}
+.decision .fill:empty::before,.decision .fill .hint{color:#5B9D77}
 
 /* ---------- editable fills ---------- */
 [contenteditable]{outline:none;border-radius:6px}
@@ -271,21 +275,22 @@ main.main > .offpage{display:none!important}
     <tbody><tr><td>1</td><td><a href="#overview">Check-in</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>2</td><td><a href="#financials">Financials</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>3</td><td>
-      <a href="#q2">Business update — Q2 review</a>
+      Business update
       <ul class="subagenda">
+        <li><a href="#q2">Q2 review</a> <span class="tag inform">Inform</span></li>
         <li><a href="#pricing">Adjusted pricing &amp; business model from 1 Aug</a> <span class="tag decide">Decide</span></li>
         <li><a href="#zurich">Action plan to improve Zurich</a> <span class="tag decide">Decide</span></li>
         <li><a href="#offmarket">Strategy to get more off-market</a> <span class="tag discuss">Discuss</span></li>
         <li><a href="#churn">Immo-Ressource — how to move forward</a> <span class="tag decide">Decide</span></li>
       </ul>
-    </td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">10 min</td></tr>
+    </td><td class="tagset"></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>4</td><td><a href="#buyback">SPV buy-back guarantee — concept</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>5</td><td><a href="#financing">Update financing round</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">10 min</td></tr>
     <tr><td>6</td><td><a href="#outlook">6-month outlook</a></td><td class="tagset"><span class="tag discuss">Discuss</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>7</td><td><a href="#ai">Automation &amp; AI</a></td><td class="tagset"><span class="tag inform">Inform</span></td><td class="time" contenteditable="true">5 min</td></tr>
     <tr><td>8</td><td><a href="#decisions">Decisions, to-dos, next steps &amp; check-out</a></td><td class="tagset"><span class="tag decide">Decide</span></td><td class="time" contenteditable="true">10 min</td></tr>
   </tbody></table>
-  <p class="ref-line"></p>
+  <p class="ref-line">Reference · <a href="#strategy">Strategy on a page</a></p>
 </section>
 
 <!-- ================= FINANCIALS ================= -->
@@ -461,7 +466,8 @@ main.main > .offpage{display:none!important}
         <tbody><tr><th style="width:34%">Participant</th><th>From 1 August</th></tr>
         <tr><td>Buyer: activation fee</td><td class="fill" contenteditable="true"><span class="hint">CHF 450.- at signup</span></td></tr>
         <tr><td>Buyer: success fee</td><td class="fill" contenteditable="true"><span class="hint">&nbsp;0.5% on completed purchase<br></span></td></tr>
-        <tr><td>Swapper</td><td>Free — monetized via the future sales mandate</td></tr>
+        <tr><td>Swapper: activation fee</td><td class="fill" contenteditable="true"><span class="hint">Free? or CHF … at signup</span></td></tr>
+        <tr><td>Swapper: success fee</td><td class="fill" contenteditable="true"><span class="hint">… % or CHF … on completed sale</span></td></tr>
         <tr><td>Agent / partner</td><td class="fill" contenteditable="true"><span class="hint">First transaction free? Referral / mandate share …</span></td></tr>
       </tbody></table>
       <div class="fill" style="margin-top:10px" contenteditable="true"><span class="hint">Expected revenue impact Q3–Q4 and why this strengthens the flywheel …</span></div>
@@ -469,6 +475,9 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board approves the adjusted pricing and business model effective immediately.</span></div>
+  <div class="decision"><span class="k">Board decision</span>
+    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+  </div>
 </section>
 
 <!-- ================= DEEP DIVE 02 · ZURICH ================= -->
@@ -511,6 +520,9 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k"><br></span><span class="k">The ask</span><span>Board aligns on the action plan and the checkpoint against which Zurich is reassessed at meeting #7.</span></div>
+  <div class="decision"><span class="k">Board decision</span>
+    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+  </div>
 </section>
 
 <!-- ================= DEEP DIVE 03 · OFF-MARKET ================= -->
@@ -574,6 +586,9 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board decides the direction for the Immo-Ressource legacy business.</span></div>
+  <div class="decision"><span class="k">Board decision</span>
+    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+  </div>
 </section>
 
 <!-- ================= BUY-BACK ================= -->
@@ -935,7 +950,8 @@ main.main > .offpage{display:none!important}
     var token = getToken();
     if(!token){ window.setToken(); token = getToken(); if(!token) return; }
     cleanForSave();
-    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    var mainHtml = main.innerHTML;
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;   /* fallback only */
     document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
     if(window.routeRefresh) window.routeRefresh();
     var api = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
@@ -944,7 +960,19 @@ main.main > .offpage{display:none!important}
     try{
       var sha;
       var cur = await fetch(api + '?ref=' + BRANCH + '&_=' + Date.now(), { headers: headers, cache:'no-store' });
-      if(cur.ok){ sha = (await cur.json()).sha; }
+      if(cur.ok){
+        var curJson = await cur.json();
+        sha = curJson.sha;
+        /* merge-proof publish: inject only the edited CONTENT into the LATEST
+           published file, so a stale tab can never roll back the page's code */
+        try{
+          var latestBytes = Uint8Array.from(atob((curJson.content || '').replace(/\s/g, '')), function(c){ return c.charCodeAt(0); });
+          var latestHtml = new TextDecoder().decode(latestBytes);
+          var doc = new DOMParser().parseFromString(latestHtml, 'text/html');
+          var m2 = doc.querySelector('main.main');
+          if(m2){ m2.innerHTML = mainHtml; html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML; }
+        }catch(mergeErr){ /* fall back to serializing this page as-is */ }
+      }
       else if(cur.status === 401 || cur.status === 403){ toast('Token rejected — set a valid token (⚙)'); return; }
       var res = await fetch(api, { method:'PUT', headers: headers, body: JSON.stringify({
         message: 'Update board pack via in-page editor',
