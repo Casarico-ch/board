@@ -678,7 +678,8 @@ main.main > .offpage{display:none!important}
     <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end">
       <label class="small" style="display:block">Appraised value (CHF)<br><input class="bb-input" id="bbV" type="number" step="50000" min="0" value="1500000"></label>
       <label class="small" style="display:block">Existing mortgage (CHF)<br><input class="bb-input" id="bbM" type="number" step="50000" min="0" value="900000"></label>
-      <div class="small" style="padding-bottom:9px">→ floor price <b class="num" id="bbG">CHF 1’275’000</b> · advance available <b class="num" id="bbCap">CHF 375’000</b></div>
+      <label class="small" style="display:block">Advance drawn (CHF)<br><input class="bb-input" id="bbA" type="number" step="25000" min="0" value="375000"></label>
+      <div class="small" style="padding-bottom:9px">→ floor price <b class="num" id="bbG">CHF 1’275’000</b> · advance up to <b class="num" id="bbCap">CHF 375’000</b></div>
     </div>
     <div class="bb-tabs">
       <button type="button" class="bb-tab on" data-bb="market">Market sale — expected (~90%)</button>
@@ -1169,7 +1170,10 @@ main.main > .offpage{display:none!important}
     if(!vEl || !mEl) return;
     var V = parseFloat(vEl.value) || 0, M = parseFloat(mEl.value) || 0;
     var G = 0.85 * V, fee = 0.005 * G;
-    var cap = Math.max(0, G - M), interest = 0.06 * cap, repay = cap + interest;
+    var cap = Math.max(0, G - M);
+    var aEl = document.getElementById('bbA');
+    var draw = aEl ? Math.min(Math.max(parseFloat(aEl.value) || 0, 0), cap) : cap;
+    var interest = 0.06 * draw, repay = draw + interest;
     put('bbG', G); put('bbCap', cap);
     put('bbMv', V); put('bbMm', M, true); put('bbMr', repay, true); put('bbMf', fee, true);
     put('bbMn', V - M - repay - fee);
@@ -1177,7 +1181,17 @@ main.main > .offpage{display:none!important}
     put('bbBn', G - M - repay);
   }
   document.addEventListener('input', function(e){
-    if(e.target && (e.target.id === 'bbV' || e.target.id === 'bbM')) calc();
+    if(e.target && (e.target.id === 'bbV' || e.target.id === 'bbM' || e.target.id === 'bbA')) calc();
+  });
+  document.addEventListener('change', function(e){
+    /* settle the drawn amount to its cap once the user leaves the field */
+    if(!e.target || e.target.id !== 'bbA') return;
+    var vEl = document.getElementById('bbV'), mEl = document.getElementById('bbM');
+    if(!vEl || !mEl) return;
+    var cap = Math.max(0, 0.85 * (parseFloat(vEl.value) || 0) - (parseFloat(mEl.value) || 0));
+    var draw = Math.min(Math.max(parseFloat(e.target.value) || 0, 0), cap);
+    e.target.value = Math.round(draw);
+    calc();
   });
   document.addEventListener('click', function(e){
     var t = e.target.closest('.bb-tab'); if(!t) return;
