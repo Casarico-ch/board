@@ -792,9 +792,11 @@ main.main .page{border-top:none}
 
 <!-- ================= INLINE EDITOR (opens with ?edit) ================= -->
 <div id="editbar" style="display:none">
+  <button id="tokenBtn" onclick="setToken()" title="Set or change your GitHub publish token">⚙</button>
   <button id="discardBtn" onclick="discardEdits()" title="Discard your local changes and reload the published page">Revert</button>
-  <button id="saveFileBtn" onclick="downloadPage()" title="Download the updated index.html to publish">Save page (.html)</button>
-  <button id="editToggle" class="primary" onclick="toggleEdit()">✎ Edit</button>
+  <button id="saveFileBtn" onclick="downloadPage()" title="Download the updated index.html (offline backup)">Save file</button>
+  <button id="editToggle" onclick="toggleEdit()">✎ Edit</button>
+  <button id="publishBtn" class="primary" onclick="publishLive()" title="Commit your changes to GitHub and go live">▲ Publish live</button>
 </div>
 <div id="fmtbar">
   <button onmousedown="return keepSel(event)" onclick="fmt('bold')" title="Bold"><b>B</b></button>
@@ -841,7 +843,7 @@ main.main .page{border-top:none}
     document.getElementById('fmtbar').style.display = editing ? 'flex' : 'none';
     var t = document.getElementById('editToggle');
     t.textContent = editing ? '✓ Done' : '✎ Edit';
-    t.classList.toggle('primary', !editing);
+    t.classList.toggle('primary', editing);
     if(editing){ addHandles(); main.focus(); } else { removeHandles(); saveNow(); }
   };
   window.addSection = function(){
@@ -870,6 +872,53 @@ main.main .page{border-top:none}
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
     if(window.toast) toast('index.html downloaded — upload it to GitHub to publish');
   };
+
+  /* ---- Publish live: commit straight to GitHub (auto-deploys via Pages) ---- */
+  var REPO = 'Casarico-ch/board', BRANCH = 'main', FILE = 'index.html';
+  var TKEY = 'casarico-board-gh-token';   // token is stored only in this browser, never in the page
+  function getToken(){ try{ return localStorage.getItem(TKEY) || ''; }catch(e){ return ''; } }
+  window.setToken = function(){
+    var cur = getToken();
+    var v = prompt('Paste your GitHub token (stored only in this browser). Leave empty to remove it.', cur ? '' : '');
+    if(v === null) return;
+    try{ if(v){ localStorage.setItem(TKEY, v.trim()); toast('Token saved on this device'); } else { localStorage.removeItem(TKEY); toast('Token removed'); } }catch(e){}
+  };
+  function b64utf8(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    for(var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  window.publishLive = async function(){
+    var token = getToken();
+    if(!token){ window.setToken(); token = getToken(); if(!token) return; }
+    if(editing) window.toggleEdit();
+    removeHandles();
+    main.setAttribute('contenteditable', 'false');
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    var api = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
+    var headers = { 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
+    toast('Publishing …');
+    try{
+      var sha;
+      var cur = await fetch(api + '?ref=' + BRANCH + '&_=' + Date.now(), { headers: headers, cache:'no-store' });
+      if(cur.ok){ sha = (await cur.json()).sha; }
+      else if(cur.status === 401 || cur.status === 403){ toast('Token rejected — set a valid token (⚙)'); return; }
+      var res = await fetch(api, { method:'PUT', headers: headers, body: JSON.stringify({
+        message: 'Update board pack via in-page editor',
+        content: b64utf8(html),
+        sha: sha,
+        branch: BRANCH
+      }) });
+      if(res.ok){ toast('Published ✓ — live in about a minute'); }
+      else {
+        var e = {}; try{ e = await res.json(); }catch(_){}
+        if(res.status === 401 || res.status === 403) toast('Token rejected — set a valid token (⚙)');
+        else if(res.status === 409) toast('Someone else just published — reload, then publish again');
+        else toast('Publish failed: ' + (e.message || res.status));
+      }
+    }catch(err){ toast('Publish failed — check your connection'); }
+  };
+
   document.getElementById('editbar').style.display = 'flex';
 })();
 </script>
@@ -878,6 +927,10 @@ main.main .page{border-top:none}
 // agenda-as-navigation router: home = Overview & agenda; every other section is its own page
 (function(){
   var overview = document.getElementById('overview');
+  /* On the plain (viewer) link, lock the natively-editable fields so nobody types edits that won't save. */
+  if(!/[?&]edit\b/.test(location.search)){
+    document.querySelectorAll('main.main [contenteditable="true"]').forEach(function(el){ el.setAttribute('contenteditable', 'false'); });
+  }
   function route(){
     var id = (location.hash || '').replace(/^#\/?/, '');
     var target = id ? document.getElementById(id) : null;
