@@ -125,6 +125,25 @@ td .num,.num{font-variant-numeric:tabular-nums}
 .decision .fill{background:#fff;border:1px dashed #A9D3BC;color:var(--ink);min-height:60px}
 .decision .fill:empty::before,.decision .fill .hint{color:#5B9D77}
 
+/* ---------- buy-back page ---------- */
+.score{display:grid;grid-template-columns:150px 1fr 40px;gap:10px;align-items:center;padding:5px 0;font-size:13px}
+.score .bar{height:10px;border-radius:99px;background:var(--line-soft);overflow:hidden}
+.score .bar i{display:block;height:100%;border-radius:99px;background:#C9C7BF}
+.score.win .bar i{background:var(--pos)}
+.score.win{font-weight:600}
+.score .pts{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.bb-input{font:500 15px/1 Inter;font-variant-numeric:tabular-nums;width:140px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.bb-input:focus{outline:none;border-color:#E4D3AE;background:#FFFDF5}
+.bb-tabs{display:flex;gap:6px;margin:16px 0 10px;flex-wrap:wrap}
+.bb-tab{font:500 12.5px/1 Inter;padding:8px 13px;border-radius:99px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--muted)}
+.bb-tab.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.wf{font-size:13.5px}
+.wf td{padding:7px 12px 7px 0}
+.wf .t-right{font-variant-numeric:tabular-nums}
+.wf tr.total td{border-top:1px solid var(--line);border-bottom:none;font-weight:600}
+.struct{display:flex;justify-content:center;padding:6px 0}
+.struct svg{max-width:660px;width:100%;height:auto}
+
 /* ---------- editable fills ---------- */
 [contenteditable]{outline:none;border-radius:6px}
 [contenteditable]:hover{background:var(--line-soft)}
@@ -596,29 +615,147 @@ main.main > .offpage{display:none!important}
   <div class="sec-head">
     <div>
       <div class="eyebrow">Forward</div>
-      <h2>SPV buy-back guarantee — basic concept</h2>
+      <h2>Buy Back Guarantee — the missing piece of the Swapper journey</h2>
     </div>
     <span class="tag discuss">Discuss</span>
   </div>
 
-  <div class="memo">
-    <div class="k">Concept</div>
-    <div class="v"><p>Homeowners often can't buy because they first need certainty about selling their current home. An SPV-based buy-back guarantee gives a Swapper conditional purchase certainty on their existing property — turning timing uncertainty into a financial product. Search demand and transaction financing then reinforce each other, and it moves us a step closer to owning the whole transaction workflow rather than just discovery.</p></div>
+  <p class="lede" style="margin-bottom:16px">A notarised commitment to buy the Swapper's current home at a floor price if it hasn't sold in 6 months — certainty that makes their bank finance the next home. Framed as a forward purchase commitment, not insurance, so it stays outside FINMA supervision.</p>
 
-    <div class="k">Known risks</div>
-    <div class="v"><ul>
-      <li>Capital requirements of the guarantee vehicle.</li>
-      <li>Sensitivity to the interest-rate environment.</li>
-    </ul></div>
+  <h3 style="margin-top:0">The gap it closes</h3>
+  <div class="grid g2">
+    <div class="card pair"><span class="mark f">✕</span><div><b>Equity is locked</b><div class="small">The down payment sits in the current home.</div></div></div>
+    <div class="card pair"><span class="mark f">✕</span><div><b>Two mortgages fail affordability</b><div class="small">Banks won't carry both homes.</div></div></div>
+    <div class="card pair"><span class="mark f">✕</span><div><b>Sale price &amp; timing uncertain</b><div class="small">No one guarantees the old home sells.</div></div></div>
+    <div class="card pair"><span class="mark f">✕</span><div><b>Conditional offers get rejected</b><div class="small">Sellers pick credible buyers in a tight market.</div></div></div>
+  </div>
+  <p class="small" style="margin-top:10px">US platforms (HomeLight, Knock, Orchard) prove the model. Nothing exists at scale in Switzerland.</p>
 
-    <div class="k">Structure <span class="todo">To complete</span></div>
-    <div class="v">
-      <div class="fill" contenteditable="true"><span class="hint">SPV setup, capital partner(s), guarantee terms &amp; pricing …</span></div>
-      <div class="fill" style="margin-top:8px" contenteditable="true"><span class="hint">Pilot scope: # guarantees, region, timeline, unit economics …</span></div>
-    </div>
+  <h3>The structure — two sister vehicles, fully ring-fenced</h3>
+  <div class="card struct">
+    <svg viewBox="0 0 660 330" role="img" aria-label="SPV structure">
+      <defs><marker id="bbarr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="#9AA0A4"/></marker></defs>
+      <g fill="none" stroke="#C9C7BF" stroke-width="1.4" marker-end="url(#bbarr)">
+        <line x1="330" y1="58" x2="330" y2="86"/>
+        <line x1="290" y1="134" x2="196" y2="168"/>
+        <line x1="370" y1="134" x2="464" y2="168"/>
+        <line x1="200" y1="264" x2="180" y2="232"/>
+        <line x1="460" y1="264" x2="480" y2="232"/>
+      </g>
+      <g font-family="Inter,sans-serif">
+        <rect x="230" y="14" width="200" height="44" rx="9" fill="#FFFFFF" stroke="#E8E6DF"/>
+        <text x="330" y="33" text-anchor="middle" font-size="13" font-weight="600" fill="#1B1E20">Swapper</text>
+        <text x="330" y="49" text-anchor="middle" font-size="11" fill="#6C7176">wants to buy before selling</text>
+        <rect x="230" y="90" width="200" height="44" rx="9" fill="#FFFFFF" stroke="#1B1E20"/>
+        <text x="330" y="109" text-anchor="middle" font-size="13" font-weight="600" fill="#1B1E20">Casarico</text>
+        <text x="330" y="125" text-anchor="middle" font-size="11" fill="#6C7176">originates exclusively · no cash at risk</text>
+        <rect x="66" y="172" width="240" height="58" rx="9" fill="#EEF3FB" stroke="#2E5AAC"/>
+        <text x="186" y="192" text-anchor="middle" font-size="13" font-weight="600" fill="#2E5AAC">CasaCash · credit SPV</text>
+        <text x="186" y="208" text-anchor="middle" font-size="11" fill="#1B1E20">issues the guarantee contract</text>
+        <text x="186" y="222" text-anchor="middle" font-size="11" fill="#1B1E20">funds the equity advance</text>
+        <rect x="354" y="172" width="240" height="58" rx="9" fill="#EAF5EF" stroke="#1E7F4F"/>
+        <text x="474" y="192" text-anchor="middle" font-size="13" font-weight="600" fill="#1E7F4F">CasaBuy · property SPV</text>
+        <text x="474" y="208" text-anchor="middle" font-size="11" fill="#1B1E20">stands behind the purchase</text>
+        <text x="474" y="222" text-anchor="middle" font-size="11" fill="#1B1E20">buys at the 85% floor if activated</text>
+        <rect x="150" y="268" width="360" height="46" rx="9" fill="#FFFFFF" stroke="#E8E6DF"/>
+        <text x="330" y="288" text-anchor="middle" font-size="13" font-weight="600" fill="#1B1E20">Refolio</text>
+        <text x="330" y="304" text-anchor="middle" font-size="11" fill="#6C7176">funds and owns both · portfolio stays ring-fenced</text>
+      </g>
+    </svg>
+  </div>
+  <p class="small" style="margin-top:8px">One notarised transfer (customer → CasaBuy) — no double notary costs, no double gains-tax event. The bank's comfort letter points at CasaBuy's committed capital.</p>
+
+  <h3>Why an SPV — six options scored</h3>
+  <div class="card">
+    <div class="score"><span>Casarico issues</span><span class="bar"><i style="width:43%"></i></span><span class="pts">15</span></div>
+    <div class="score"><span>Refolio issues</span><span class="bar"><i style="width:46%"></i></span><span class="pts">16</span></div>
+    <div class="score"><span>Joint venture</span><span class="bar"><i style="width:60%"></i></span><span class="pts">21</span></div>
+    <div class="score"><span>Insurance partner</span><span class="bar"><i style="width:54%"></i></span><span class="pts">19</span></div>
+    <div class="score"><span>Bank guarantee</span><span class="bar"><i style="width:43%"></i></span><span class="pts">15</span></div>
+    <div class="score win"><span>Independent SPV</span><span class="bar"><i style="width:89%"></i></span><span class="pts">31</span></div>
+    <p class="small" style="margin-top:8px">Scored across simplicity, capital efficiency, liability isolation, investor friendliness, regulatory burden, scalability and bank confidence. The SPV wins everything that matters at scale; its only cost is a heavier setup quarter.</p>
   </div>
 
-  <div class="ask"><span class="k">The ask</span><span>Board gives directional feedback on the concept and the conditions for a pilot.</span></div>
+  <h3>The product in four numbers</h3>
+  <div class="grid g4">
+    <div class="card kpi"><div class="lab">Guarantee floor</div><div class="val">85%</div><div class="sub">of appraised value — a safety net, not an offer</div></div>
+    <div class="card kpi"><div class="lab">Term</div><div class="val">6 mo</div><div class="sub">+3 months optional against +0.25%</div></div>
+    <div class="card kpi"><div class="lab">Guarantee fee</div><div class="val">0.5%</div><div class="sub">of floor price — waived if we end up buying</div></div>
+    <div class="card kpi"><div class="lab">Equity advance</div><div class="val">6%</div><div class="sub">flat for 6 months, optional, secured by Schuldbrief</div></div>
+  </div>
+  <p class="small" style="margin-top:10px">At an 85% floor, a rational seller cuts the asking price long before surrendering 15% — expected activation only ~10%.</p>
+
+  <h3>Try it — what a deal looks like</h3>
+  <div class="card">
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end">
+      <label class="small" style="display:block">Appraised value (CHF)<br><input class="bb-input" id="bbV" type="number" step="50000" min="0" value="1500000"></label>
+      <label class="small" style="display:block">Existing mortgage (CHF)<br><input class="bb-input" id="bbM" type="number" step="50000" min="0" value="900000"></label>
+      <div class="small" style="padding-bottom:9px">→ floor price <b class="num" id="bbG">CHF 1’275’000</b> · advance available <b class="num" id="bbCap">CHF 375’000</b></div>
+    </div>
+    <div class="bb-tabs">
+      <button type="button" class="bb-tab on" data-bb="market">Market sale — expected (~90%)</button>
+      <button type="button" class="bb-tab" data-bb="backstop">Backstop — no buyer after 6 months</button>
+    </div>
+    <div id="bbMarket">
+      <table class="wf">
+        <tr><td>Home sells at appraised value</td><td class="t-right num" id="bbMv">CHF 1’500’000</td></tr>
+        <tr><td>Repay bank mortgage</td><td class="t-right num" id="bbMm">− CHF 900’000</td></tr>
+        <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbMr">− CHF 397’500</td></tr>
+        <tr><td>Guarantee fee (0.5% of floor)</td><td class="t-right num" id="bbMf">− CHF 6’375</td></tr>
+        <tr class="total"><td>To the customer at closing <span class="small">(advance was already in hand on day one)</span></td><td class="t-right num" id="bbMn">CHF 196’125</td></tr>
+      </table>
+    </div>
+    <div id="bbBackstop" style="display:none">
+      <table class="wf">
+        <tr><td>CasaBuy pays the floor price</td><td class="t-right num" id="bbBg">CHF 1’275’000</td></tr>
+        <tr><td>Repay bank mortgage</td><td class="t-right num" id="bbBm">− CHF 900’000</td></tr>
+        <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbBr">− CHF 397’500</td></tr>
+        <tr><td>Guarantee fee</td><td class="t-right num">waived</td></tr>
+        <tr class="total"><td>To the customer at closing — clean exit, no earn-out, transaction ends</td><td class="t-right num" id="bbBn">CHF −22’500</td></tr>
+      </table>
+    </div>
+    <p class="small" style="margin-top:10px">Advance is capped so mortgage + advance never exceed the floor — the home is never charged beyond 85% of value. Customer keeps full control of pricing for the whole 6 months.</p>
+  </div>
+
+  <h3>Who puts in what</h3>
+  <div class="grid g2">
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:8px">Casarico</div>
+      <div class="small" style="color:var(--ink)">
+        <b>Cash in: none — services only.</b><br>
+        Origination fee CHF 3–5k per guarantee (part deferred, forfeited on loss-making deals) + the Swapper fees the product unlocks.<br>
+        Earn-in option up to ~20% of CasaCash on milestones · board seat · contractual exclusivity across both vehicles.
+      </div>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:8px">Refolio</div>
+      <div class="small" style="color:var(--ink)">
+        <b>Funds both vehicles: ≈ CHF 15m committed.</b><br>
+        CasaCash funding line ≈ CHF 5–6m · CasaBuy capital ≈ CHF 9–10m (6–8 concurrent activations).<br>
+        Earns the lending margin, the ~15-point acquisition discount and resale/rental returns. Owns 100% at incorporation.
+      </div>
+    </div>
+  </div>
+  <p class="small" style="margin-top:10px">Pilot year at 25 deals ≈ break-even before activation outcomes · ≈ CHF 24k revenue per full deal (1.9% of floor) · clear profitability from ~40 deals a year.</p>
+
+  <h3>Stress-tested — 20 open guarantees</h3>
+  <div class="grid g3">
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Base</b><span class="chip pos">Clearly positive</span></div><div class="small" style="margin-top:8px">10% activate · resale at value.<br>≈ 15-point entry discount less costs. Advances fully repaid.</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Adverse</b><span class="chip pos">Positive</span></div><div class="small" style="margin-top:8px">20% activate · resale −5%.<br>≈ 10-point cushion remains. Advances fully repaid.</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Severe</b><span class="chip act">Small loss</span></div><div class="small" style="margin-top:8px">35% activate · resale −15%.<br>Loss contained inside CasaBuy's capital. Advances still repaid.</div></div>
+  </div>
+  <p class="small" style="margin-top:10px">First real capital loss only beyond a −15% Zurich-wide fall — without precedent in recent history. Losses never reach Casarico, CasaCash's lenders or Refolio's wider portfolio. Why Zurich: home market, no property transfer tax, and activations book a ~15-point gain.</p>
+
+  <h3>What has to be true before the first deal</h3>
+  <div class="card">
+    <div class="item"><span class="chip mut">Open</span><div class="grow">Counsel opinion: purchase commitment ≠ insurance (FINMA) + notarisation mechanics</div></div>
+    <div class="item"><span class="chip mut">Open</span><div class="grow">Tax opinion: gains tax on short-holding resales · VAT on fee and interest</div></div>
+    <div class="item"><span class="chip mut">Open</span><div class="grow">KKG exemption confirmed for the mortgage-secured advance (gating item)</div></div>
+    <div class="item"><span class="chip mut">Open</span><div class="grow">2–3 Zurich banks accept the comfort letter — the true product-market-fit test</div></div>
+    <div class="item"><span class="chip mut">Open</span><div class="grow">Sponsor terms signed · both vehicles incorporated · 3–5 pilot deals in Q4 2026, 20 in 2027</div></div>
+  </div>
+
+  <div class="ask"><span class="k">The ask</span><span>Board gives directional feedback on the concept and green-lights the gating work for a Q4 2026 Zurich pilot.</span></div>
 </section>
 
 <!-- ================= FINANCING ================= -->
@@ -1026,6 +1163,43 @@ main.main > .offpage{display:none!important}
   window.addEventListener('hashchange', route);
   window.routeRefresh = route;   /* editor calls this after refreshing content */
   route();
+})();
+
+/* buy-back worked-example calculator (event-delegated; harmless if the elements are edited away) */
+(function(){
+  function chf(n){
+    var neg = n < 0; var s = String(Math.round(Math.abs(n)));
+    s = s.replace(/\B(?=(\d{3})+(?!\d))/g, '’');
+    return (neg ? '− ' : '') + 'CHF ' + s;
+  }
+  function put(id, n, forceMinus){
+    var el = document.getElementById(id); if(!el) return;
+    el.textContent = (forceMinus && n > 0 ? '− ' + chf(n) : chf(n));
+  }
+  function calc(){
+    var vEl = document.getElementById('bbV'), mEl = document.getElementById('bbM');
+    if(!vEl || !mEl) return;
+    var V = parseFloat(vEl.value) || 0, M = parseFloat(mEl.value) || 0;
+    var G = 0.85 * V, fee = 0.005 * G;
+    var cap = Math.max(0, G - M), interest = 0.06 * cap, repay = cap + interest;
+    put('bbG', G); put('bbCap', cap);
+    put('bbMv', V); put('bbMm', M, true); put('bbMr', repay, true); put('bbMf', fee, true);
+    put('bbMn', V - M - repay - fee);
+    put('bbBg', G); put('bbBm', M, true); put('bbBr', repay, true);
+    put('bbBn', G - M - repay);
+  }
+  document.addEventListener('input', function(e){
+    if(e.target && (e.target.id === 'bbV' || e.target.id === 'bbM')) calc();
+  });
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.bb-tab'); if(!t) return;
+    document.querySelectorAll('.bb-tab').forEach(function(b){ b.classList.toggle('on', b === t); });
+    var mode = t.getAttribute('data-bb');
+    var mp = document.getElementById('bbMarket'), bp = document.getElementById('bbBackstop');
+    if(mp) mp.style.display = (mode === 'market') ? '' : 'none';
+    if(bp) bp.style.display = (mode === 'backstop') ? '' : 'none';
+  });
+  calc();
 })();
 
 function toast(msg){
