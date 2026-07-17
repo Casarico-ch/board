@@ -120,10 +120,23 @@ td .num,.num{font-variant-numeric:tabular-nums}
   padding:14px 18px;display:flex;gap:12px;align-items:baseline;
 }
 .ask .k{font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--act);white-space:nowrap}
-.decision{margin-top:12px;background:var(--pos-bg);border:1px solid #C3E4D2;border-radius:var(--radius);padding:14px 18px}
-.decision .k{display:block;font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--pos);margin-bottom:8px}
-.decision .fill{background:#fff;border:1px dashed #A9D3BC;color:var(--ink);min-height:60px}
-.decision .fill:empty::before,.decision .fill .hint{color:#5B9D77}
+
+/* ---------- decision & action capture ---------- */
+.cap-h{display:none;font:600 13.5px/1.4 Inter;margin:26px 0 6px}
+body.canedit .cap-h,.cap.has-items .cap-h{display:block}
+.cap-item{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+.cap-item:last-child{border-bottom:none}
+.cap-item .cap-text{flex:1;min-width:0}
+.cap-item .chip{flex:none}
+.cap-del{display:none}
+body.canedit .cap-del{display:inline-block}
+.btnrow.add-cap,.add-cap{display:none}
+body.canedit .btnrow.add-cap,body.canedit .add-cap{display:flex}
+.cap-src{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
+.cap-src:hover{color:var(--ink)}
+.cap .cap-card{display:none}
+body.canedit .cap .cap-card,.cap.has-items .cap-card{display:block}
+@media print{.add-cap,.cap-del{display:none!important}}
 
 /* ---------- buy-back page ---------- */
 .score{display:grid;grid-template-columns:150px 1fr 40px;gap:10px;align-items:center;padding:5px 0;font-size:13px}
@@ -394,6 +407,12 @@ main.main > .offpage{display:none!important}
       <div class="sub">Detailed P&amp;L: <a href="https://docs.google.com/spreadsheets/d/1o9Md0DB9La2Sm23JxOEbInTXoRGh7H08L3Rmi5BVa9w/edit?pli=1&amp;gid=476394302#gid=476394302">Link</a></div>
     </div>
   </div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
 </section>
 
 <!-- ================= Q2 REVIEW ================= -->
@@ -455,6 +474,12 @@ main.main > .offpage{display:none!important}
       <div class="link"><a href="#churn">→ Deep dive 04 · Immo-Ressource — how to move forward</a></div>
     </div></div>
   </div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
 </section>
 
 <!-- ================= DEEP DIVE 01 · PRICING ================= -->
@@ -492,8 +517,11 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k">Discussion</span><span>Board approves the adjusted pricing and business model effective immediately?</span></div>
-  <div class="decision"><span class="k">Board decision</span>
-    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
   </div>
 </section>
 
@@ -537,8 +565,11 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k"><br></span><span class="k">The ask</span><span>Board aligns on the action plan and the checkpoint against which Zurich is reassessed at board meeting #7.</span></div>
-  <div class="decision"><span class="k">Board decision</span>
-    <div class="fill" contenteditable="true"></div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
   </div>
 </section>
 
@@ -575,6 +606,12 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Discuss options</span></div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
 </section>
 
 <!-- ================= DEEP DIVE 04 · IMMO-RESSOURCE ================= -->
@@ -593,8 +630,11 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k">CONCLUSION</span><span>Immo-Ressource V1 is declining fast without the required focus and capacity. We must speed up financing round and not increase costs.</span></div>
-  <div class="decision"><span class="k">Board decision</span>
-    <div class="fill" contenteditable="true"></div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
   </div>
 </section>
 
@@ -710,11 +750,11 @@ main.main > .offpage{display:none!important}
   </div>
   <p class="small" style="margin-top:10px"><br><font color="#1b1e20" face="Inter"><span style="font-size: 14px;"><b>Stress-test: 20 open guarantees</b></span></font></p>
   <div class="grid g3">
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Base</b><span class="chip pos">Clearly positive</span></div><div class="small" style="margin-top:8px">10% activate · resale at value.<br>≈ 15-point entry discount less costs. Advances fully repaid.</div></div>
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Adverse</b><span class="chip pos">Positive</span></div><div class="small" style="margin-top:8px">20% activate · resale −5%.<br>≈ 10-point cushion remains. Advances fully repaid.</div></div>
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Severe</b><span class="chip act">Small loss</span></div><div class="small" style="margin-top:8px">35% activate · resale −15%.<br>Loss contained inside CasaBuy's capital. Advances still repaid.</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Base</b><span class="chip pos">Clearly positive</span></div><div class="small" style="margin-top:8px">10% activate · resale at value.<br>≈ 15-point entry discount less costs. Advances fully repaid.</div><div class="num" style="margin-top:10px;font-weight:600;color:var(--pos)">≈ + CHF 230’000 net · +9%</div><div class="small" style="color:var(--faint)">2 × gain 225’000, less ≈ 1% costs and ≈ 45% gains tax · on CHF 2.55m deployed</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Adverse</b><span class="chip pos">Positive</span></div><div class="small" style="margin-top:8px">20% activate · resale −5%.<br>≈ 10-point cushion remains. Advances fully repaid.</div><div class="num" style="margin-top:10px;font-weight:600;color:var(--pos)">≈ + CHF 300’000 net · +6%</div><div class="small" style="color:var(--faint)">4 × gain 150’000, less costs and gains tax · on CHF 5.1m deployed</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Severe</b><span class="chip act">Small loss</span></div><div class="small" style="margin-top:8px">35% activate · resale −15%.<br>Loss contained inside CasaBuy's capital. Advances still repaid.</div><div class="num" style="margin-top:10px;font-weight:600;color:var(--neg)">≈ − CHF 100’000 net · −1%</div><div class="small" style="color:var(--faint)">7 × resale at cost — only transaction costs lost · on CHF 8.9m deployed</div></div>
   </div>
-  <p class="small" style="margin-top:10px">First real capital loss only beyond a −15% real estate price fall, loss contained inside CasaBuy.<br><br><br></p>
+  <p class="small" style="margin-top:10px">On top, CasaCash earns ≈ CHF 0.35m per 20-deal cohort (guarantee fees + 6% advance interest) in every scenario, and advances are always repaid. First real capital loss only beyond a −15% price fall — even at −20% resale the hit is ≈ − CHF 0.6m (−7%), well inside CasaBuy's CHF 9–10m capital. Figures are illustrative: avg. value CHF 1.5m, floor CHF 1.275m, resale within a year, ≈ 1% transaction costs, ≈ 45% Zurich short-holding gains tax on the gain (holding &gt; 1 year reduces the tax).<br><br><br></p>
 
   <h3>What has to be true before the first deal / pilot project</h3>
   <div class="card">
@@ -726,6 +766,12 @@ main.main > .offpage{display:none!important}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board gives directional feedback on the concept and green-lights the gating work for a Q4 2026 Zurich pilot.</span></div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
 </section>
 
 <!-- ================= FINANCING ================= -->
@@ -739,6 +785,12 @@ main.main > .offpage{display:none!important}
   </div>
 
   <p>Page in progress</p>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
 </section>
 
 <!-- ================= OUTLOOK ================= -->
@@ -751,6 +803,12 @@ main.main > .offpage{display:none!important}
     <span class="tag discuss">Discuss</span>
   </div>
   <p class="lede" style="margin-bottom:16px">Page in progres</p><div class="grid g3">
+  </div>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
   </div>
 </section>
 
@@ -772,7 +830,13 @@ main.main > .offpage{display:none!important}
     <tr><td><b>Matching management</b></td><td class="small" style="color:var(--ink)">Match buyers to (off-market) properties at scale</td><td class="fill" contenteditable="true">V1 running</td></tr>
     <tr><td><b>Marketing analytics</b></td><td class="small" style="color:var(--ink)">Attribute spend and steer campaigns (ZH vs GE)</td><td class="fill" contenteditable="true">Running</td></tr>
     <tr><td><b>Video ad creation</b></td><td class="small" style="color:var(--ink)">Generate ad creative variants with AI Avatars</td><td class="fill" contenteditable="true">Running<br></td></tr>
-  </tbody></table><br><b>! Our most important use of AI :<br></b>- Product development (costs saving but also huge leverage in terms of what's possible)<br>- Listings scraping, data structuring for automatic matching with our clients (time savings)<br><br><b>Future ideas for AI within the company:<br></b>- Full client relationship management<br>- Partner agents outreach + relationship management<br>- Lead nurturing for higher conversion rate<br>- Content creation for more social presence (LinkedIn, Instagram, ...)<br>- Agent performance benchmarking (speed of response, information accuracy, ...)<br>- Eigener Pricing Tool ähnlich wie PriceHubble, Wüst &amp; Partner, ...<br>- Financial capacity analysis + automated mortgage borkering<br></section><section class="page" id="ai"><br><b>Future ideas for the implementation of AI:<br></b>- Supply and relationship management with partner agents<br>- Lead nurturing via Email, Sms, Whatsapp to increase conversion rate<br>- Agent performance benchmarking (response speed, information accuracy, ...)<br>- Mortgage brokering (incl. financial capacity calculator)</section><section class="page" id="ai">
+  </tbody></table><br><b>! Our most important use of AI :<br></b>- Product development (costs saving but also huge leverage in terms of what's possible)<br>- Listings scraping, data structuring for automatic matching with our clients (time savings)<br><br><b>Future ideas for AI within the company:<br></b>- Full client relationship management<br>- Partner agents outreach + relationship management<br>- Lead nurturing for higher conversion rate<br>- Content creation for more social presence (LinkedIn, Instagram, ...)<br>- Agent performance benchmarking (speed of response, information accuracy, ...)<br>- Eigener Pricing Tool ähnlich wie PriceHubble, Wüst &amp; Partner, ...<br>- Financial capacity analysis + automated mortgage borkering<br>
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
+</section><section class="page" id="ai"><br><b>Future ideas for the implementation of AI:<br></b>- Supply and relationship management with partner agents<br>- Lead nurturing via Email, Sms, Whatsapp to increase conversion rate<br>- Agent performance benchmarking (response speed, information accuracy, ...)<br>- Mortgage brokering (incl. financial capacity calculator)</section><section class="page" id="ai">
 </section>
 
 <!-- ================= STRATEGY ================= -->
@@ -839,6 +903,12 @@ main.main > .offpage{display:none!important}
     <tr><td>Capital needs of buy-back guarantees</td><td class="small" style="color:var(--ink)">SPV structure, external capital partners</td></tr>
   </tbody></table>
   <p class="small" style="margin-top:12px">Decision rule: every choice should strengthen the flywheel of Swappers, proprietary supply, trusted execution and transaction ownership. Incremental revenue that dilutes this positioning is rejected.</p>
+
+  <div class="cap" data-cap>
+    <h3 class="cap-h">Decisions &amp; actions from this item</h3>
+    <div class="card cap-card"><div class="cap-list"></div></div>
+    <div class="btnrow add-cap"><button type="button" onclick="capAdd(this,'decision')">+ Decision</button><button type="button" onclick="capAdd(this,'action')">+ Action</button></div>
+  </div>
 </section>
 
 <!-- ================= DECISIONS & ACTIONS ================= -->
@@ -852,19 +922,19 @@ main.main > .offpage{display:none!important}
   </div>
   <p class="lede" style="margin-bottom:18px">This helps us keep track of decisions and to do's defined during our meeting.<br><br></p>
 
-  <h3 style="margin-top:0">Decisions</h3>
-  <table id="decTable">
-    <tbody><tr><th style="width:26px">#</th><th>Decision</th><th style="width:22%">Relates to</th><th style="width:34px"></th></tr>
-    <tr class="rec"><td class="idx">1</td><td contenteditable="true"></td><td contenteditable="true"></td><td><button class="ghost" onclick="delRow(this)" title="Remove">✕</button></td></tr>
-  </tbody></table>
-  <div class="btnrow"><button onclick="addRow('decTable',3)">+ Add decision</button></div>
+  <h3 style="margin-top:0">Decisions <span class="small" style="font-weight:400">— collected live from every agenda page</span></h3>
+  <div class="card">
+    <div id="rollupDec" data-derived></div>
+    <div class="cap-list" id="genDec"></div>
+  </div>
+  <div class="btnrow add-cap"><button type="button" onclick="capAddGeneral('decision')">+ Add decision</button></div>
 
-  <h3>Actions &amp; to-dos</h3>
-  <table id="actTable">
-    <tbody><tr><th style="width:26px">#</th><th>Action</th><th style="width:18%">Owner</th><th style="width:16%">Due</th><th style="width:34px"></th></tr>
-    <tr class="rec"><td class="idx">1</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><button class="ghost" onclick="delRow(this)" title="Remove">✕</button></td></tr>
-  </tbody></table>
-  <div class="btnrow"><button onclick="addRow('actTable',4)">+ Add action</button></div>
+  <h3>Actions &amp; to-dos <span class="small" style="font-weight:400">— collected live from every agenda page</span></h3>
+  <div class="card">
+    <div id="rollupAct" data-derived></div>
+    <div class="cap-list" id="genAct"></div>
+  </div>
+  <div class="btnrow add-cap"><button type="button" onclick="capAddGeneral('action')">+ Add action</button></div>
 
   <h3>Board remarks &amp; risk mitigation</h3>
   <div class="fill" contenteditable="true"><span class="hint">Notes from the board discussion …</span></div>
@@ -920,6 +990,22 @@ main.main > .offpage{display:none!important}
     return;
   }
   var editing = false, st;
+  document.body.classList.add('canedit');   /* shows capture/add controls for the editor */
+  var baseline = null;   /* normalized per-section snapshot of what this tab started from */
+  function normSection(s){
+    var c = s.cloneNode(true);
+    c.classList.remove('active','offpage','hide');
+    c.querySelectorAll('.sec-del').forEach(function(x){ x.remove(); });
+    c.querySelectorAll('[data-derived]').forEach(function(x){ x.innerHTML=''; });
+    c.querySelectorAll('[data-cap]').forEach(function(x){ x.classList.remove('has-items'); });
+    return c;
+  }
+  function captureBaseline(){
+    baseline = {};
+    main.querySelectorAll(':scope > section').forEach(function(s){
+      if(s.id) baseline[s.id] = normSection(s).outerHTML;
+    });
+  }
   function saveNow(){ try{ localStorage.setItem(EKEY, main.innerHTML); }catch(e){} }
   function clearDraft(){ try{ localStorage.removeItem(EKEY); }catch(e){} }
   function saveSoon(){ clearTimeout(st); st = setTimeout(saveNow, 500); }
@@ -946,6 +1032,7 @@ main.main > .offpage{display:none!important}
       }
     }catch(e){}
     if(window.routeRefresh) window.routeRefresh();   /* re-apply page visibility after swapping content */
+    captureBaseline();   /* remember what this tab started from, for section-level merge on publish */
   })();
   window.keepSel = function(e){ e.preventDefault(); return false; };  /* keep the selection when clicking the toolbar */
   window.fmt = function(c, v){ document.execCommand(c, false, v || null); main.focus(); saveSoon(); };
@@ -975,8 +1062,16 @@ main.main > .offpage{display:none!important}
     main.querySelectorAll('.page').forEach(function(s){ s.classList.remove('active'); });
     Array.prototype.forEach.call(main.children, function(el){ el.classList.remove('offpage'); });
     var bb = document.getElementById('backbar'); if(bb) bb.style.display = 'none';
+    /* derived rollups are rebuilt at view time — never persist them */
+    document.querySelectorAll('[data-derived]').forEach(function(el){ el.innerHTML=''; });
+    document.body.classList.remove('canedit');
     /* strip extension artifacts */
     document.body.removeAttribute('cz-shortcut-listen');
+  }
+  function restoreAfterSave(){
+    document.getElementById('editbar').style.display = 'flex';
+    document.body.classList.add('canedit');
+    if(window.routeRefresh) window.routeRefresh();
   }
   window.toggleEdit = function(){
     editing = !editing;
@@ -1005,8 +1100,7 @@ main.main > .offpage{display:none!important}
   window.downloadPage = function(){
     cleanForSave();
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-    document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
-    if(window.routeRefresh) window.routeRefresh();
+    restoreAfterSave();
     var blob = new Blob([html], {type:'text/html;charset=utf-8'});
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'index.html';
@@ -1036,8 +1130,7 @@ main.main > .offpage{display:none!important}
     cleanForSave();
     var mainHtml = main.innerHTML;
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;   /* fallback only */
-    document.getElementById('editbar').style.display = 'flex';   /* restore live toolbar */
-    if(window.routeRefresh) window.routeRefresh();
+    restoreAfterSave();
     var api = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
     var headers = { 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
     toast('Publishing …');
@@ -1047,14 +1140,44 @@ main.main > .offpage{display:none!important}
       if(cur.ok){
         var curJson = await cur.json();
         sha = curJson.sha;
-        /* merge-proof publish: inject only the edited CONTENT into the LATEST
-           published file, so a stale tab can never roll back the page's code */
+        /* merge-proof publish: code always comes from the LATEST published file,
+           and only the SECTIONS this tab actually changed replace their published
+           counterparts — so a stale tab can never roll back anything else */
         try{
           var latestBytes = Uint8Array.from(atob((curJson.content || '').replace(/\s/g, '')), function(c){ return c.charCodeAt(0); });
           var latestHtml = new TextDecoder().decode(latestBytes);
           var doc = new DOMParser().parseFromString(latestHtml, 'text/html');
           var m2 = doc.querySelector('main.main');
-          if(m2){ m2.innerHTML = mainHtml; html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML; }
+          if(m2 && baseline){
+            var latestSecs = {};
+            m2.querySelectorAll(':scope > section').forEach(function(s){ if(s.id) latestSecs[s.id] = s; });
+            /* deletions the editor made in this tab */
+            Object.keys(baseline).forEach(function(id){
+              if(!main.querySelector(':scope > section[id="' + id + '"]') && latestSecs[id]){ latestSecs[id].remove(); delete latestSecs[id]; }
+            });
+            var prev = null;
+            main.querySelectorAll(':scope > section').forEach(function(s){
+              var ns = normSection(s);
+              if(s.id && latestSecs[s.id]){
+                if(baseline[s.id] !== ns.outerHTML){
+                  var repl = doc.importNode(ns, true);
+                  latestSecs[s.id].replaceWith(repl);
+                  prev = repl;
+                } else {
+                  prev = latestSecs[s.id];
+                }
+              } else {
+                var add = doc.importNode(ns, true);
+                if(prev && prev.nextSibling) m2.insertBefore(add, prev.nextSibling);
+                else m2.appendChild(add);
+                prev = add;
+              }
+            });
+            html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+          } else if(m2){
+            m2.innerHTML = mainHtml;
+            html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+          }
         }catch(mergeErr){ /* fall back to serializing this page as-is */ }
       }
       else if(cur.status === 401 || cur.status === 403){ toast('Token rejected — set a valid token (⚙)'); return; }
@@ -1064,7 +1187,7 @@ main.main > .offpage{display:none!important}
         sha: sha,
         branch: BRANCH
       }) });
-      if(res.ok){ clearDraft(); toast('Published ✓ — live in about a minute'); }
+      if(res.ok){ clearDraft(); captureBaseline(); toast('Published ✓ — live in about a minute'); }
       else {
         var e = {}; try{ e = await res.json(); }catch(_){}
         if(res.status === 401 || res.status === 403) toast('Token rejected — set a valid token (⚙)');
@@ -1105,11 +1228,115 @@ main.main > .offpage{display:none!important}
     if(overview) overview.classList.toggle('hide', onPage);
     document.getElementById('backbar').style.display = onPage ? 'inline-block' : 'none';
     document.body.classList.toggle('onpage', onPage);
+    if(window.buildRollup) window.buildRollup();
     window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', route);
   window.routeRefresh = route;   /* editor calls this after refreshing content */
   route();
+})();
+
+/* ---------- decision & action capture: per-page items roll up to the summary ---------- */
+(function(){
+  var NAME = {financials:'Financials', q2:'Q2 review', pricing:'Pricing', zurich:'Zurich',
+    offmarket:'Off-market', churn:'Immo-Ressource', buyback:'Buy-back', financing:'Financing',
+    outlook:'Outlook', ai:'Automation & AI', strategy:'Strategy'};
+  function escT(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function itemData(it, srcId, general){
+    var txt = it.querySelector('.cap-text');
+    var ow = it.querySelector('.cap-owner span');
+    return { text: txt ? txt.textContent.trim() : '', owner: ow ? ow.textContent.trim() : '',
+      src: srcId, label: general ? 'General' : (NAME[srcId] || srcId),
+      type: it.getAttribute('data-type') || 'decision' };
+  }
+  window.capCollect = function(){
+    var decs = [], acts = [];
+    document.querySelectorAll('main.main > section').forEach(function(s){
+      if(s.id === 'decisions'){
+        s.querySelectorAll('#genDec .cap-item').forEach(function(it){ decs.push(itemData(it, s.id, true)); });
+        s.querySelectorAll('#genAct .cap-item').forEach(function(it){ acts.push(itemData(it, s.id, true)); });
+        return;
+      }
+      s.querySelectorAll('[data-cap] .cap-item').forEach(function(it){
+        var d = itemData(it, s.id, false);
+        (d.type === 'action' ? acts : decs).push(d);
+      });
+    });
+    return { decs: decs, acts: acts };
+  };
+  window.buildRollup = function(){
+    /* per-page: reveal the capture card only when it has items (editor always sees it) */
+    document.querySelectorAll('main.main [data-cap]').forEach(function(cap){
+      cap.classList.toggle('has-items', !!cap.querySelector('.cap-item'));
+    });
+    var rd = document.getElementById('rollupDec'), ra = document.getElementById('rollupAct');
+    if(!rd && !ra) return;
+    var all = window.capCollect();
+    function row(n, r){
+      return '<div class="cap-item"><span class="small num" style="min-width:20px">' + n + '.</span>'
+        + '<div class="cap-text">' + (escT(r.text) || '<span style="color:var(--faint)">—</span>')
+        + (r.owner ? ' <span class="small">· ' + escT(r.owner) + '</span>' : '') + '</div>'
+        + (r.label !== 'General' ? '<a class="cap-src" href="#' + r.src + '">' + escT(r.label) + '</a>' : '')
+        + '</div>';
+    }
+    if(rd){
+      var fromPages = all.decs.filter(function(r){ return r.label !== 'General'; });
+      rd.innerHTML = fromPages.map(function(r, i){ return row(i + 1, r); }).join('');
+      var n = fromPages.length;
+      document.querySelectorAll('#genDec .cap-item .cap-n').forEach(function(sp){ sp.textContent = (++n) + '.'; });
+      if(!n) rd.innerHTML = '<div class="empty">No decisions captured yet — add them here or on any agenda page.</div>';
+    }
+    if(ra){
+      var fromPagesA = all.acts.filter(function(r){ return r.label !== 'General'; });
+      ra.innerHTML = fromPagesA.map(function(r, i){ return row(i + 1, r); }).join('');
+      var m = fromPagesA.length;
+      document.querySelectorAll('#genAct .cap-item .cap-n').forEach(function(sp){ sp.textContent = (++m) + '.'; });
+      if(!m) ra.innerHTML = '<div class="empty">No actions captured yet — add them here or on any agenda page.</div>';
+    }
+  };
+  function markDirty(){
+    var m = document.querySelector('main.main');
+    if(m) m.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+  function itemHtml(type, numbered){
+    var head = numbered ? '<span class="cap-n small num" style="min-width:20px"></span>'
+      : (type === 'action' ? '<span class="chip disc">Action</span>' : '<span class="chip pos">Decision</span>');
+    var owner = type === 'action' ? '<span class="cap-owner small">Owner:&nbsp;<span contenteditable="true" data-ph="—"></span></span>' : '';
+    return head + '<div class="cap-text" contenteditable="true" data-ph="' + (type === 'action' ? 'Action …' : 'Decision …') + '"></div>' + owner
+      + '<button type="button" class="ghost cap-del" onclick="capDel(this)" title="Remove">✕</button>';
+  }
+  function newItem(type, numbered){
+    var d = document.createElement('div');
+    d.className = 'cap-item';
+    d.setAttribute('data-type', type);
+    d.innerHTML = itemHtml(type, numbered);
+    return d;
+  }
+  window.capAdd = function(btn, type){
+    var cap = btn.closest('[data-cap]'); if(!cap) return;
+    var list = cap.querySelector('.cap-list'); if(!list) return;
+    var d = newItem(type, false);
+    list.appendChild(d);
+    markDirty(); window.buildRollup();
+    var t = d.querySelector('.cap-text'); if(t) t.focus();
+  };
+  window.capAddGeneral = function(type){
+    var list = document.getElementById(type === 'action' ? 'genAct' : 'genDec'); if(!list) return;
+    var d = newItem(type, true);
+    list.appendChild(d);
+    markDirty(); window.buildRollup();
+    var t = d.querySelector('.cap-text'); if(t) t.focus();
+  };
+  window.capDel = function(btn){
+    var it = btn.closest('.cap-item'); if(!it) return;
+    it.remove();
+    markDirty(); window.buildRollup();
+  };
+  /* live-refresh rollup numbers/text when typing inside capture items on the summary page */
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.closest && e.target.closest('#genDec, #genAct')) window.buildRollup();
+  });
+  window.buildRollup();
 })();
 
 /* buy-back worked-example calculator (event-delegated; harmless if the elements are edited away) */
@@ -1168,42 +1395,10 @@ function toast(msg){
   clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 1800);
 }
 
-function addRow(id, cells){
-  var table = document.getElementById(id);
-  var tr = document.createElement('tr'); tr.className = 'rec';
-  var html = '<td class="idx"></td>';
-  for(var i=0;i<cells-1;i++){ html += '<td contenteditable="true"></td>'; }
-  html += '<td><button class="ghost" onclick="delRow(this)" title="Remove">\u2715</button></td>';
-  tr.innerHTML = html;
-  table.appendChild(tr);
-  renumber(table);
-  tr.querySelector('[contenteditable]').focus();
-}
-function delRow(btn){
-  var tr = btn.closest('tr'); var table = tr.closest('table');
-  tr.remove(); renumber(table);
-}
-function renumber(table){
-  var rows = table.querySelectorAll('tr.rec');
-  for(var i=0;i<rows.length;i++){ rows[i].querySelector('.idx').textContent = i+1; }
-}
-
-function rowsText(id){
-  var out = [];
-  document.getElementById(id).querySelectorAll('tr.rec').forEach(function(tr){
-    var cells = [];
-    tr.querySelectorAll('td[contenteditable]').forEach(function(td){
-      var v = td.innerText.replace(/\s+/g,' ').trim();
-      if(v) cells.push(v);
-    });
-    if(cells.length) out.push(cells);
-  });
-  return out;
-}
-
 function exportMinutes(){
-  var nm = document.getElementById('nextMeeting').innerText.replace(/\s+/g,' ').trim();
-  var isHint = document.getElementById('nextMeeting').querySelector('.hint');
+  var nmEl = document.getElementById('nextMeeting');
+  var nm = nmEl ? nmEl.innerText.replace(/\s+/g,' ').trim() : '';
+  var isHint = nmEl && nmEl.querySelector('.hint');
   var L = [];
   L.push('Minutes of the Board Meeting of Immo-Ressource AG, registered seat 1700 Fribourg');
   L.push('Meeting #6 - 21.07.2026, Zurich (held in person, all attendees clearly identified)');
@@ -1214,17 +1409,18 @@ function exportMinutes(){
   L.push('');
   L.push('Financials: Q1 2026 net -CHF 72\u2019760 (rev 105\u2019756 / charges 178\u2019516); Q2 2026 net -CHF 36\u2019672 (rev 137\u2019042 / charges 173\u2019714); Q3 2026 projection net -CHF 90\u2019000 (rev 80\u2019000 / charges 170\u2019000).');
   L.push('');
+  var all = window.capCollect ? window.capCollect() : {decs:[], acts:[]};
   L.push('DECISIONS');
-  var dec = rowsText('decTable');
-  if(dec.length){ dec.forEach(function(c,i){ L.push((i+1)+'. '+c.join(' - ')); }); }
+  var dec = all.decs.filter(function(r){ return r.text; });
+  if(dec.length){ dec.forEach(function(r,i){ L.push((i+1)+'. '+r.text+(r.label && r.label!=='General' ? ' ['+r.label+']' : '')); }); }
   else { L.push('(none recorded)'); }
   L.push('');
   L.push('ACTIONS & TO-DOS');
-  var act = rowsText('actTable');
-  if(act.length){ act.forEach(function(c,i){ L.push((i+1)+'. '+c.join(' - ')); }); }
+  var act = all.acts.filter(function(r){ return r.text; });
+  if(act.length){ act.forEach(function(r,i){ L.push((i+1)+'. '+r.text+(r.owner ? ' - '+r.owner : '')+(r.label && r.label!=='General' ? ' ['+r.label+']' : '')); }); }
   else { L.push('(none recorded)'); }
   L.push('');
-  L.push('Next board meeting: ' + (isHint ? '(to be scheduled)' : nm));
+  L.push('Next board meeting: ' + (isHint || !nm ? '(to be scheduled)' : nm));
   L.push('');
   L.push('');
   L.push('___________________________');
