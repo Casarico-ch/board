@@ -201,6 +201,21 @@ button.ghost:hover{color:var(--neg)}
   .memo .k{margin-top:12px}
   section{scroll-margin-top:70px}
 }
+
+/* ---------- inline editor ---------- */
+#editbar{position:fixed;right:18px;bottom:18px;z-index:90;display:flex;gap:8px;align-items:center}
+#editbar button{box-shadow:0 2px 12px rgba(0,0,0,.14)}
+#fmtbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:90;display:none;gap:3px;
+  background:var(--ink);padding:6px;border-radius:12px;box-shadow:0 6px 22px rgba(0,0,0,.28)}
+#fmtbar button{background:transparent;border:none;color:#fff;padding:8px 11px;border-radius:8px;font:600 13px/1 Inter;box-shadow:none}
+#fmtbar button:hover{background:rgba(255,255,255,.16);border-color:transparent}
+#fmtbar .sep{width:1px;background:rgba(255,255,255,.22);margin:3px 2px}
+body.editmode main.main{outline:2px dashed #E4D3AE;outline-offset:10px;border-radius:6px}
+body.editmode section{position:relative}
+.sec-del{position:absolute;top:12px;right:0;background:var(--neg-bg);color:var(--neg);border:none;
+  border-radius:99px;font:600 11px/1 Inter;padding:6px 11px;cursor:pointer;opacity:.85}
+.sec-del:hover{opacity:1;border-color:transparent}
+@media print{#editbar,#fmtbar,.sec-del{display:none!important}}
 </style>
 </head>
 <body>
@@ -776,6 +791,90 @@ button.ghost:hover{color:var(--neg)}
 </main>
 
 <div id="toast"></div>
+
+<!-- ================= INLINE EDITOR (opens with ?edit) ================= -->
+<div id="editbar" style="display:none">
+  <button id="discardBtn" onclick="discardEdits()" title="Discard your local changes and reload the published page">Revert</button>
+  <button id="saveFileBtn" onclick="downloadPage()" title="Download the updated index.html to publish">Save page (.html)</button>
+  <button id="editToggle" class="primary" onclick="toggleEdit()">✎ Edit</button>
+</div>
+<div id="fmtbar">
+  <button onmousedown="return keepSel(event)" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+  <button onmousedown="return keepSel(event)" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+  <span class="sep"></span>
+  <button onmousedown="return keepSel(event)" onclick="fmt('formatBlock','H2')" title="Heading">H2</button>
+  <button onmousedown="return keepSel(event)" onclick="fmt('formatBlock','H3')" title="Sub-heading">H3</button>
+  <button onmousedown="return keepSel(event)" onclick="fmt('formatBlock','P')" title="Normal text">¶</button>
+  <button onmousedown="return keepSel(event)" onclick="fmt('insertUnorderedList')" title="Bullet list">• List</button>
+  <button onmousedown="return keepSel(event)" onclick="makeLink()" title="Add link">Link</button>
+  <span class="sep"></span>
+  <button onclick="addSection()" title="Add a new section at the end">＋ Section</button>
+</div>
+<script>
+/* Inline editor — only active when the URL has ?edit. Viewers on the plain link see nothing. */
+(function(){
+  var EDIT = /[?&]edit\b/.test(location.search);
+  var EKEY = 'casarico-boardpack-6-edits';
+  var main = document.querySelector('main.main');
+  if(!EDIT || !main) return;
+  try{ var saved = localStorage.getItem(EKEY); if(saved) main.innerHTML = saved; }catch(e){}
+  var editing = false, st;
+  function saveNow(){ try{ localStorage.setItem(EKEY, main.innerHTML); }catch(e){} }
+  function saveSoon(){ clearTimeout(st); st = setTimeout(saveNow, 500); }
+  main.addEventListener('input', saveSoon);
+  window.keepSel = function(e){ e.preventDefault(); return false; };  /* keep the selection when clicking the toolbar */
+  window.fmt = function(c, v){ document.execCommand(c, false, v || null); main.focus(); saveSoon(); };
+  window.makeLink = function(){ var u = prompt('Link URL (https://…)'); if(u) window.fmt('createLink', u); };
+  function addHandles(){
+    main.querySelectorAll('section').forEach(function(s){
+      if(s.querySelector('.sec-del')) return;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'sec-del'; b.textContent = '✕ section';
+      b.setAttribute('contenteditable', 'false');
+      b.onclick = function(){ if(confirm('Delete this whole section?')){ s.remove(); saveNow(); } };
+      s.appendChild(b);
+    });
+  }
+  function removeHandles(){ main.querySelectorAll('.sec-del').forEach(function(b){ b.remove(); }); }
+  window.toggleEdit = function(){
+    editing = !editing;
+    main.setAttribute('contenteditable', editing ? 'true' : 'false');
+    document.body.classList.toggle('editmode', editing);
+    document.getElementById('fmtbar').style.display = editing ? 'flex' : 'none';
+    var t = document.getElementById('editToggle');
+    t.textContent = editing ? '✓ Done' : '✎ Edit';
+    t.classList.toggle('primary', !editing);
+    if(editing){ addHandles(); main.focus(); } else { removeHandles(); saveNow(); }
+  };
+  window.addSection = function(){
+    var s = document.createElement('section');
+    s.innerHTML = '<div class="sec-head"><div><div class="eyebrow">New</div><h2>New section</h2></div></div><p>Write here …</p>';
+    main.appendChild(s);
+    if(editing) addHandles();
+    saveNow();
+    s.scrollIntoView({behavior:'smooth', block:'center'});
+  };
+  window.discardEdits = function(){
+    if(confirm('Discard your local changes and reload the published version?')){
+      try{ localStorage.removeItem(EKEY); }catch(e){}
+      location.reload();
+    }
+  };
+  window.downloadPage = function(){
+    if(editing) window.toggleEdit();
+    removeHandles();
+    main.setAttribute('contenteditable', 'false');
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    var blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'index.html';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    if(window.toast) toast('index.html downloaded — upload it to GitHub to publish');
+  };
+  document.getElementById('editbar').style.display = 'flex';
+})();
+</script>
 
 <script>
 // active section in nav
