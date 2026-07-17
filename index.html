@@ -219,9 +219,10 @@ body.editmode section{position:relative}
 
 /* ---------- agenda-as-navigation: each section is its own page ---------- */
 .page{display:none}
-.page.active{display:block}
+.page.active{display:block;padding-top:0;border-top:none}
 main.main .page{border-top:none}
 #overview.hide{display:none}
+main.main > .offpage{display:none!important}
 #backbar{position:fixed;top:16px;left:16px;z-index:85;display:none;
   font:500 13px/1 Inter;background:var(--surface);border:1px solid var(--line);border-radius:99px;
   padding:9px 15px;cursor:pointer;text-decoration:none;color:var(--ink);box-shadow:0 2px 12px rgba(0,0,0,.10)}
@@ -232,7 +233,7 @@ main.main .page{border-top:none}
 .subagenda a:hover{border-color:var(--muted)}
 .ref-line{margin-top:14px;font-size:12.5px;color:var(--muted)}
 .ref-line a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
-@media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important}}
+@media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important} main.main > .offpage{display:block!important}}
 </style>
 </head>
 <body>
@@ -873,6 +874,7 @@ main.main .page{border-top:none}
     document.body.classList.remove('onpage');
     var ov = document.getElementById('overview'); if(ov) ov.classList.remove('hide');
     main.querySelectorAll('.page').forEach(function(s){ s.classList.remove('active'); });
+    Array.prototype.forEach.call(main.children, function(el){ el.classList.remove('offpage'); });
     var bb = document.getElementById('backbar'); if(bb) bb.style.display = 'none';
     /* strip extension artifacts */
     document.body.removeAttribute('cz-shortcut-listen');
@@ -978,8 +980,16 @@ main.main .page{border-top:none}
     var target = id ? document.getElementById(id) : null;
     var onPage = !!(target && target.classList.contains('page'));
     document.querySelectorAll('main.main .page').forEach(function(s){
-      s.classList.toggle('active', onPage && s.id === id);
+      s.classList.toggle('active', onPage && s === target);
     });
+    /* standalone-page feel: on a page, hide EVERYTHING else in the main column
+       (header, agenda, any stray elements edits may have created) */
+    var mainEl = document.querySelector('main.main');
+    if(mainEl){
+      Array.prototype.forEach.call(mainEl.children, function(el){
+        el.classList.toggle('offpage', onPage && el !== target);
+      });
+    }
     if(overview) overview.classList.toggle('hide', onPage);
     document.getElementById('backbar').style.display = onPage ? 'inline-block' : 'none';
     document.body.classList.toggle('onpage', onPage);
