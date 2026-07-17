@@ -692,7 +692,8 @@ main.main > .offpage{display:none!important}
         <tr><td>Repay bank mortgage</td><td class="t-right num" id="bbMm">− CHF 900’000</td></tr>
         <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbMr">− CHF 212’000</td></tr>
         <tr><td>Guarantee fee (0.5% of floor)</td><td class="t-right num" id="bbMf">− CHF 6’375</td></tr>
-        <tr class="total"><td>To the customer at closing <span class="small">(advance was already in hand on day one)</span></td><td class="t-right num" id="bbMn">CHF 381’625</td></tr>
+        <tr><td>Notary costs (≈ 0.1%, paid by the customer)</td><td class="t-right num" id="bbMno">− CHF 1’500</td></tr>
+        <tr class="total"><td>To the customer at closing <span class="small">(advance was already in hand on day one)</span></td><td class="t-right num" id="bbMn">CHF 380’125</td></tr>
       </tbody></table>
     </div>
     <div id="bbBackstop" style="display: none;">
@@ -701,6 +702,7 @@ main.main > .offpage{display:none!important}
         <tr><td>Repay bank mortgage</td><td class="t-right num" id="bbBm">− CHF 900’000</td></tr>
         <tr><td>Repay advance + 6% interest</td><td class="t-right num" id="bbBr">− CHF 212’000</td></tr>
         <tr><td>Guarantee fee</td><td class="t-right num">waived</td></tr>
+        <tr><td>Notary costs (<span class="num" id="bbBno">≈ CHF 1’275</span>)</td><td class="t-right num">paid by CasaBuy</td></tr>
         <tr class="total"><td>To the customer at closing - clean exit, no earn-out, transaction ends</td><td class="t-right num" id="bbBn">CHF 163’000</td></tr>
       </tbody></table>
     </div>
@@ -723,14 +725,15 @@ main.main > .offpage{display:none!important}
   </div>
   <p class="small" style="margin-top:10px"><br><font color="#1b1e20" face="Inter"><span style="font-size: 14px;"><b>Stress-test: 20 open guarantees</b></span></font></p>
   <div class="grid g3">
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Base</b><span class="chip pos">Clearly positive</span></div><div class="small" style="margin-top:8px">10% activate · resale at value.<br>≈ 15-point entry discount less costs. Advances fully repaid.</div></div>
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Adverse</b><span class="chip pos">Positive</span></div><div class="small" style="margin-top:8px">20% activate · resale −5%.<br>≈ 10-point cushion remains. Advances fully repaid.</div></div>
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Severe</b><span class="chip act">Small loss</span></div><div class="small" style="margin-top:8px">35% activate · resale −15%.<br>Loss contained inside CasaBuy's capital. Advances still repaid.</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Base</b><span class="chip pos">Clearly positive</span></div><div class="small" style="margin-top:8px">10% activate · resale at value.<br>≈ 15-point entry discount less costs. Advances fully repaid.</div><div class="num" style="margin-top:10px;font-weight:600;color:var(--pos)">≈ + CHF 230’000 net · +9%</div><div class="small" style="color:var(--faint)">2 × gain 225’000, less ≈ 1% costs (incl. notary, paid by CasaBuy) and ≈ 45% gains tax · on CHF 2.55m deployed</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Adverse</b><span class="chip pos">Positive</span></div><div class="small" style="margin-top:8px">20% activate · resale −5%.<br>≈ 10-point cushion remains. Advances fully repaid.</div><div class="num" style="margin-top:10px;font-weight:600;color:var(--pos)">≈ + CHF 300’000 net · +6%</div><div class="small" style="color:var(--faint)">4 × gain 150’000, less costs (incl. notary) and gains tax · on CHF 5.1m deployed</div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>Severe</b><span class="chip act">Small loss</span></div><div class="small" style="margin-top:8px">35% activate · resale −15%.<br>Loss contained inside CasaBuy's capital. Advances still repaid.</div><div class="num" style="margin-top:10px;font-weight:600;color:var(--neg)">≈ − CHF 100’000 net · −1%</div><div class="small" style="color:var(--faint)">7 × resale at cost - only transaction costs lost (incl. notary, paid by CasaBuy) · on CHF 8.9m deployed</div></div>
   </div>
-  <p class="small" style="margin-top:10px">First real capital loss only beyond a −15% real estate price fall, loss contained inside CasaBuy.<br><br><br></p>
+  <p class="small" style="margin-top:10px">On top, CasaCash earns ≈ CHF 0.35m per 20-deal cohort (guarantee fees + 6% advance interest) in every scenario, and advances are always repaid. First real capital loss only beyond a −15% price fall - even at −20% resale the hit is ≈ − CHF 0.6m (−7%), well inside CasaBuy's CHF 9–10m capital. Notary costs: paid by the customer when their market sale closes; paid by CasaBuy whenever CasaBuy ends up buying (included in the cost assumptions above). Figures are illustrative: avg. value CHF 1.5m, floor CHF 1.275m, resale within a year, ≈ 1% transaction costs, ≈ 45% Zurich short-holding gains tax on the gain (holding &gt; 1 year reduces the tax).<br><br><br></p>
 
   <h3>What has to be true before the first deal / pilot project</h3>
   <div class="card">
+    <div class="item"><span class="chip mut">Open</span><div class="grow">Validate financial model with exact numbers</div></div>
     <div class="item"><span class="chip mut">Open</span><div class="grow">Counsel opinion: purchase commitment ≠ insurance (FINMA) + notarisation mechanics</div></div>
     <div class="item"><span class="chip mut">Open</span><div class="grow">Tax opinion: gains tax on short-holding resales · VAT on fee and interest</div></div>
     <div class="item"><span class="chip mut">Open</span><div class="grow">KKG exemption confirmed for the mortgage-secured advance (gating item)</div></div>
@@ -1302,10 +1305,14 @@ main.main > .offpage{display:none!important}
     var aEl = document.getElementById('bbA');
     var draw = aEl ? Math.min(Math.max(parseFloat(aEl.value) || 0, 0), cap) : cap;
     var interest = 0.06 * draw, repay = draw + interest;
+    var notarySale = 0.001 * V;       /* market sale: paid by the customer */
+    var notaryBuy = 0.001 * G;        /* activation: paid by CasaBuy */
     put('bbG', G); put('bbCap', cap);
     put('bbMv', V); put('bbMm', M, true); put('bbMr', repay, true); put('bbMf', fee, true);
-    put('bbMn', V - M - repay - fee);
+    put('bbMno', notarySale, true);
+    put('bbMn', V - M - repay - fee - notarySale);
     put('bbBg', G); put('bbBm', M, true); put('bbBr', repay, true);
+    var bno = document.getElementById('bbBno'); if(bno) bno.textContent = '≈ ' + chf(notaryBuy);
     put('bbBn', G - M - repay);
   }
   document.addEventListener('input', function(e){
