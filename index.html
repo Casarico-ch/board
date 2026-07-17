@@ -120,6 +120,10 @@ td .num,.num{font-variant-numeric:tabular-nums}
   padding:14px 18px;display:flex;gap:12px;align-items:baseline;
 }
 .ask .k{font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--act);white-space:nowrap}
+.decision{margin-top:12px;background:var(--pos-bg);border:1px solid #C3E4D2;border-radius:var(--radius);padding:14px 18px}
+.decision .k{display:block;font:600 11px/1.7 Inter;text-transform:uppercase;letter-spacing:.08em;color:var(--pos);margin-bottom:8px}
+.decision .fill{background:#fff;border:1px dashed #A9D3BC;color:var(--ink);min-height:60px}
+.decision .fill:empty::before,.decision .fill .hint{color:#5B9D77}
 
 /* ---------- editable fills ---------- */
 [contenteditable]{outline:none;border-radius:6px}
@@ -460,7 +464,8 @@ main.main .page{border-top:none}
         <tbody><tr><th style="width:34%">Participant</th><th>From 1 August</th></tr>
         <tr><td>Buyer: activation fee</td><td class="fill" contenteditable="true"><span class="hint">CHF 450.- at signup</span></td></tr>
         <tr><td>Buyer: success fee</td><td class="fill" contenteditable="true"><span class="hint">&nbsp;0.5% on completed purchase<br></span></td></tr>
-        <tr><td>Swapper</td><td>Free — monetized via the future sales mandate</td></tr>
+        <tr><td>Swapper: activation fee</td><td class="fill" contenteditable="true"><span class="hint">Free? or CHF … at signup</span></td></tr>
+        <tr><td>Swapper: success fee</td><td class="fill" contenteditable="true"><span class="hint">… % or CHF … on completed sale</span></td></tr>
         <tr><td>Agent / partner</td><td class="fill" contenteditable="true"><span class="hint">First transaction free? Referral / mandate share …</span></td></tr>
       </tbody></table>
       <div class="fill" style="margin-top:10px" contenteditable="true"><span class="hint">Expected revenue impact Q3–Q4 and why this strengthens the flywheel …</span></div>
@@ -468,6 +473,9 @@ main.main .page{border-top:none}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board approves the adjusted pricing and business model effective immediately.</span></div>
+  <div class="decision"><span class="k">Board decision</span>
+    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+  </div>
 </section>
 
 <!-- ================= DEEP DIVE 02 · ZURICH ================= -->
@@ -510,6 +518,9 @@ main.main .page{border-top:none}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board aligns on the action plan and the checkpoint against which Zurich is reassessed at meeting #7.</span></div>
+  <div class="decision"><span class="k">Board decision</span>
+    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+  </div>
 </section>
 
 <!-- ================= DEEP DIVE 03 · OFF-MARKET ================= -->
@@ -573,6 +584,9 @@ main.main .page{border-top:none}
   </div>
 
   <div class="ask"><span class="k">The ask</span><span>Board decides the direction for the Immo-Ressource legacy business.</span></div>
+  <div class="decision"><span class="k">Board decision</span>
+    <div class="fill" contenteditable="true"><span class="hint">Record the board's decision — approved / amended / deferred, with any conditions and the effective date …</span></div>
+  </div>
 </section>
 
 <!-- ================= BUY-BACK ================= -->
