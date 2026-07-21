@@ -2,7 +2,8 @@
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Casarico - Board pack #6 · 21.07.2026</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Casarico</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
 
@@ -275,9 +276,37 @@ main.main > .offpage{display:none!important}
 .ref-line{margin-top:14px;font-size:12.5px;color:var(--muted)}
 .ref-line a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
 @media print{#backbar{display:none!important} .page{display:block!important} #overview.hide{display:block!important} main.main > .offpage{display:block!important}}
+
+/* ---------- access-code gate ---------- */
+#codegate{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
+#codegate.on{display:flex}
+.cg-box{max-width:360px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:34px 28px}
+.cg-mark{width:48px;height:48px;border-radius:12px;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;font:600 24px/1 Georgia,serif}
+.cg-title{font:600 16px/1.3 Inter;margin-top:14px}
+.cg-sub{color:var(--muted);font-size:13.5px;margin:6px 0 18px}
+#codeinput{width:100%;font:400 15px/1 Inter;padding:12px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+#codeinput:focus{outline:none;border-color:#E4D3AE;background:#FFFDF5}
+.cg-err{color:var(--neg);font-size:12.5px;min-height:18px;text-align:left}
+.cg-btn{width:100%;justify-content:center;font:500 14px/1 Inter;padding:12px 18px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.cg-btn:hover{opacity:.92}
+.cg-note{color:var(--faint);font-size:12px;margin-top:16px}
+@media print{#codegate{display:none!important}}
 </style>
 </head>
 <body class="">
+
+<div id="codegate">
+  <div class="cg-box">
+    <div class="cg-mark">C</div>
+    <div class="cg-title">Casarico Board</div>
+    <p class="cg-sub">This board is private. Enter the access code to continue.</p>
+    <input id="codeinput" type="password" autocomplete="current-password" placeholder="Access code" onkeydown="if(event.key==='Enter')__submitCode()">
+    <div id="codeerr" class="cg-err"></div>
+    <button class="cg-btn" onclick="__submitCode()">Unlock</button>
+    <p class="cg-note">The code is remembered on this device. Ask Daniel if you don't have it.</p>
+  </div>
+</div>
+<script id="board-vault" type="application/json"></script>
 
 <a id="backbar" href="#overview" style="display: none;">← Agenda</a>
 
@@ -985,15 +1014,21 @@ main.main > .offpage{display:none!important}
   function clearDraft(){ try{ localStorage.removeItem(EKEY); }catch(e){} }
   function saveSoon(){ clearTimeout(st); st = setTimeout(saveNow, 500); }
   main.addEventListener('input', saveSoon);
-  /* Always start from the freshest PUBLISHED version (bypasses the Pages cache),
-     then only offer a leftover unpublished draft as an explicit restore. */
-  (async function loadFreshest(){
+  /* Load the freshest PUBLISHED version (decrypting the vault when present),
+     then offer any leftover unpublished draft. Called by the gate once unlocked. */
+  window.__editorLoad = async function(){
     try{
       var res = await fetch('https://raw.githubusercontent.com/Casarico-ch/board/main/index.html?_=' + Date.now(), {cache:'no-store'});
       if(res.ok){
         var doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-        var freshMain = doc.querySelector('main.main');
-        if(freshMain) main.innerHTML = freshMain.innerHTML;
+        var v = doc.getElementById('board-vault');
+        var cipher = v ? v.textContent.trim() : '';
+        if(cipher && window.__vaultDecrypt && window.__CODE){
+          try{ main.innerHTML = await window.__vaultDecrypt(cipher, window.__CODE); }catch(e){ /* keep current content */ }
+        } else {
+          var freshMain = doc.querySelector('main.main');
+          if(freshMain && freshMain.innerHTML.trim()) main.innerHTML = freshMain.innerHTML;
+        }
       }
     }catch(e){ /* offline: keep the served page */ }
     try{
@@ -1007,8 +1042,9 @@ main.main > .offpage{display:none!important}
       }
     }catch(e){}
     if(window.routeRefresh) window.routeRefresh();   /* re-apply page visibility after swapping content */
+    if(window.bbCalc) window.bbCalc();
     captureBaseline();   /* remember what this tab started from, for section-level merge on publish */
-  })();
+  };
   window.keepSel = function(e){ e.preventDefault(); return false; };  /* keep the selection when clicking the toolbar */
   window.fmt = function(c, v){ document.execCommand(c, false, v || null); main.focus(); saveSoon(); };
   window.makeLink = function(){ var u = prompt('Link URL (https://…)'); if(u) window.fmt('createLink', u); };
@@ -1102,60 +1138,67 @@ main.main > .offpage{display:none!important}
   window.publishLive = async function(){
     var token = getToken();
     if(!token){ window.setToken(); token = getToken(); if(!token) return; }
+    if(!window.__CODE){ toast('Unlock with the access code before publishing'); return; }
     cleanForSave();
-    var mainHtml = main.innerHTML;
-    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;   /* fallback only */
+    var localPlain = main.innerHTML;   /* this tab's plaintext content, after cleaning */
     restoreAfterSave();
     var api = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
     var headers = { 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
     toast('Publishing …');
     try{
-      var sha;
+      var sha, html = null;
       var cur = await fetch(api + '?ref=' + BRANCH + '&_=' + Date.now(), { headers: headers, cache:'no-store' });
       if(cur.ok){
         var curJson = await cur.json();
         sha = curJson.sha;
-        /* merge-proof publish: code always comes from the LATEST published file,
-           and only the SECTIONS this tab actually changed replace their published
-           counterparts - so a stale tab can never roll back anything else */
-        try{
-          var latestBytes = Uint8Array.from(atob((curJson.content || '').replace(/\s/g, '')), function(c){ return c.charCodeAt(0); });
-          var latestHtml = new TextDecoder().decode(latestBytes);
-          var doc = new DOMParser().parseFromString(latestHtml, 'text/html');
-          var m2 = doc.querySelector('main.main');
-          if(m2 && baseline){
-            var latestSecs = {};
-            m2.querySelectorAll(':scope > section').forEach(function(s){ if(s.id) latestSecs[s.id] = s; });
-            /* deletions the editor made in this tab */
-            Object.keys(baseline).forEach(function(id){
-              if(!main.querySelector(':scope > section[id="' + id + '"]') && latestSecs[id]){ latestSecs[id].remove(); delete latestSecs[id]; }
-            });
-            var prev = null;
-            main.querySelectorAll(':scope > section').forEach(function(s){
-              var ns = normSection(s);
-              if(s.id && latestSecs[s.id]){
-                if(baseline[s.id] !== ns.outerHTML){
-                  var repl = doc.importNode(ns, true);
-                  latestSecs[s.id].replaceWith(repl);
-                  prev = repl;
-                } else {
-                  prev = latestSecs[s.id];
-                }
-              } else {
-                var add = doc.importNode(ns, true);
-                if(prev && prev.nextSibling) m2.insertBefore(add, prev.nextSibling);
-                else m2.appendChild(add);
-                prev = add;
-              }
-            });
-            html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-          } else if(m2){
-            m2.innerHTML = mainHtml;
-            html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-          }
-        }catch(mergeErr){ /* fall back to serializing this page as-is */ }
+        var latestBytes = Uint8Array.from(atob((curJson.content || '').replace(/\s/g, '')), function(c){ return c.charCodeAt(0); });
+        var latestHtml = new TextDecoder().decode(latestBytes);
+        var doc = new DOMParser().parseFromString(latestHtml, 'text/html');
+        var m2 = doc.querySelector('main.main');
+        var vault = doc.getElementById('board-vault');
+        /* decrypt the latest published content into m2 so we merge onto the freshest base */
+        if(vault && vault.textContent.trim() && window.__vaultDecrypt){
+          try{ m2.innerHTML = await window.__vaultDecrypt(vault.textContent.trim(), window.__CODE); }
+          catch(e){ toast('Publish blocked - the live board uses a different code. Reload.'); return; }
+        }
+        if(m2 && baseline){
+          /* merge-proof: only the SECTIONS this tab changed replace their published counterparts */
+          var latestSecs = {};
+          m2.querySelectorAll(':scope > section').forEach(function(s){ if(s.id) latestSecs[s.id] = s; });
+          Object.keys(baseline).forEach(function(id){
+            if(!main.querySelector(':scope > section[id="' + id + '"]') && latestSecs[id]){ latestSecs[id].remove(); delete latestSecs[id]; }
+          });
+          var prev = null;
+          main.querySelectorAll(':scope > section').forEach(function(s){
+            var ns = normSection(s);
+            if(s.id && latestSecs[s.id]){
+              if(baseline[s.id] !== ns.outerHTML){
+                var repl = doc.importNode(ns, true);
+                latestSecs[s.id].replaceWith(repl);
+                prev = repl;
+              } else { prev = latestSecs[s.id]; }
+            } else {
+              var add = doc.importNode(ns, true);
+              if(prev && prev.nextSibling) m2.insertBefore(add, prev.nextSibling);
+              else m2.appendChild(add);
+              prev = add;
+            }
+          });
+        } else if(m2){
+          m2.innerHTML = localPlain;
+        }
+        /* encrypt the merged plaintext into the vault and strip it from <main> */
+        if(m2){
+          var env = await window.__vaultEncrypt(m2.innerHTML, window.__CODE);
+          if(!vault){ vault = doc.createElement('script'); vault.id = 'board-vault'; vault.type = 'application/json'; doc.body.insertBefore(vault, doc.body.firstChild); }
+          vault.textContent = env;
+          m2.innerHTML = '';
+          html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+        }
       }
       else if(cur.status === 401 || cur.status === 403){ toast('Token rejected - set a valid token (⚙)'); return; }
+      else { toast('Publish failed - could not read the live file (' + cur.status + ')'); return; }
+      if(!html){ toast('Publish failed - nothing to write'); return; }
       var res = await fetch(api, { method:'PUT', headers: headers, body: JSON.stringify({
         message: 'Update board pack via in-page editor',
         content: b64utf8(html),
@@ -1414,7 +1457,7 @@ main.main > .offpage{display:none!important}
     var draw = aEl ? Math.min(Math.max(parseFloat(aEl.value) || 0, 0), cap) : cap;
     var interest = 0.05 * draw, repay = draw + interest;
     var notarySale = 0.001 * V;       /* market sale: paid by the customer */
-    var notaryBuy = 0.001 * G;        /* activation: paid by CasaBuy */
+    var notaryBuy = 0.001 * G;        /* activation: paid by the buyer vehicle */
     put('bbG', G); put('bbCap', cap);
     put('bbMv', V); put('bbMm', M, true); put('bbMr', repay, true); put('bbMf', fee, true);
     put('bbMno', notarySale, true);
@@ -1444,6 +1487,7 @@ main.main > .offpage{display:none!important}
     if(mp) mp.style.display = (mode === 'market') ? '' : 'none';
     if(bp) bp.style.display = (mode === 'backstop') ? '' : 'none';
   });
+  window.bbCalc = calc;
   calc();
 })();
 
@@ -1458,15 +1502,16 @@ function exportMinutes(){
   var nm = nmEl ? nmEl.innerText.replace(/\s+/g,' ').trim() : '';
   var isHint = nmEl && nmEl.querySelector('.hint');
   var L = [];
-  L.push('Minutes of the Board Meeting of Immo-Ressource AG, registered seat 1700 Fribourg');
-  L.push('Meeting #6 - 21.07.2026, Zurich (held in person, all attendees clearly identified)');
+  /* attendees pulled from the (decrypted) content so nothing sensitive lives in the public script */
+  var att = '';
+  try{
+    var ov = document.getElementById('overview');
+    if(ov){ var f = ov.querySelector('.field div, [data-att]'); if(f) att = f.innerText.replace(/\s+/g,' ').trim(); }
+  }catch(e){}
+  L.push('Minutes of the Board Meeting of Immo-Ressource AG');
+  L.push('Board meeting - held in person, all attendees clearly identified');
   L.push('');
-  L.push('Attendees: Daniel Abebe (Chairperson), Luca Fontanella, Nicola Haas. Absent: none.');
-  L.push('');
-  L.push('Check-in: Bridge-financing contract + payment: done. Year-closing 2025 + GV: open.');
-  L.push('');
-  L.push('Financials: Q1 2026 net -CHF 72\u2019760 (rev 105\u2019756 / charges 178\u2019516); Q2 2026 net -CHF 36\u2019672 (rev 137\u2019042 / charges 173\u2019714); Q3 2026 projection net -CHF 90\u2019000 (rev 80\u2019000 / charges 170\u2019000).');
-  L.push('');
+  if(att){ L.push('Attendees: ' + att); L.push(''); }
   var all = window.capCollect ? window.capCollect() : {decs:[], acts:[]};
   L.push('DECISIONS');
   var dec = all.decs.filter(function(r){ return r.text; });
@@ -1513,5 +1558,75 @@ document.addEventListener('focusin', function(e){
 });
 </script>
 
+<script>
+/* ================= access-code vault: content is AES-encrypted; the code unlocks it ================= */
+(function(){
+  var VKEY = 'casarico-board-code';   // remembers the code on this device (like the GitHub token)
+  var main = document.querySelector('main.main');
+  var gate = document.getElementById('codegate');
+  var vaultEl = document.getElementById('board-vault');
+  function b64(bytes){ var s=''; for(var i=0;i<bytes.length;i++) s+=String.fromCharCode(bytes[i]); return btoa(s); }
+  function ub64(str){ var bin=atob(str), a=new Uint8Array(bin.length); for(var i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i); return a; }
+  async function deriveKey(pass, salt){
+    var mat = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), {name:'PBKDF2'}, false, ['deriveKey']);
+    return crypto.subtle.deriveKey({name:'PBKDF2', salt:salt, iterations:150000, hash:'SHA-256'}, mat, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+  }
+  window.__vaultEncrypt = async function(plaintext, pass){
+    var salt = crypto.getRandomValues(new Uint8Array(16));
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    var key = await deriveKey(pass, salt);
+    var ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv:iv}, key, new TextEncoder().encode(plaintext)));
+    return JSON.stringify({v:1, kdf:'PBKDF2-SHA256', iter:150000, salt:b64(salt), iv:b64(iv), ct:b64(ct)});
+  };
+  window.__vaultDecrypt = async function(envStr, pass){
+    var env = JSON.parse(envStr);
+    var key = await deriveKey(pass, ub64(env.salt));
+    var pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:ub64(env.iv)}, key, ub64(env.ct));
+    return new TextDecoder().decode(pt);
+  };
+
+  function afterUnlock(){
+    if(window.routeRefresh) window.routeRefresh();
+    if(window.buildRollup) window.buildRollup();
+    if(window.bbCalc) window.bbCalc();
+    if(window.__editorLoad) window.__editorLoad();
+  }
+
+  var cipher = vaultEl ? vaultEl.textContent.trim() : '';
+  if(!cipher){
+    /* no vault (plaintext file) - nothing to unlock; run the app on the content that's already there */
+    afterUnlock();
+    return;
+  }
+
+  async function unlock(code, fromCache){
+    try{
+      var plain = await window.__vaultDecrypt(cipher, code);
+      main.innerHTML = plain;
+      window.__CODE = code;
+      try{ localStorage.setItem(VKEY, code); }catch(e){}
+      gate.classList.remove('on');
+      afterUnlock();
+      return true;
+    }catch(e){
+      try{ localStorage.removeItem(VKEY); }catch(_){}
+      if(!fromCache){
+        var er = document.getElementById('codeerr'); if(er) er.textContent = 'Wrong code - try again.';
+        var ci = document.getElementById('codeinput'); if(ci) ci.select();
+      }
+      return false;
+    }
+  }
+  window.__submitCode = function(){ var v = document.getElementById('codeinput').value; if(v) unlock(v, false); };
+
+  var cached = ''; try{ cached = localStorage.getItem(VKEY) || ''; }catch(e){}
+  if(cached){
+    unlock(cached, true).then(function(ok){ if(!ok){ gate.classList.add('on'); focusInput(); } });
+  } else {
+    gate.classList.add('on'); focusInput();
+  }
+  function focusInput(){ setTimeout(function(){ var i = document.getElementById('codeinput'); if(i) i.focus(); }, 30); }
+})();
+</script>
 
 </body></html>
